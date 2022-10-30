@@ -4,19 +4,19 @@ int main(void)
 {
 	char	*line;
 
+	// signaling
 	ft_sighandle();
 
 	while (1)
 	{
 		line = readline("msh $ ");
-		if (ft_strlen(line) == 0)
+		if (!line)
 		{
-			printf("this case\n");
-			free(line);
-			write(1, "\n", 1);
-			break ;
+			printf("Exiting\n");
+			return (0);
 		}
-		printf("command is : %s - length : %d\n", line, (int)ft_strlen(line));
+		else
+			printf("command is : %s\n", line);
 		free(line);
 	}
 	return (0);

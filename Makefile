@@ -5,14 +5,14 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
 RLINE_DIR = /opt/homebrew/Cellar/readline/8.1.2
-O_LINK = -lreadline
+O_LINK = -L$(RLINE_DIR)/lib -lreadline
 
 LIBFT_DIR = libft
 LIBFT = libft/libft.a
 
 RM = rm -rf
 
-INC = -Iincs -Ilibft
+INC = -Iincs -Ilibft -I$(RLINE_DIR)/include
 
 SRCS_DIR = srcs/
 SRCS = minishell.c signal.c
@@ -36,6 +36,7 @@ $(LIBFT):
 
 clean:
 	@$(RM) $(NAME)
+	@make clean -C $(LIBFT_DIR)
 	@echo "Some clean~"
 
 fclean: clean

@@ -1,17 +1,17 @@
 #include "minishell.h"
 
-// In this section, There are a handlering for ctrl-C, ctrl-D and ctrl-\\
+// In this section, There are a handlering for ctrl-C and ctrl-\\
 // In interactive mode:
 // ctrl-C : display a new prompt on a newline (original is sigint)
-// ctrl-D : exits the shell (this is not a signal, it is a EOF)
 // ctrl-\ : does nothing (original is sigquit)
+// ctrl-D : exits the shell (this is not a signal, it is a EOF)
 
 void	ft_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)info;
 	(void)context;
 	if (sig == SIGINT)
-		printf("this is a SIGINT captured\n");
+		rl_replace_line("clear", 1);
 	else if (sig == SIGQUIT)
 		return ;
 	return ;
