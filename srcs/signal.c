@@ -11,7 +11,12 @@ void	ft_handler(int sig, siginfo_t *info, void *context)
 	(void)info;
 	(void)context;
 	if (sig == SIGINT)
-		rl_replace_line("clear", 1);
+    {
+        printf("\n");
+        rl_replace_line("", 0);
+        rl_on_new_line();
+        rl_redisplay();
+    }
 	else if (sig == SIGQUIT)
 		return ;
 	return ;

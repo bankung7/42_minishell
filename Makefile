@@ -4,15 +4,27 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-RLINE_DIR = /opt/homebrew/Cellar/readline/8.1.2
-O_LINK = -L$(RLINE_DIR)/lib -lreadline
-
 LIBFT_DIR = libft
 LIBFT = libft/libft.a
 
-RM = rm -rf
+RL_DIR = /usr/local/Homebrew/opt/readline
+LIB_DIR = -L$(RL_DIR)/lib -lreadline
+LIB_INC = -Iincs -I$(RL_DIR)/include
 
-INC = -Iincs -Ilibft -I$(RLINE_DIR)/include
+# MACOS_LINK = -L$(RL_DIR)/lib -lreadline
+# MACOS_INC = -Iincs -Ilibft -I$(RL_DIR)/include
+
+# ifeq ($(shell uname), Darwin)
+# LIB_DIR += -L$(RL_DIR)/lib
+# LIB_INC += -I$(RL_DIR)/include
+# endif
+
+# ifeq ($(shell uname), Darwin)
+# LIB_DIR += -L/usr/local/opt/readline/lib
+# LIB_INC += -I/usr/local/opt/readline/include
+# endif
+
+RM = rm -rf
 
 SRCS_DIR = srcs/
 SRCS = minishell.c signal.c
@@ -23,12 +35,12 @@ OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	@$(CC) $(CFLAGS) $(O_LINK) $^ -o $@
+	@$(CC) $(CFLAGS) $^ -o $@  $(LIB_DIR)
 	@echo "minishell is ready~"
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@mkdir -p $(OBJS_DIR)
-	@$(CC) $(CFLAGS) $^ $(INC) -c -o $@
+	@$(CC) $(CFLAGS) $(LIB_INC) -c $^ -o $@
 
 $(LIBFT):
 	@echo "minishel is on prepared!"
