@@ -25,10 +25,8 @@ static	void	ft_printnbr(int n, int fd)
 
 void	ft_putnbr_fd(int n, int fd)
 {
-	int	i;
 	int	isneg;
 
-	i = 0;
 	isneg = 0;
 	if (n == 0)
 	{

@@ -8,21 +8,18 @@ LIBFT_DIR = libft
 LIBFT = libft/libft.a
 
 RL_DIR = /usr/local/Homebrew/opt/readline
-LIB_DIR = -L$(RL_DIR)/lib -lreadline
-LIB_INC = -Iincs -I$(RL_DIR)/include
+LIB_DIR = -lreadline
+LIB_INC = -Iincs -Ilibft
 
-# MACOS_LINK = -L$(RL_DIR)/lib -lreadline
-# MACOS_INC = -Iincs -Ilibft -I$(RL_DIR)/include
+ifeq ($(shell uname), Darwin)
+LIB_DIR += -L$(RL_DIR)/lib
+LIB_INC += -I$(RL_DIR)/include
+endif
 
-# ifeq ($(shell uname), Darwin)
-# LIB_DIR += -L$(RL_DIR)/lib
-# LIB_INC += -I$(RL_DIR)/include
-# endif
-
-# ifeq ($(shell uname), Darwin)
-# LIB_DIR += -L/usr/local/opt/readline/lib
-# LIB_INC += -I/usr/local/opt/readline/include
-# endif
+ifeq ($(shell uname), Linux)
+LIB_DIR += -L/usr/local/opt/readline/lib -lft
+LIB_INC += -I/usr/local/opt/readline/include
+endif
 
 RM = rm -rf
 

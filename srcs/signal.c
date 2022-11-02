@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-// In this section, There are a handlering for ctrl-C and ctrl-\\
+// In this section, There are a handlering for ctrl-C and ctrl- <black slash>
 // In interactive mode:
-// ctrl-C : display a new prompt on a newline (original is sigint)
-// ctrl-\ : does nothing (original is sigquit)
+// ctrl-C : display a new prompt on a newline (original is SIGINT)
+// ctrl-\ : does nothing (original is SIGQUIT)
 // ctrl-D : exits the shell (this is not a signal, it is a EOF)
 
 void	ft_handler(int sig, siginfo_t *info, void *context)
@@ -11,14 +11,14 @@ void	ft_handler(int sig, siginfo_t *info, void *context)
 	(void)info;
 	(void)context;
 	if (sig == SIGINT)
-    {
-        printf("\n");
-        rl_replace_line("", 0);
-        rl_on_new_line();
-        rl_redisplay();
-    }
+	{
+		printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
 	else if (sig == SIGQUIT)
-		return ;
+		rl_redisplay();
 	return ;
 }
 
