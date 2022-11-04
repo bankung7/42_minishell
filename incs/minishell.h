@@ -11,13 +11,29 @@
 # include <signal.h>
 # include "libft.h"
 
-// define
-# define PROMPT "minishell$"
+// define color
+# define WHITE '\033[;37m'
+# define GREEN '\033[;32m'
+
+// define prompt
+# define PROMPT "\033[;32mminishell$ \033[;37m"
 # define EXIT_MSG "Exiting Bye~"
 
-// structure 
+// define token type
+# define END_TOKEN 0
+# define WORD 1
 
-// parsing
+// structure
+typedef struct s_token
+{
+    int type;
+    char **string;
+    struct t_token *next;
+}   t_token;
+
+// token
+int ft_isdelimit(char *str, int i);
+void    ft_token(char *str);
 
 // executing
 

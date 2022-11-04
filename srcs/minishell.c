@@ -5,7 +5,7 @@ int main(void)
 	char	*line;
 
 	// signaling
-	ft_sighandle();
+	//ft_sighandle();
 
     // looping
 	while (1)
@@ -19,7 +19,10 @@ int main(void)
 		else
         {
             // Execute by execv
-			printf("command is : %s\n", line);
+			// printf("command is : %s\n", line);
+			printf("line len => [%d]\n", (int)ft_strlen(line));
+			ft_token(line);
+			printf("\n");
         }
 		free(line);
 	}
