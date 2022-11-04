@@ -24,11 +24,13 @@ void	ft_handler(int sig, siginfo_t *info, void *context)
 
 int	ft_sighandle(void)
 {
-	struct sigaction	action;
+	struct sigaction	acint;
+    struct sigaction    acquit;
 
-	action.sa_sigaction = ft_handler;
-	action.sa_flags = SA_SIGINFO;
-	sigaction(SIGINT, &action, 0);
-	sigaction(SIGQUIT, &action, 0);
+	acint.sa_sigaction = ft_handler;
+	acint.sa_flags = SA_SIGINFO;
+	sigaction(SIGINT, &acint, 0);
+    acquit.sa_handler = SIG_IGN;
+    sigaction(SIGQUIT, &acquit, 0);
 	return (0);
 }
