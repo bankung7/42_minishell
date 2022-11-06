@@ -24,7 +24,7 @@ endif
 RM = rm -rf
 
 SRCS_DIR = srcs/
-SRCS = minishell.c signal.c token.c
+SRCS = minishell.c signal.c token.c parsing.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
