@@ -11,12 +11,12 @@ RL_DIR = /usr/local/Homebrew/opt/readline
 LIB_DIR = -lreadline
 LIB_INC = -Iincs -Ilibft
 
-ifeq ($(shell uname), Darwin)
-LIB_DIR += -L$(RL_DIR)/lib
-LIB_INC += -I$(RL_DIR)/include
-endif
+#ifeq ($(shell uname), Darwin)
+# LIB_DIR += -L$(RL_DIR)/lib
+# LIB_INC += -I$(RL_DIR)/include
+# endif
 
-ifeq ($(shell uname), Linux)
+ifeq ($(shell uname), Darwin)
 LIB_DIR += -L/usr/local/opt/readline/lib -Llibft -lft
 LIB_INC += -I/usr/local/opt/readline/include
 endif
@@ -24,7 +24,7 @@ endif
 RM = rm -rf
 
 SRCS_DIR = srcs/
-SRCS = minishell.c signal.c token.c parsing.c
+SRCS = minishell.c signal.c token.c parsing.c builtin.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))

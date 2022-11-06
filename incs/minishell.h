@@ -12,14 +12,13 @@
 # include "libft.h"
 
 // define color
-# define WHITE '\033[;37m'
-# define GREEN '\033[;32m'
 
 // define prompt
 # define PROMPT "\033[;32mminishell$ \033[;37m"
 # define EXIT_MSG "Exiting Bye~"
 
 // define delimiter
+# define ERROR_TOKEN -3
 # define END_TOKEN -2
 # define WORD -1
 # define DELIMITER 0
@@ -38,6 +37,7 @@ typedef struct s_token
 {
     int type;
     char *string;
+    int pipe;
     struct s_token *next;
 }   t_token;
 
@@ -46,6 +46,9 @@ typedef struct s_data
     t_token *token;
     int is_infile;
     int is_outfile;
+    int isappend;
+    int is_heredoc;
+    char hdoc;
 }   t_data;
 
 // token
@@ -55,6 +58,9 @@ int ft_cleartoken(t_token **token);
 
 // parsing
 int ft_buildcmd(t_token **token);
+
+// builtin
+int ft_isbuiltin(char *cmd);
 
 // executing
 

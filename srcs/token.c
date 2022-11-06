@@ -26,6 +26,7 @@ int ft_addtoken(t_token **token, char *str, int type)
         return (-1);
     node->string = str;
     node->type = type;
+    node->pipe = 0;
     node->next = 0;
     
     if (*token == 0)
@@ -80,6 +81,7 @@ int ft_stoken(t_token **token, char *str, int i, int type)
         if (str[i + j] == 0)
         {
             printf("no quote found!\n");
+            ft_addtoken(token, 0, ERROR_TOKEN);
             return (0);
         }
         tmp = ft_substr(str, i, j);

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void ft_cleararray(char **arr)
+int ft_cleararray(char **arr, int res)
 {
     int i;
 
@@ -8,6 +8,7 @@ void ft_cleararray(char **arr)
     while (arr[i])
         free(arr[i++]);
     free(arr);
+    return (res);
 }
 
 char **ft_groupcmd(t_token **token)
@@ -40,22 +41,37 @@ char **ft_groupcmd(t_token **token)
     return (cmd);
 }
 
+int ft_readtoken(t_token **token)
+{
+    t_token *head;
+
+    head = *token;
+    while (head)
+    {
+        if (head->type == ERROR_TOKEN)
+            return (-1);
+        head = head->next;
+    }
+    return (0);
+}
+
 int ft_buildcmd(t_token **token)
 {
     pid_t pid;
     char *path;
     char **cmd;
 
+    if (ft_checktoken(token) == -1)
+        return (-1);
+    if (ft_isbuiltin((*token)->string) != 0)
+        return (printf("this is a builtin\n"));
     path = ft_strjoin("/bin/", (*token)->string);
     if (access(path, F_OK) == 0)
     {
         cmd = ft_groupcmd(token);
         pid = fork();
         if (pid == -1)
-        {
-            ft_cleararray(cmd);
-            return (0);
-        }
+            return (ft_cleararray(cmd, -1));
         else if (pid == 0)
         {
             execve(path, cmd, 0);
@@ -63,7 +79,7 @@ int ft_buildcmd(t_token **token)
         }
         else
             wait(0);
-        ft_cleararray(cmd);
+        ft_cleararray(cmd, 0);
         free(path);
     }
     else
@@ -71,11 +87,5 @@ int ft_buildcmd(t_token **token)
         free(path);
         return (-1);
     }
-    return (0);
-}
-
-int ft_checktoken(t_token **token)
-{
-    
     return (0);
 }
