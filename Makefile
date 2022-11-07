@@ -11,15 +11,15 @@ RL_DIR = /usr/local/Homebrew/opt/readline
 LIB_DIR = -lreadline
 LIB_INC = -Iincs -Ilibft
 
-#ifeq ($(shell uname), Darwin)
-# LIB_DIR += -L$(RL_DIR)/lib
-# LIB_INC += -I$(RL_DIR)/include
-# endif
-
 ifeq ($(shell uname), Darwin)
-LIB_DIR += -L/usr/local/opt/readline/lib -Llibft -lft
-LIB_INC += -I/usr/local/opt/readline/include
+LIB_DIR += -L$(RL_DIR)/lib
+LIB_INC += -I$(RL_DIR)/include
 endif
+
+# ifeq ($(shell uname), Linux)
+# LIB_DIR += -L/usr/local/opt/readline/lib -Llibft -lft
+# LIB_INC += -I/usr/local/opt/readline/include
+# endif
 
 RM = rm -rf
 

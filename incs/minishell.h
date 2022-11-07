@@ -12,61 +12,41 @@
 # include "libft.h"
 
 // define color
+# define GREEN "\033[;32m"
+# define WHITE "\033[;37m"
+
+// define delimiter
+# define WHITE_SPACE 0
+# define PIPE 1
+# define OR 2
+# define SQUOTE 3
+# define DQUOTE 4
+# define INFILE 5
+# define HEREDOC 6
+# define OUTFILE 7
+# define APPEND 8
+# define COMMAND 99
 
 // define prompt
 # define PROMPT "\033[;32mminishell$ \033[;37m"
 # define EXIT_MSG "Exiting Bye~"
 
-// define delimiter
-# define ERROR_TOKEN -3
-# define END_TOKEN -2
-# define WORD -1
-# define DELIMITER 0
-# define PIPE 1
-# define OR 2
-# define INFILE 3
-# define HEREDOC 4
-# define OUTFILE 5
-# define APPEND 6
-# define SQUOTE 8
-# define DQUOTE 10
-# define DSIGN 9
-
 // structure
-typedef struct s_token
+typedef struct s_cmd
 {
-    int type;
-    char *string;
-    int pipe;
-    struct s_token *next;
-}   t_token;
+    char **cmd;
+    char *path;
+    int infile;
+    int outfile;
+    struct s_cmd *next;
+}   t_cmd;
 
-typedef struct s_data
+typedef struct s_mini
 {
-    t_token *token;
-    int is_infile;
-    int is_outfile;
-    int isappend;
-    int is_heredoc;
-    char hdoc;
-}   t_data;
+    t_cmd *cmd;
+}   t_mini;
 
-// token
-int ft_isdelimit(char *str, int i);
-void    ft_tokenize(t_token **token, char *str);
-int ft_cleartoken(t_token **token);
-
-// parsing
-int ft_buildcmd(t_token **token);
-
-// builtin
-int ft_isbuiltin(char *cmd);
-
-// executing
-
-// signal
-int ft_sighandle(void);
-
-// pipe
+// token.c
+int ft_tokenize(char *str);
 
 #endif

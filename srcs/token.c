@@ -1,141 +1,94 @@
 #include "minishell.h"
 
-int ft_cleartoken(t_token **token)
+int ft_delimtiter(char c)
 {
-    t_token *head;
-
-    if (*token == 0)
-        return (0);
-    head = *token;
-    while (*token)
-    {
-        *token = (*token)->next;
-        free(head->string);
-        free(head);
-        head = (*token);
-    }
-    return (0);
+	if (c == ' ' || c == '\t')
+		return (1);
+	if (c == '<' || c == '>' || c == '|')
+		return (2);
+	if (c == '\'' || c == '"')
+		return (3);
+	return (0);
 }
 
-int ft_addtoken(t_token **token, char *str, int type)
+int ft_addquote(char *str, int i)
 {
-    t_token *node;
+	int j;
+	char c;
+	char *tmp;
 
-    node = malloc(sizeof(t_token));
-    if (!node)
-        return (-1);
-    node->string = str;
-    node->type = type;
-    node->pipe = 0;
-    node->next = 0;
-    
-    if (*token == 0)
-        *token = node;
-    else
-    {
-        t_token *head;
-        head = *token;
-        while (head->next)
-            head = head->next;
-        head->next = node;
-    }
-    return (0);
+	j = 1;
+	c = str[i];
+	while (str[i + j] && str[i + j] != c)
+		j++;
+	if (str[i + j] != 0)
+		j++;
+	tmp = ft_substr(str, i, j);
+	printf("%s [%d]\n", tmp, j);
+	free(tmp);
+	return (j);
 }
 
-int ft_isdelimit(char *str, int i)
+int ft_addsword(char *str, int i)
 {
-    if (str[i] == ' ' || str[i] == '\t')
-        return (DELIMITER);
-    else if (str[i] == '|' && str[i + 1] == '|')
-        return (OR);
-    else if (str[i] == '|')
-        return (PIPE);
-    else if (str[i] == '<' && str[i + 1] == '<')
-        return (HEREDOC);
-    else if (str[i] == '<')
-        return (INFILE);
-    else if (str[i] == '>' && str[i + 1] == '>')
-        return (APPEND);
-    else if (str[i] == '>')
-        return (OUTFILE);
-    else if (str[i] == '\'')
-        return (SQUOTE);
-    else if (str[i] == '"')
-        return (DQUOTE);
-    else if (str[i] == '$')
-        return (DSIGN);
-    return (-1);
+	char *tmp;
+
+	if (str[i] == '|' && str[i + 1] == '|')
+		tmp = ft_strdup("||");
+	else if (str[i] == '|')
+		tmp = ft_strdup("|");
+	else if (str[i] == '<' && str[i + 1] == '<')
+		tmp = ft_strdup("<<");
+	else if (str[i] == '<')
+		tmp = ft_strdup("<");
+	else if (str[i] == '>' && str[i + 1] == '>')
+		tmp = ft_strdup(">>");
+	else if (str[i] == '>')
+		tmp = ft_strdup(">");
+	else
+		return (1);
+	int len = ft_strlen(tmp);
+	printf("%s [%d]\n", tmp, len);
+	free(tmp);
+	return (len);
 }
 
-int ft_stoken(t_token **token, char *str, int i, int type)
+int ft_addword(char *str, int start)
 {
-    int j;
-    char *tmp;
+	int i;
+	char *tmp;
 
-    j = type % 2;
-    if (type == SQUOTE || type == DQUOTE)
-    {
-        i++;
-        while (str[i + j] && ft_isdelimit(str, i + j) != type)
-            j++;
-        if (str[i + j] == 0)
-        {
-            printf("no quote found!\n");
-            ft_addtoken(token, 0, ERROR_TOKEN);
-            return (0);
-        }
-        tmp = ft_substr(str, i, j);
-        // printf("%s\n", tmp);
-        // free(tmp);
-        ft_addtoken(token, tmp, WORD);
-        return (j + 1);
-    }
-    if (j == 0)
-        j = 2;
-    tmp = ft_substr(str, i, j);
-    // printf("%s\n", tmp);
-    // free(tmp);
-    ft_addtoken(token, tmp, type);
-    return (j - 1);
+	i = 0;
+	while (str[start + i])
+	{
+		if (ft_delimtiter(str[start + i]) == 0)
+			i++;
+		if (ft_delimtiter(str[start + i]) != 0 || (str[start + i] == 0 && i > 0))
+		{
+			tmp = ft_substr(str, start, i);
+			printf("%s [%d]\n", tmp, (int)ft_strlen(tmp));
+			free(tmp);
+			return (i);
+		}
+	}
+	return (i);
 }
 
-int ft_wtoken(t_token **token, char *str, int i)
+int ft_tokenize(char *str)
 {
-    int j;
-    char *tmp;
+	int i;
 
-    j = 0;
-    while (str[i + j])
-    {
-        if (ft_isdelimit(str, i + j) == -1)
-            j++;
-        if ((str[i + j + 1] == 0 && j > 0) || ft_isdelimit(str, i + j) != -1)
-        {
-            if (str[i + j + 1] == 0)
-                j += 1;
-            tmp = ft_substr(str, i, j);
-            // free(tmp);
-            ft_addtoken(token, tmp, WORD);
-            // printf("%s\n", tmp);
-            return (j - 1);
-        }
-    }
-    return (j);
-}
-
-void ft_tokenize(t_token **token, char *str)
-{
-    int i;
-    int instance;
-
-    i = 0;
-    while (str[i])
-    {
-        instance = ft_isdelimit(str, i);
-        if (instance == -1)
-            i += ft_wtoken(token, str, i);
-        else if (instance > 0)
-            i += ft_stoken(token, str, i, instance);
-        i++;
-    }
+	i = 0;
+	while (str[i])
+	{
+		if (ft_delimtiter(str[i]) == 0)
+			i += ft_addword(str, i);
+		else if (ft_delimtiter(str[i]) == 2)
+			i += ft_addsword(str, i);
+		else if (ft_delimtiter(str[i]) == 3)
+			i += ft_addquote(str, i);
+		else
+			i++;
+	}
+	return (0);
 }
