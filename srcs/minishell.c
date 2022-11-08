@@ -1,5 +1,24 @@
 #include "minishell.h"
 
+int ft_clearlist(t_mini *data)
+{
+    if (!data)
+        return (0);
+    if (data->cmdlist == 0)
+        return (0);
+    t_cmd *head;
+    head = data->cmdlist;
+    while (head)
+    {
+        data->cmdlist = data->cmdlist->next;
+        free(head->cmd);
+        free(head->path);
+        free(head);
+        head = data->cmdlist;
+    }
+    return (0);
+}
+
 int main(void)
 {
     char *line;
@@ -23,10 +42,19 @@ int main(void)
         head = data->cmdlist;
         while (head)
         {
-            printf("[%d] => %s\n", i, head->cmd);
+            printf("\n========== node [%d] =========\n", i);
+            printf("Command :\t[%s]\n", head->cmd);
+            printf("Path :\t[%s]\n", head->path);
+            printf("Infile :\t[%d]\n", head->infile);
+            printf("Outfile :\t[%d]\n", head->outfile);
+            printf("Type :\t[%d]\n", head->type);
+            printf("==============================\n");
             head = head->next;
             i++;
         }
+        if (ft_checkcmd(data) == -1)
+            printf("syntax error\n");
+        ft_clearlist(data);
         // ===== link list
         printf("\n");
     }

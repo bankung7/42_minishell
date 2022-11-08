@@ -1,48 +1,25 @@
 #include "minishell.h"
 
-int ft_buildlist(t_mini *data, char *str, int type)
+int ft_delimiter(char *str, int i)
 {
-	t_cmd *node;
-	t_cmd *head;
-
-	head = data->cmdlist;
-	if (!head)
-	{
-		node = malloc(sizeof(t_cmd));
-		if (!node)
-			return (-1);
-		node->cmd = ft_strdup(str);
-		node->type = type;
-		node->next = 0;
-		data->cmdlist = node;
-	}
-	else
-	{
-		while (head->next)
-			head = head->next;
-		node = malloc(sizeof(t_cmd));
-		if (!node)
-			return (-1);
-		node->cmd = ft_strdup(str);
-		node->type = type;
-		node->next = 0;
-		head->next = node;
-	}
-	return (0);
+	if (str[i] == ' ' || str[i] == '\t')
+		return (0);
+	else if (str[i] == '|' && str[i + 1] == '|')
+		return (OR);
+	else if (str[i] == '|')
+		return (PIPE);
+	else if (str[i] == '<' && str[i + 1] == '<')
+		return (HEREDOC);
+	else if (str[i] == '<')
+		return (INFILE);
+	else if (str[i] == '>' && str[i + 1] == '>')
+		return (APPEND);
+	else if (str[i] == '>')
+		return (OUTFILE);
+	return (-1);
 }
 
-int ft_delimtiter(char c)
-{
-	if (c == ' ' || c == '\t')
-		return (1);
-	if (c == '<' || c == '>' || c == '|')
-		return (2);
-	if (c == '\'' || c == '"')
-		return (3);
-	return (0);
-}
-
-int ft_addquote(char *str, int i)
+int ft_addquote(t_mini *data, char *str, int i)
 {
 	int j;
 	char c;
@@ -55,12 +32,13 @@ int ft_addquote(char *str, int i)
 	if (str[i + j] != 0)
 		j++;
 	tmp = ft_substr(str, i, j);
-	printf("%s [%d]\n", tmp, j);
+	ft_buildlist(data, tmp, WORD);
+	// printf("%s [%d]\n", tmp, j);
 	free(tmp);
 	return (j);
 }
 
-int ft_addsword(char *str, int i)
+int ft_addsword(t_mini *data, char *str, int i)
 {
 	int len;
 	char *tmp;
@@ -80,7 +58,8 @@ int ft_addsword(char *str, int i)
 	else
 		return (1);
 	len = ft_strlen(tmp);
-	printf("%s [%d]\n", tmp, len);
+	// printf("%s [%d]\n", tmp, len);
+	ft_buildlist(data, tmp, ft_delimiter(str, i));
 	free(tmp);
 	return (len);
 }
@@ -93,12 +72,12 @@ int ft_addword(t_mini *data, char *str, int start)
 	i = 0;
 	while (str[start + i])
 	{
-		if (ft_delimtiter(str[start + i]) == 0)
+		if (ft_delimiter(str, start + i) == -1)
 			i++;
-		if (ft_delimtiter(str[start + i]) != 0 || (str[start + i] == 0 && i > 0))
+		if (ft_delimiter(str, start + i) != -1 || (str[start + i] == 0 && i > 0))
 		{
 			tmp = ft_substr(str, start, i);
-			ft_buildlist(data, tmp, COMMAND);
+			ft_buildlist(data, tmp, WORD);
 			// printf("%s [%d]\n", tmp, (int)ft_strlen(tmp));
 			free(tmp);
 			return (i);
@@ -110,16 +89,18 @@ int ft_addword(t_mini *data, char *str, int start)
 int ft_tokenize(t_mini *data, char *str)
 {
 	int i;
+	int type;
 
 	i = 0;
 	while (str[i])
 	{
-		if (ft_delimtiter(str[i]) == 0)
+		type = ft_delimiter(str, i);
+		if (type == -1)
 			i += ft_addword(data, str, i);
-		else if (ft_delimtiter(str[i]) == 2)
-			i += ft_addsword(str, i);
-		else if (ft_delimtiter(str[i]) == 3)
-			i += ft_addquote(str, i);
+		else if (type > 0 && type < 10)
+			i += ft_addsword(data, str, i);
+		else if (type == 10 || type == 11)
+			i += ft_addquote(data, str, i);
 		else
 			i++;
 	}

@@ -16,10 +16,10 @@ LIB_DIR += -L$(RL_DIR)/lib
 LIB_INC += -I$(RL_DIR)/include
 endif
 
-# ifeq ($(shell uname), Linux)
-# LIB_DIR += -L/usr/local/opt/readline/lib -Llibft -lft
-# LIB_INC += -I/usr/local/opt/readline/include
-# endif
+ifeq ($(shell uname), Linux)
+LIB_DIR += -L/usr/local/opt/readline/lib -Llibft -lft
+LIB_INC += -I/usr/local/opt/readline/include
+endif
 
 RM = rm -rf
 

@@ -25,7 +25,10 @@
 # define APPEND 6
 # define SQUOTE 11
 # define DQUOTE 12
+# define SWORD 97
+# define WORD 98
 # define COMMAND 99
+# define BUILTIN 100
 
 // define prompt
 # define PROMPT "\033[;32mminishell$ \033[;37m"
@@ -49,5 +52,9 @@ typedef struct s_mini
 
 // token.c
 int ft_tokenize(t_mini *data, char *str);
+
+// parsing.c
+int ft_buildlist(t_mini *data, char *str, int type);
+int ft_checkcmd(t_mini *data);
 
 #endif
