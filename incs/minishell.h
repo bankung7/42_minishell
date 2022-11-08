@@ -19,12 +19,12 @@
 # define WHITE_SPACE 0
 # define PIPE 1
 # define OR 2
-# define SQUOTE 3
-# define DQUOTE 4
-# define INFILE 5
-# define HEREDOC 6
-# define OUTFILE 7
-# define APPEND 8
+# define INFILE 3
+# define HEREDOC 4
+# define OUTFILE 5
+# define APPEND 6
+# define SQUOTE 11
+# define DQUOTE 12
 # define COMMAND 99
 
 // define prompt
@@ -34,19 +34,20 @@
 // structure
 typedef struct s_cmd
 {
-    char **cmd;
+    char *cmd;
     char *path;
     int infile;
     int outfile;
+    int type;
     struct s_cmd *next;
 }   t_cmd;
 
 typedef struct s_mini
 {
-    t_cmd *cmd;
+    t_cmd *cmdlist;
 }   t_mini;
 
 // token.c
-int ft_tokenize(char *str);
+int ft_tokenize(t_mini *data, char *str);
 
 #endif
