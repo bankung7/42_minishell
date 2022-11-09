@@ -16,6 +16,10 @@ int ft_delimiter(char *str, int i)
 		return (APPEND);
 	else if (str[i] == '>')
 		return (OUTFILE);
+	else if (str[i] == '\'')
+		return (SQUOTE);
+	else if (str[i] == '"')
+		return (DQUOTE);
 	return (-1);
 }
 
@@ -29,39 +33,24 @@ int ft_addquote(t_mini *data, char *str, int i)
 	c = str[i];
 	while (str[i + j] && str[i + j] != c)
 		j++;
+	if (str[i + j] == c)
+		j++;
+	if (j == 1)
+	{
+		ft_clearlist(data);
+		return (ft_strlen(str));
+	}
 	if (str[i + j] != 0)
 		j++;
-	tmp = ft_substr(str, i, j);
-	ft_buildlist(data, tmp, WORD);
-	// printf("%s [%d]\n", tmp, j);
+	tmp = ft_substr(str, i + 1, j - 2);
+	if (ft_buildword(data, tmp) == -1)
+	{
+		ft_clearlist(data);
+		free(tmp);
+		return (ft_strlen(str));
+	}
 	free(tmp);
 	return (j);
-}
-
-int ft_addsword(t_mini *data, char *str, int i)
-{
-	int len;
-	char *tmp;
-
-	if (str[i] == '|' && str[i + 1] == '|')
-		tmp = ft_strdup("||");
-	else if (str[i] == '|')
-		tmp = ft_strdup("|");
-	else if (str[i] == '<' && str[i + 1] == '<')
-		tmp = ft_strdup("<<");
-	else if (str[i] == '<')
-		tmp = ft_strdup("<");
-	else if (str[i] == '>' && str[i + 1] == '>')
-		tmp = ft_strdup(">>");
-	else if (str[i] == '>')
-		tmp = ft_strdup(">");
-	else
-		return (1);
-	len = ft_strlen(tmp);
-	// printf("%s [%d]\n", tmp, len);
-	ft_buildlist(data, tmp, ft_delimiter(str, i));
-	free(tmp);
-	return (len);
 }
 
 int ft_addword(t_mini *data, char *str, int start)
@@ -77,9 +66,14 @@ int ft_addword(t_mini *data, char *str, int start)
 		if (ft_delimiter(str, start + i) != -1 || (str[start + i] == 0 && i > 0))
 		{
 			tmp = ft_substr(str, start, i);
-			ft_buildlist(data, tmp, WORD);
-			// printf("%s [%d]\n", tmp, (int)ft_strlen(tmp));
+			if (ft_buildword(data, tmp) == -1)
+			{
+				ft_clearlist(data);
+				free(tmp);
+				return (ft_strlen(str));
+			}
 			free(tmp);
+			// printf("%s [%d]\n", str, (int)ft_strlen(str));
 			return (i);
 		}
 	}
@@ -97,9 +91,11 @@ int ft_tokenize(t_mini *data, char *str)
 		type = ft_delimiter(str, i);
 		if (type == -1)
 			i += ft_addword(data, str, i);
-		else if (type > 0 && type < 10)
-			i += ft_addsword(data, str, i);
-		else if (type == 10 || type == 11)
+		else if (type == PIPE)
+			i += ft_buildpipe(data, str);
+		else if (type >= 3 && type <= 6)
+			i += ft_buildfd(data, str, type);
+		else if (type == SQUOTE || type == DQUOTE)
 			i += ft_addquote(data, str, i);
 		else
 			i++;

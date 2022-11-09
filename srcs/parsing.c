@@ -1,49 +1,5 @@
 #include "minishell.h"
 
-int ft_isbuiltin(char *str)
-{
-    int len;
-
-    len = ft_strlen(str);
-    if (len == 2 && ft_strncmp("cd", str, 2) == 0)
-        return (printf("builtin cd\n"));
-    else if (len == 3 && ft_strncmp("pwd", str, 3) == 0)
-        return (printf("builtin pwd\n"));
-    else if (len == 3 && ft_strncmp("env", str, 3) == 0)
-        return (printf("builtin env\n"));
-    else if (len == 4 && ft_strncmp("echo", str, 4) == 0)
-        return (printf("builtin echo\n"));
-    else if (len == 4 && ft_strncmp("exit", str, 4) == 0)
-        return (printf("builtin exit\n"));
-    else if (len == 5 && ft_strncmp("unset", str, 5) == 0)
-        return (printf("builtin unset\n"));
-    else if (len == 6 && ft_strncmp("export", str, 6) == 0)
-        return (printf("builtin export\n"));
-    return (0);
-}
-
-char *ft_trimcmd(char *str)
-{
-    int len;
-    char c;
-    char *tmp;
-
-    if (!str)
-        return (0);
-    if (str[0] == '\'' || str[0] == '"')
-    {
-        c = str[0];
-        len = ft_strlen(str);
-        if (str[len - 1] == c)
-            tmp = ft_substr(str, 1, len - 2);
-        else
-            tmp = 0;
-    }
-    else
-        tmp = ft_strdup(str);
-    return (tmp);
-}
-
 char **ft_cmdarray(char **input, char *arg)
 {
     int i;
@@ -80,112 +36,103 @@ char **ft_cmdarray(char **input, char *arg)
     return (tmp);
 }
 
-int ft_iscmd(char *str)
+t_cmd *ft_newcmd(void)
 {
-    char *tmp;
+    t_cmd *node;
 
-    // not built-in
-    if (ft_isbuiltin(str) == 0)
-    {
-        tmp = ft_strjoin("/bin/", str);
-        if (access(tmp, F_OK) != -1)
-        {
-            printf("this is a shell command\n");
-            return (0);
-        }
-        else
-            return (-1);
-    }
-    return (0);
+    node = malloc(sizeof(t_cmd));
+    if (!node)
+        return (0);
+    node->vector = 0;
+    node->cmd = 0;
+    node->path = 0;
+    node->infile = 0;
+    node->outfile = 1;
+    node->type = 0;
+    node->next = 0;
+    return (node);
 }
 
-int ft_buildlist(t_mini *data, char *str, int type)
+int ft_buildword(t_mini *data, char *str)
+{
+	char **atmp;
+	t_cmd *head;
+
+	if (!data->cmdlist)
+		data->cmdlist = ft_newcmd();
+	head = data->cmdlist;
+    if (!head)
+    {
+        ft_clearlist(data);
+        return (ft_strlen(str));
+    }
+	while (head->next)
+		head = head->next;
+	if (head->type == INFILE)
+		head->infile = 99; // handler fd
+	else if (head->type == OUTFILE || head->type == APPEND)
+		head->outfile = 99; // handler fd
+	else
+	{
+		atmp = ft_cmdarray(head->vector, str);
+		head->vector = atmp;
+		if (!head->path)
+			head->path = ft_strdup(str);
+	}
+	head->type = 0;
+	return (0);
+}
+
+int ft_buildfd(t_mini *data, char *str, int type)
+{
+    int len;
+	t_cmd *head;
+
+	if (!data->cmdlist)
+		data->cmdlist = ft_newcmd();
+	head = data->cmdlist;
+    if (!head || (head->type >= 1 && head->type <= 6))
+    {
+        ft_clearlist(data);
+        return (ft_strlen(str));
+    }
+	while (head->next)
+		head = head->next;
+	if (type == INFILE)
+        head->infile = 99; // set fd later
+    else if (type == OUTFILE)
+        head->outfile = 99; // set fd later
+    else if (type == APPEND)
+        head->outfile = 98; // set fd later
+    head->type = type;
+    len = type % 2;
+    if (len == 0)
+        len = 2;
+    // wait for here doc
+	return (len);
+}
+
+int ft_buildpipe(t_mini *data, char *str)
 {
     t_cmd *node;
     t_cmd *head;
 
     if (!data->cmdlist)
-    {
-        node = malloc(sizeof(t_cmd));
-        if (!node)
-            return (-1);
-        node->vector = 0;
-        node->cmd = 0;
-        node->path = 0;
-        node->infile = 0;
-        node->outfile = 1;
-        node->type = 0;
-        node->next = 0;
-        data->cmdlist = node;
-    }
-
-    // current the node
+        return (ft_strlen(str));
     head = data->cmdlist;
     while (head->next)
         head = head->next;
-
-    if (type == INFILE)
-        head->type = INFILE;
-    else if (type == OUTFILE)
-        head->type = OUTFILE;
-    else if (type == APPEND)
-        head->type = APPEND;
-    else if (type == WORD && head->type == INFILE)
+    if (head->type != 0)
     {
-        head->infile = 99; // set fd later
-        head->type = 0;
+        ft_clearlist(data);
+        return (ft_strlen(str));
     }
-    else if (type == WORD && (head->type == OUTFILE || head->type == APPEND))
+    node = ft_newcmd();
+    if (!node)
     {
-        head->outfile = 99; // set fd later
-        head->type = 0;
+        ft_clearlist(data);
+        return (ft_strlen(str));
     }
-    else if (type == WORD && head->path == 0)
-    {
-        head->vector = ft_cmdarray(0, str);
-        head->cmd = ft_strdup(str);
-        head->path = ft_strdup(str);
-    }
-    else if (type == WORD)
-    {
-        char *tmp;
-        tmp = ft_strjoin(head->cmd, str);
-        free(head->cmd);
-        head->cmd = ft_strdup(tmp);
-        free(tmp);
-
-        char **atmp;
-        atmp = ft_cmdarray(head->vector, str);
-        head->vector = atmp;
-    }
-    else if (type == PIPE)
-    {
-        node = malloc(sizeof(t_cmd));
-        if (!node)
-            return (-1);
-        node->cmd = 0;
-        node->path = 0;
-        node->infile = 0;
-        node->outfile = 1;
-        node->type = 0;
-        node->next = 0;
-        head->next = node;
-    }
-    return (0);
-}
-
-int ft_checkcmd(t_mini *data)
-{
-    t_cmd *head;
-
-    head = data->cmdlist;
-    if (!head)
-        return (-1);
-    while (head)
-    {
-        if (ft_iscmd(head->path) == -1)
-            return (-1);
-        head = head->next;
-    }
-    return (0);
+    head->next = node;
+    return (1);
 }

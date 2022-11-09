@@ -56,7 +56,20 @@ typedef struct s_mini
 int ft_tokenize(t_mini *data, char *str);
 
 // parsing.c
-int ft_buildlist(t_mini *data, char *str, int type);
+t_cmd *ft_newcmd(void);
+char *ft_trimword(char *str, int start, int i);
+char **ft_cmdarray(char **input, char *arg);
+int ft_buildword(t_mini *data, char *str);
+int ft_buildfd(t_mini *data, char *str, int type);
+int ft_buildpipe(t_mini *data, char *str);
+
+// execute.c
 int ft_checkcmd(t_mini *data);
+int ft_isbuiltin(char *str);
+int ft_runcmd(t_mini *data);
+int ft_iscmd(char *str);
+
+// exit.c
+int ft_clearlist(t_mini *data);
 
 #endif

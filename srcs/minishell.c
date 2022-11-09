@@ -1,24 +1,5 @@
 #include "minishell.h"
 
-int ft_clearlist(t_mini *data)
-{
-    if (!data)
-        return (0);
-    if (data->cmdlist == 0)
-        return (0);
-    t_cmd *head;
-    head = data->cmdlist;
-    while (head)
-    {
-        data->cmdlist = data->cmdlist->next;
-        free(head->cmd);
-        free(head->path);
-        free(head);
-        head = data->cmdlist;
-    }
-    return (0);
-}
-
 int main(void)
 {
     char *line;
@@ -35,9 +16,9 @@ int main(void)
             continue;
         ft_tokenize(data, line);
         free(line);
+
         // ----- link list
         t_cmd *head;
-
         int i = 0;
         head = data->cmdlist;
         while (head)
@@ -45,7 +26,7 @@ int main(void)
             printf("\n========== node [%d] =========\n", i);
             printf("vector\t:\t");
             int j = 0;
-            while (head->vector[j])
+            while (head && head->vector[j])
                 printf("%s ;", head->vector[j++]);
             printf("\n");
             printf("Command\t:\t[%s]\n", head->cmd);
@@ -57,11 +38,15 @@ int main(void)
             head = head->next;
             i++;
         }
+
         if (ft_checkcmd(data) == -1)
             printf("syntax error\n");
+        else
+            ft_runcmd(data);
         ft_clearlist(data);
         // ===== link list
         printf("\n");
     }
+    free(data);
     return (0);
 }
