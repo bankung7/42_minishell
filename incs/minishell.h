@@ -16,6 +16,7 @@
 # define WHITE "\033[;37m"
 
 // define delimiter
+# define ERROR -1
 # define WHITE_SPACE 0
 # define PIPE 1
 # define OR 2
@@ -37,6 +38,7 @@
 // structure
 typedef struct s_cmd
 {
+    char **vector;
     char *cmd;
     char *path;
     int infile;

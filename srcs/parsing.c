@@ -22,6 +22,28 @@ int ft_isbuiltin(char *str)
     return (0);
 }
 
+char *ft_trimcmd(char *str)
+{
+    int len;
+    char c;
+    char *tmp;
+
+    if (!str)
+        return (0);
+    if (str[0] == '\'' || str[0] == '"')
+    {
+        c = str[0];
+        len = ft_strlen(str);
+        if (str[len - 1] == c)
+            tmp = ft_substr(str, 1, len - 2);
+        else
+            tmp = 0;
+    }
+    else
+        tmp = ft_strdup(str);
+    return (tmp);
+}
+
 char **ft_cmdarray(char **input, char *arg)
 {
     int i;
@@ -30,23 +52,31 @@ char **ft_cmdarray(char **input, char *arg)
 
     i = 0;
     len = 0;
-    while (input[len])
-        len++;
-    if (len == 0)
-        tmp = malloc(sizeof(char*) * (2));
-    else
-        tmp = malloc(sizeof(char*) * (len + 1));
-    if (!tmp)
-        return (0);
-    while (i < len)
+    if (!input)
     {
-        tmp[i] = ft_strdup(input[i]);
-        free(input[i]);
-        i++;
+        tmp = malloc(sizeof(char *) * 2);
+        if (!tmp)
+            return (0);
+        tmp[0] = ft_strdup(arg);
+        tmp[1] = 0;
     }
-    tmp[i++] = ft_strdup(str);
-    tmp[i] == 0;
-    free(input);
+    else
+    {
+        while (input[len])
+            len++;
+        tmp = malloc(sizeof(char *) * (len + 2));
+        if (!tmp)
+            return (0);
+        while (i < len)
+        {
+            tmp[i] = ft_strdup(input[i]);
+            free(input[i]);
+            i++;
+        }
+        tmp[i++] = ft_strdup(arg);
+        tmp[i] = 0;
+        free(input);
+    }
     return (tmp);
 }
 
@@ -71,57 +101,63 @@ int ft_iscmd(char *str)
 
 int ft_buildlist(t_mini *data, char *str, int type)
 {
-	t_cmd *node;
-	t_cmd *head;
+    t_cmd *node;
+    t_cmd *head;
 
-	if (!data->cmdlist)
-	{
-		node = malloc(sizeof(t_cmd));
-		if (!node)
-			return (-1);
-		node->cmd = 0;
-		node->path = 0;
-		node->infile = 0;
-		node->outfile = 1;
-		node->type = 0;
-		node->next = 0;
-		data->cmdlist = node;
-	}
+    if (!data->cmdlist)
+    {
+        node = malloc(sizeof(t_cmd));
+        if (!node)
+            return (-1);
+        node->vector = 0;
+        node->cmd = 0;
+        node->path = 0;
+        node->infile = 0;
+        node->outfile = 1;
+        node->type = 0;
+        node->next = 0;
+        data->cmdlist = node;
+    }
 
-	// current the node
-	head = data->cmdlist;
-	while (head->next)
-		head = head->next;
+    // current the node
+    head = data->cmdlist;
+    while (head->next)
+        head = head->next;
 
-	if (type == INFILE)
-		head->type = INFILE;
-	else if (type == OUTFILE)
-		head->type = OUTFILE;
-	else if (type == APPEND)
-		head->type = APPEND;
-	else if (type == WORD && head->type == INFILE)
-	{
-		head->infile = 99; // set fd later
-		head->type = 0;
-	}
-	else if (type == WORD && (head->type == OUTFILE || head->type == APPEND))
-	{
-		head->outfile = 99; // set fd later
-		head->type = 0;
-	}
-	else if (type == WORD && head->path == 0)
-	{
-		head->cmd = ft_strdup(str);
-		head->path = ft_strdup(str);
-	}
-	else if (type == WORD)
-	{
-		char *tmp;
-		tmp = ft_strjoin(head->cmd, str);
-		free(head->cmd);
-		head->cmd = ft_strdup(tmp);
-		free(tmp);
-	}
+    if (type == INFILE)
+        head->type = INFILE;
+    else if (type == OUTFILE)
+        head->type = OUTFILE;
+    else if (type == APPEND)
+        head->type = APPEND;
+    else if (type == WORD && head->type == INFILE)
+    {
+        head->infile = 99; // set fd later
+        head->type = 0;
+    }
+    else if (type == WORD && (head->type == OUTFILE || head->type == APPEND))
+    {
+        head->outfile = 99; // set fd later
+        head->type = 0;
+    }
+    else if (type == WORD && head->path == 0)
+    {
+        head->vector = ft_cmdarray(0, str);
+        head->cmd = ft_strdup(str);
+        head->path = ft_strdup(str);
+    }
+    else if (type == WORD)
+    {
+        char *tmp;
+        tmp = ft_strjoin(head->cmd, str);
+        free(head->cmd);
+        head->cmd = ft_strdup(tmp);
+        free(tmp);
+
+        char **atmp;
+        atmp = ft_cmdarray(head->vector, str);
+        head->vector = atmp;
+    }
     else if (type == PIPE)
     {
         node = malloc(sizeof(t_cmd));
@@ -135,7 +171,7 @@ int ft_buildlist(t_mini *data, char *str, int type)
         node->next = 0;
         head->next = node;
     }
-	return (0);
+    return (0);
 }
 
 int ft_checkcmd(t_mini *data)

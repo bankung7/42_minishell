@@ -43,11 +43,16 @@ int main(void)
         while (head)
         {
             printf("\n========== node [%d] =========\n", i);
-            printf("Command :\t[%s]\n", head->cmd);
-            printf("Path :\t[%s]\n", head->path);
-            printf("Infile :\t[%d]\n", head->infile);
-            printf("Outfile :\t[%d]\n", head->outfile);
-            printf("Type :\t[%d]\n", head->type);
+            printf("vector\t:\t");
+            int j = 0;
+            while (head->vector[j])
+                printf("%s ;", head->vector[j++]);
+            printf("\n");
+            printf("Command\t:\t[%s]\n", head->cmd);
+            printf("Path\t:\t[%s]\n", head->path);
+            printf("Infile\t:\t[%d]\n", head->infile);
+            printf("Outfile\t:\t[%d]\n", head->outfile);
+            printf("Type\t:\t[%d]\n", head->type);
             printf("==============================\n");
             head = head->next;
             i++;
