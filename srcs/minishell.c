@@ -38,7 +38,6 @@ int main(void)
 			head = head->next;
 			i++;
 		}
-
 		if (ft_checkcmd(data) == -1)
 			printf("syntax error\n");
 		else

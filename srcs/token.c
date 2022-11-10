@@ -40,7 +40,6 @@ int ft_addquote(t_mini *data, char *str, int i)
 	tmp = ft_substr(str, i + 1, j - 2);
 	if (ft_buildword(data, tmp) == -1)
 		return (ft_clearlist(data, ft_strlen(str)));
-	// free(tmp);
 	return (j);
 }
 
@@ -59,8 +58,6 @@ int ft_addword(t_mini *data, char *str, int start)
 			tmp = ft_substr(str, start, i);
 			if (ft_buildword(data, tmp) == -1)
 				return (ft_clearlist(data, ft_strlen(str)));
-			// free(tmp);
-			// printf("%s [%d]\n", str, (int)ft_strlen(str));
 			return (i);
 		}
 	}

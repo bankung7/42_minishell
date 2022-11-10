@@ -58,7 +58,11 @@ int	ft_buildword(t_mini *data, char *str)
 		atmp = ft_cmdarray(head->vector, str);
 		head->vector = atmp;
 		if (!head->path)
+        {
+            if (ft_iscmd(str) == -1)
+                return (-1);
 			head->path = ft_strdup(str);
+        }
 	}
 	head->type = 0;
 	return (0);

@@ -64,14 +64,16 @@ int ft_buildpipe(t_mini *data, char *str);
 
 // execute.c
 int ft_checkcmd(t_mini *data);
-int ft_isbuiltin(char *str);
 int ft_runcmd(t_mini *data);
 int ft_iscmd(char *str);
 
 // exit.c
 int ft_clearlist(t_mini *data, int res);
 
-#endif
+// builtin.c
+int ft_isbuiltin(t_cmd *cmd, int xcmd);
+int ft_echo(t_cmd *cmd, int xcmd);
+int ft_pwd(int xcmd);
+int ft_env(int xcmd);
 
-// case : "test"
-// case : "test
+#endif
