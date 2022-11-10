@@ -10,7 +10,7 @@ void    ft_cleararr(void **arr)
     free(arr);
 }
 
-int ft_clearlist(t_mini *data)
+int ft_clearlist(t_mini *data, int res)
 {
     if (!data)
         return (0);
@@ -28,5 +28,5 @@ int ft_clearlist(t_mini *data)
         free(head);
         head = data->cmdlist;
     }
-    return (0);
+    return (res);
 }

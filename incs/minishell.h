@@ -57,7 +57,6 @@ int ft_tokenize(t_mini *data, char *str);
 
 // parsing.c
 t_cmd *ft_newcmd(void);
-char *ft_trimword(char *str, int start, int i);
 char **ft_cmdarray(char **input, char *arg);
 int ft_buildword(t_mini *data, char *str);
 int ft_buildfd(t_mini *data, char *str, int type);
@@ -70,6 +69,9 @@ int ft_runcmd(t_mini *data);
 int ft_iscmd(char *str);
 
 // exit.c
-int ft_clearlist(t_mini *data);
+int ft_clearlist(t_mini *data, int res);
 
 #endif
+
+// case : "test"
+// case : "test
