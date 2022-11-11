@@ -24,7 +24,7 @@ endif
 RM = rm -rf
 
 SRCS_DIR = srcs/
-SRCS = minishell.c signal.c token.c parsing.c builtin.c exit.c execute.c
+SRCS = minishell.c signal.c token.c parsing.c builtin.c exit.c execute.c pipex.c pipex_utils.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
@@ -40,7 +40,7 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 	@$(CC) $(CFLAGS) $(LIB_INC) -c $^ -o $@
 
 $(LIBFT):
-	@echo "minishel is on prepared!"
+	@echo "minishell is on prepared!"
 	@make -C $(LIBFT_DIR)
 
 clean:
@@ -55,8 +55,11 @@ fclean: clean
 
 re: fclean all
 
+restart: $(OBJS)
+	@$(CC) $(CFLAGS) $^ -o $(NAME)  $(LIB_DIR)
+
 norm:
 	norminette -R checkForbiddenSourceHeader $(SRCS_DIR) $(LIBFT_DIR)
 	norminette -R checkDefine incs/ $(LIBFT)/libft.h
 
-.PHONY: all clean fclean re norm
+.PHONY: all clean fclean re restart norm
