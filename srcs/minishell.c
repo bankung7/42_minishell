@@ -6,17 +6,23 @@ int main(void)
 	t_mini data;
 
 	data.cmdlist = 0;
+	ft_sighandle();
 	while (1)
 	{
+		char *path = getenv("PATH");
+		printf("%s\n", path);
 		line = readline(PROMPT);
 		if (!line)
-			continue;
+		{
+			printf("Exit Bye~\n");
+			break ;
+		}
 		ft_tokenize(&data, line);
 
 		// ----- link list
 		// t_cmd *head;
 		// int i = 0;
-		// head = data->cmdlist;
+		// head = data.cmdlist;
 		// while (head)
 		// {
 		// 	printf("\n========== node [%d] =========\n", i);
@@ -33,6 +39,7 @@ int main(void)
 		// 	head = head->next;
 		// 	i++;
 		// }
+
 		if (ft_checkcmd(&data) == -1)
 			printf("syntax error\n");
 		else

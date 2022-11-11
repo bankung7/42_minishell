@@ -74,4 +74,7 @@ int ft_isbuiltin(t_cmd *cmd, int x);
 int ft_echo(t_cmd *cmd, int x);
 int ft_pwd(int x);
 
+// signal.c
+int	ft_sighandle(void);
+
 #endif
