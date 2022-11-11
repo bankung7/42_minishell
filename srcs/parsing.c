@@ -27,8 +27,7 @@ t_cmd	*ft_newcmd(void)
 	node = malloc(sizeof(t_cmd));
 	if (!node)
 		return (0);
-	node->vector = 0;
-	node->cmd = 0;
+	node->argv = 0;
 	node->path = 0;
 	node->infile = 0;
 	node->outfile = 1;
@@ -55,8 +54,8 @@ int	ft_buildword(t_mini *data, char *str)
 		head->outfile = 99; // handler fd
 	else
 	{
-		atmp = ft_cmdarray(head->vector, str);
-		head->vector = atmp;
+		atmp = ft_cmdarray(head->argv, str);
+		head->argv = atmp;
 		if (!head->path)
         {
             if (ft_iscmd(str) == -1)

@@ -21,9 +21,8 @@ int ft_clearlist(t_mini *data, int res)
     while (head)
     {
         data->cmdlist = data->cmdlist->next;
-        if (head->vector)
-            ft_cleararr((void**)head->vector);
-        free(head->cmd);
+        if (head->argv)
+            ft_cleararr((void**)head->argv);
         free(head->path);
         free(head);
         head = data->cmdlist;

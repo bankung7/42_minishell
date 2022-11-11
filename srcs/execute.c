@@ -5,8 +5,8 @@ int ft_checkcmd(t_mini *data)
 	t_cmd *head;
 
 	head = data->cmdlist;
-	if (!head)
-		return (-1);
+	// if (!head)
+	// 	return (-1);
 	while (head)
 	{
         if (ft_isbuiltin(head, 0) == 0)
@@ -51,7 +51,7 @@ int ft_runcmd(t_mini *data)
             {
                 char *path;
                 path = ft_strjoin("/bin/", head->path);
-                execve(path, head->vector, 0);
+                execve(path, head->argv, 0);
                 free(path);
             }
 			exit(0);

@@ -84,5 +84,6 @@ int ft_tokenize(t_mini *data, char *str)
 		else
 			i++;
 	}
+	free(str);
 	return (0);
 }

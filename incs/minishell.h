@@ -38,8 +38,7 @@
 // structure
 typedef struct s_cmd
 {
-    char **vector;
-    char *cmd;
+    char **argv;
     char *path;
     int infile;
     int outfile;
@@ -71,9 +70,8 @@ int ft_iscmd(char *str);
 int ft_clearlist(t_mini *data, int res);
 
 // builtin.c
-int ft_isbuiltin(t_cmd *cmd, int xcmd);
-int ft_echo(t_cmd *cmd, int xcmd);
-int ft_pwd(int xcmd);
-int ft_env(int xcmd);
+int ft_isbuiltin(t_cmd *cmd, int x);
+int ft_echo(t_cmd *cmd, int x);
+int ft_pwd(int x);
 
 #endif
