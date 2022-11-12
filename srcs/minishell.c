@@ -14,33 +14,32 @@ int main(void)
 		ft_tokenize(&data, line);
 
 		// ----- link list
-		// t_cmd *head;
-		// int i = 0;
-		// head = data->cmdlist;
-		// while (head)
-		// {
-		// 	printf("\n========== node [%d] =========\n", i);
-		// 	printf("cmd\t:\t");
-		// 	int j = 0;
-		// 	while (head && head->argv[j])
-		// 		printf("%s ;", head->argv[j++]);
-		// 	printf("\n");
-		// 	printf("Path\t:\t[%s]\n", head->path);
-		// 	printf("Infile\t:\t[%d]\n", head->infile);
-		// 	printf("Outfile\t:\t[%d]\n", head->outfile);
-		// 	printf("Type\t:\t[%d]\n", head->type);
-		// 	printf("==============================\n");
-		// 	head = head->next;
-		// 	i++;
-		// }
-		if (ft_checkcmd(&data) == -1)
-			printf("syntax error\n");
-		else
+		t_cmd *head;
+		int i = 0;
+		head = data.cmdlist;
+		while (head)
 		{
-			// printf("path = %s\n", data.cmdlist->path);
-			ft_runcmd(&data);
+			printf("\n========== node [%d] =========\n", i);
+			printf("cmd\t:\t");
+			int j = 0;
+			while (head && head->argv[j])
+				printf("%s ;", head->argv[j++]);
+			printf("\n");
+			printf("Path\t:\t[%s]\n", head->path);
+			printf("Infile\t:\t[%d]\n", head->infile);
+			printf("Outfile\t:\t[%d]\n", head->outfile);
+			printf("Type\t:\t[%d]\n", head->type);
+			printf("==============================\n");
+			head = head->next;
+			i++;
 		}
-		ft_clearlist(&data, 0);
+		// if (ft_checkcmd(&data) == -1)
+		// 	printf("syntax error\n");
+		// else
+		// {
+		// 	ft_runcmd(&data);
+		// }
+		// ft_clearlist(&data, 0);
 		// ===== link list
 		// printf("\n");
 	}

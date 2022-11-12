@@ -11,16 +11,18 @@ int ft_checkcmd(t_mini *data)
 	{
 		if (ft_isbuiltin(head, 0) == 0)
 			head->type = BUILTIN;
-		else if (ft_iscmd(data, head->path) == 0)
+		else if (ft_iscmd(data, head->path, head) == 0)
+		{
 			head->type = COMMAND;
-		else
-			return (-1);
+		}
+		// else
+		// 	return (-1);
 		head = head->next;
 	}
 	return (0);
 }
 
-int	ft_iscmd(t_mini *data, char *str)
+int	ft_iscmd(t_mini *data, char *str, t_cmd *head)
 {
 	int		i;
 	int		status;
@@ -31,7 +33,7 @@ int	ft_iscmd(t_mini *data, char *str)
 
 	i = 0;
 	if (access(str, X_OK | R_OK | F_OK) == 0)
-		return (-1);
+		return (0);
 	path = ft_split(getenv("PATH"), ':');
 	while (path[i])
 	{
@@ -41,14 +43,12 @@ int	ft_iscmd(t_mini *data, char *str)
 		status = access(tmp2, X_OK | R_OK | F_OK);
 		if (status == 0)
 		{
-			// data->cmdlist->path = ft_strdup(tmp2);
-			printf("i = %d\tpath = %s\n", i, tmp2);
-			// printf("path = %s\n", data->cmdlist->path);
+			head->path = ft_strdup(tmp2);
 			return (status);
 		}
+		free(tmp2);
 		i++;
 	}
-	free(tmp2);
 	return (status);
 }
 
@@ -71,10 +71,10 @@ int ft_runcmd(t_mini *data)
 				ft_isbuiltin(head, 1);
 			else
 			{
-				char *path;
-				path = ft_strjoin("/bin/", head->path);
-				execve(path, head->argv, 0);
-				free(path);
+				// char *path;
+				// path = ft_strjoin("/bin/", head->path);
+				execve(head->path, head->argv, 0);
+				// free(path);
 			}
 			exit(0);
 		}
