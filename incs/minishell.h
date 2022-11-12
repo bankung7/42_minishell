@@ -64,7 +64,7 @@ int ft_buildpipe(t_mini *data, char *str);
 // execute.c
 int ft_checkcmd(t_mini *data);
 int ft_runcmd(t_mini *data);
-int ft_iscmd(char *str);
+int ft_iscmd(t_mini *data, char *str);
 
 // exit.c
 int ft_clearlist(t_mini *data, int res);

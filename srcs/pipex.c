@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 20:01:28 by pjerddee          #+#    #+#             */
-/*   Updated: 2022/11/11 21:24:18 by pjerddee         ###   ########.fr       */
+/*   Updated: 2022/11/12 16:29:33 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,23 +62,23 @@ void	here_doc_pipe(int ac, char **av, char **paths)
 	}
 }
 
-char	**ft_findpath(char **env)
-{
-	int	i;
+// char	**ft_findpath(char **env)
+// {
+// 	int	i;
 
-	i = 0;
-	while (env[i] != NULL)
-	{
-		if (ft_strnstr(env[i], "PATH=", 5))
-		{
-			env[i] = env[i] + 5;
-			return (ft_split(env[i], ':'));
-		}
-		else
-			i++;
-	}
-	return (NULL);
-}
+// 	i = 0;
+// 	while (env[i] != NULL)
+// 	{
+// 		if (ft_strnstr(env[i], "PATH=", 5))
+// 		{
+// 			env[i] = env[i] + 5;
+// 			return (ft_split(env[i], ':'));
+// 		}
+// 		else
+// 			i++;
+// 	}
+// 	return (NULL);
+// }
 
 char	*find_bin_path(char *cmd, char **paths)
 {

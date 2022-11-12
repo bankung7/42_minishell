@@ -58,7 +58,7 @@ int	ft_buildword(t_mini *data, char *str)
 		head->argv = atmp;
 		if (!head->path)
         {
-            if (ft_iscmd(str) == -1)
+			if (ft_iscmd(data, str) == -1)
                 return (-1);
 			head->path = ft_strdup(str);
         }

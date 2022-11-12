@@ -36,7 +36,10 @@ int main(void)
 		if (ft_checkcmd(&data) == -1)
 			printf("syntax error\n");
 		else
+		{
+			// printf("path = %s\n", data.cmdlist->path);
 			ft_runcmd(&data);
+		}
 		ft_clearlist(&data, 0);
 		// ===== link list
 		// printf("\n");
