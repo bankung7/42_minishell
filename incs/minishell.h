@@ -64,7 +64,8 @@ int ft_buildpipe(t_mini *data, char *str);
 // execute.c
 int ft_checkcmd(t_mini *data);
 int ft_runcmd(t_mini *data);
-int ft_iscmd(t_mini *data, char *str, t_cmd *head);
+char *ft_iscmd(char *str);
+// int ft_iscmd(t_mini *data, char *str, t_cmd *head);
 
 // exit.c
 int ft_clearlist(t_mini *data, int res);
@@ -73,6 +74,7 @@ int ft_clearlist(t_mini *data, int res);
 int ft_isbuiltin(t_cmd *cmd, int x);
 int ft_echo(t_cmd *cmd, int x);
 int ft_pwd(int x);
+int ft_cd(t_cmd *cmd, int x);
 
 // pipex.c
 void	here_doc_pipe(int ac, char **av, char **paths);

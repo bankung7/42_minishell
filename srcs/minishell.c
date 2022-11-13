@@ -12,7 +12,10 @@ int main(void)
 		if (!line)
 			continue;
 		ft_tokenize(&data, line);
-
+		if (ft_checkcmd(&data) == -1)
+			printf("syntax error\n");
+		else
+			ft_runcmd(&data);
 		// ----- link list
 		t_cmd *head;
 		int i = 0;
@@ -33,13 +36,7 @@ int main(void)
 			head = head->next;
 			i++;
 		}
-		// if (ft_checkcmd(&data) == -1)
-		// 	printf("syntax error\n");
-		// else
-		// {
-		// 	ft_runcmd(&data);
-		// }
-		// ft_clearlist(&data, 0);
+		ft_clearlist(&data, 0);
 		// ===== link list
 		// printf("\n");
 	}

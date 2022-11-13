@@ -6,11 +6,11 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 20:01:28 by pjerddee          #+#    #+#             */
-/*   Updated: 2022/11/12 16:29:33 by pjerddee         ###   ########.fr       */
+/*   Updated: 2022/11/13 18:57:41 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "minishell.h"
 
 char	*here_doc(char **av);
 void	here_doc_pipe(int ac, char **av, char **paths);
@@ -62,41 +62,62 @@ void	here_doc_pipe(int ac, char **av, char **paths)
 	}
 }
 
-// char	**ft_findpath(char **env)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (env[i] != NULL)
-// 	{
-// 		if (ft_strnstr(env[i], "PATH=", 5))
-// 		{
-// 			env[i] = env[i] + 5;
-// 			return (ft_split(env[i], ':'));
-// 		}
-// 		else
-// 			i++;
-// 	}
-// 	return (NULL);
-// }
-
-char	*find_bin_path(char *cmd, char **paths)
+void	ft_pipex(int ac, char **av, char **paths, int i)
 {
-	char	*bin_path;
-	int		i;
+	int		fd[2];
+	int		pid;
+
+	if (pipe(fd) != 0)
+		ft_err("Error at pipe\n");
+	pid = fork();
+	if (pid < 0)
+		ft_err("Error at fork\n");
+	else if (pid == 0)
+		runcmd(paths, av, fd[1], i);
+	else
+	{
+		wait(NULL);
+		close(fd[1]);
+		dup2(fd[0], 0);
+		if (++i < ac - 2)
+			ft_pipex(ac, av, paths, i);
+		else
+			runcmd(paths, av, open(av[ac - 1], O_WRONLY | O_CREAT, 0775), i);
+	}
+}
+
+void	ft_err(char *err_msg)
+{
+	ft_putstr_fd(err_msg, 2);
+	exit(EXIT_FAILURE);
+}
+
+void	ft_free(char **str)
+{
+	int	i;
 
 	i = 0;
-	while (paths[i] != NULL)
+	while (str[i])
+		free(str[i++]);
+	free(str);
+}
+
+void	runcmd(char **paths, char **argv, int dupped_fd, int i)
+{
+	char	**args;
+	char	*bin_path;
+
+	args = ft_split(argv[i], ' ');
+	bin_path = find_bin_path(args[0], paths);
+	if (!bin_path)
 	{
-		bin_path = ft_strjoin(paths[i], ft_strjoin("/", cmd));
-		if (access(bin_path, X_OK | R_OK | F_OK) == 0)
-			return (bin_path);
-		else
-			i++;
+		ft_free(args);
 		free(bin_path);
-		bin_path = NULL;
+		return (ft_putstr_fd("Command not found\n", 2));
 	}
-	return (NULL);
+	dup2(dupped_fd, 1);
+	execve(bin_path, args, NULL);
+	free(bin_path);
 }
 
 char	*here_doc(char **av)
