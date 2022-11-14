@@ -77,4 +77,7 @@ int ft_pwd(int x);
 // signal.c
 int	ft_sighandle(void);
 
+// redirection.c
+int ft_redirection(t_cmd *cmd, char *name);
+
 #endif

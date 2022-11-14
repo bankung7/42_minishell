@@ -48,10 +48,8 @@ int	ft_buildword(t_mini *data, char *str)
 		return (ft_clearlist(data, ft_strlen(str)));
 	while (head->next)
 		head = head->next;
-	if (head->type == INFILE)
-		head->infile = 99; // handler fd
-	else if (head->type == OUTFILE || head->type == APPEND)
-		head->outfile = 99; // handler fd
+	if (head->type == INFILE || head->type == OUTFILE || head->type == APPEND)
+        ft_redirection(head, str);
 	else
 	{
 		atmp = ft_cmdarray(head->argv, str);
@@ -79,12 +77,8 @@ int	ft_buildfd(t_mini *data, char *str, int type)
 		return (ft_clearlist(data, ft_strlen(str)));
 	while (head->next)
 		head = head->next;
-	if (type == INFILE)
-		head->infile = 99; // set fd later
-	else if (type == OUTFILE)
-		head->outfile = 99; // set fd later
-	else if (type == APPEND)
-		head->outfile = 98; // set fd later
+	if (type == INFILE || type == OUTFILE || type == APPEND)
+		head->type = type;
 	head->type = type;
 	len = type % 2;
 	if (len == 0)
