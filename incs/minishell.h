@@ -68,7 +68,8 @@ char *ft_iscmd(char *str);
 // int ft_iscmd(t_mini *data, char *str, t_cmd *head);
 
 // exit.c
-int ft_clearlist(t_mini *data, int res);
+void    ft_cleararr(void **arr);
+int     ft_clearlist(t_mini *data, int res);
 
 // builtin.c
 int ft_isbuiltin(t_cmd *cmd, int x);

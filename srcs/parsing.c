@@ -60,7 +60,7 @@ int	ft_buildword(t_mini *data, char *str)
         {
 			if (ft_iscmd(str) == NULL)
                 return (-1);
-			head->path = ft_iscmd(str);
+			head->path = ft_strdup(str);
         }
 	}
 	head->type = 0;
