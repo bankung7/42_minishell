@@ -12,7 +12,7 @@ int main(void)
 		if (!line)
 			continue;
 		ft_tokenize(&data, line);
-		
+
 		// ----- link list
 		// int i = 0;
 		// t_cmd *head;

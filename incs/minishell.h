@@ -77,16 +77,4 @@ int ft_echo(t_cmd *cmd, int x);
 int ft_pwd(int x);
 int ft_cd(t_cmd *cmd, int x);
 
-// pipex.c
-void	here_doc_pipe(int ac, char **av, char **paths);
-char	**ft_findpath(char **env);
-char	*find_bin_path(char *cmd, char **paths);
-char	*here_doc(char **av);
-
-// pipex_utils.c
-void	ft_pipex(int ac, char **av, char **paths, int i);
-void	ft_err(char *err_msg);
-void	ft_free(char **str);
-void	runcmd(char **paths, char **argv, int dupped_fd, int i);
-
 #endif
