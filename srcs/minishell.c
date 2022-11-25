@@ -1,58 +1,51 @@
 #include "minishell.h"
 
+int ft_prompt(t_data *data)
+{
+    char *line;
+
+    while (1)
+    {
+        line = readline(MPROMPT);
+        if (!line)
+            break ;
+        if (ft_strlen(line) == 0)
+            continue ;
+        // printf("%s\n", line);
+
+        ft_tokenize(data, line);
+        ft_expander(data);
+        //// test
+
+        int i = 0;
+
+        while (data->tray[i])
+            printf("[%s] ", data->tray[i++]);
+        printf("\n");
+
+        i = 0;
+        while (data->tray[i])
+            free(data->tray[i++]);
+        free(data->tray);
+        data->tray = 0;
+
+        //// test
+
+        free(line);
+    }
+    return (0);
+}
+
 int main(int argc, char **argv, char **env)
 {
     (void)argc;
     (void)argv;
-	char *line;
-	t_mini data;
+    t_data  data;
 
-	data.cmdlist = 0;
-	ft_sighandle();
-
-    // environment test
-    int ei = 0;
-    while (env[ei])
-        printf("%s\n", env[ei++]);
-    
-	while (1)
-	{
-		line = readline(PROMPT);
-		if (!line)
-		{
-			printf("Exit Bye~\n");
-			break ;
-		}
-		ft_tokenize(&data, line);
-
-		// ----- link list
-		t_cmd *head;
-		int i = 0;
-		head = data.cmdlist;
-		while (head)
-		{
-			printf("\n========== node [%d] =========\n", i);
-			printf("cmd\t:\t");
-			int j = 0;
-			while (head && head->argv[j])
-				printf("%s ;", head->argv[j++]);
-			printf("\n");
-			printf("Path\t:\t[%s]\n", head->path);
-			printf("Infile\t:\t[%d]\n", head->infile);
-			printf("Outfile\t:\t[%d]\n", head->outfile);
-			printf("Type\t:\t[%d]\n", head->type);
-			printf("==============================\n");
-			head = head->next;
-			i++;
-		}
-
-		if (ft_checkcmd(&data) == -1)
-			printf("syntax error\n");
-		else
-			ft_runcmd(&data);
-		ft_clearlist(&data, 0);
-		// ===== link list
-		// printf("\n");
-	}
-	return (0);
+    data.cmdlist = 0;
+    data.env = env;
+    data.tray = 0;
+    // ft_sighandle();
+    ft_prompt(&data);
+    return (0);
 }
