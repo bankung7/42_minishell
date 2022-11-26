@@ -74,7 +74,7 @@ int ft_prepvar(t_data *data, int index, char *str, int start)
 		else
 			i++;
 	}
-	if (i > 1)
+	if (i >= 1)
 	{
 		tmp = ft_substr(str, 1, i - 1);
 		// printf("find : %s\n", tmp);
@@ -99,12 +99,9 @@ int ft_checkex(t_data *data, int index)
 			quote = (quote + 1) % 2;
 		if (str[i] == '$' && quote == 0)
 		{
-			if (str[i + 1] == '$')
-				return (0);
 			ft_prepvar(data, index, &str[i], i);
 			str = data->tray[index];
 			i--;
-			// printf("next : %s\n", &str[i]);
 		}
 		i++;
 	}
@@ -125,3 +122,6 @@ int ft_expander(t_data *data)
 	}
 	return (0);
 }
+
+/// new
+

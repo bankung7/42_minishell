@@ -24,6 +24,7 @@
 # define SQUOTE 11
 # define DQUOTE 12
 # define DOLLARS 13
+# define WORD 99
 
 // struct
 typedef struct s_cmd
@@ -53,6 +54,7 @@ int ft_tokenize(t_data *data, char *str);
 
 // expander.c
 int ft_expander(t_data *data);
+char *ft_nexpander(char *str);
 
 // parser.c
 
