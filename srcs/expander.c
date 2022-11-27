@@ -1,7 +1,7 @@
 #include "minishell.h"
 
-// trim quote
-int ft_qtrim(t_data *data, int index)
+/// new ///
+char *ft_qtrim(char *str)
 {
 	int i;
 	int j;
@@ -10,118 +10,93 @@ int ft_qtrim(t_data *data, int index)
 
 	i = 0;
 	j = 0;
-	tmp = ft_calloc(sizeof(char), (ft_strlen(data->tray[index]) + 1));
+	quote = 0;
+	tmp = ft_calloc(sizeof(char), (ft_strlen(str) + 1));
 	if (!tmp)
-		return (-1);
-	while (data->tray[index][i])
+		return (0);
+	while (str[i])
 	{
-		if (ft_isdelimit(data->tray[index], i) == SQUOTE || ft_isdelimit(data->tray[index], i) == DQUOTE)
+		if (ft_isdelimit(str, i) == SQUOTE || ft_isdelimit(str, i) == DQUOTE)
 		{
-			quote = ft_isdelimit(data->tray[index], i++);
-			while (ft_isdelimit(data->tray[index], i) != quote)
-				tmp[j++] = data->tray[index][i++];
+			quote = ft_isdelimit(str, i++);
+			while (ft_isdelimit(str, i) != quote)
+				tmp[j++] = str[i++];
 			quote = 0;
 			i++;
 		}
 		else
-			tmp[j++] = data->tray[index][i++];
+			tmp[j++] = str[i++];
 	}
-	free(data->tray[index]);
-	data->tray[index] = ft_strdup(tmp);	
-	free(tmp);
-	return (0);
+	return (tmp);
 }
 
-// except case
-// "$VARxxx" => [$VARxxx]
-// $VARxxx => [$VARxxx]
-
-int ft_replacevar(t_data *data, int index, char *find, int start)
+char *ft_replacevar(t_data *data, char *str, char *find, int start)
 {
 	int flen;
 	char *val;
 	char *tmp;
 
 	flen = ft_strlen(find) + 1;
-	val = ft_getenv(data, find);
-	tmp = ft_calloc(sizeof(char), ft_strlen(data->tray[index]) + ft_strlen(val) - flen + 1);
 
-	// printf("ask or space [%d]\n", olen + vlen - flen + 1);
-	ft_memcpy(tmp, data->tray[index], start);
-	// printf("first %s\n", tmp);
+	val = ft_getenv(data, find);
+	tmp = ft_calloc(sizeof(char), ft_strlen(str) + ft_strlen(val) - flen + 1);
+	ft_memcpy(tmp, str, start);
 	ft_memcpy(&tmp[ft_strlen(tmp)], val, ft_strlen(val));
-	// printf("second %s\n", tmp);
-	ft_memcpy(&tmp[ft_strlen(tmp)], &data->tray[index][start + flen], ft_strlen(data->tray[index]) - (start + flen));
-	// printf("third %s\n", tmp);
-	// printf("tmp : %s\n", tmp);
-	free(data->tray[index]);
-	data->tray[index] = tmp;
-	// free(tmp);
-	free(val);
-	return (0);
+	ft_memcpy(&tmp[ft_strlen(tmp)], &str[start + flen], ft_strlen(str) - (start - flen));
+	if (val)
+		free(val);
+	return (tmp);
 }
 
-int ft_prepvar(t_data *data, int index, char *str, int start)
+static char *ft_prepvar(t_data *data, char *str, int start)
 {
 	int i;
 	char *tmp;
+	char *substr;
 
 	i = 1;
-	while (str[i])
+	while (str[start + i])
 	{
-		if (ft_isdelimit(str, i) == 0 || ft_isdelimit(str, i) >= 11)
+		if (ft_isdelimit(str, start + i) == 0 || ft_isdelimit(str, start + i) >= 11)
 			break;
 		else
 			i++;
 	}
-	if (i >= 1)
-	{
-		tmp = ft_substr(str, 1, i - 1);
-		// printf("find : %s\n", tmp);
-		ft_replacevar(data, index, tmp, start);
-		free(tmp);
-	}
-	return (0);
+	substr = ft_substr(str, start + 1, i - 1);
+	tmp = ft_replacevar(data, str, substr, start);
+	free(substr);
+	// printf("test : %s\n", tmp);
+	return (tmp);
 }
 
-int ft_checkex(t_data *data, int index)
+char *ft_expander(t_data *data, char *str, int start, int j)
 {
+	char *word;
+	char *tmp;
 	int i;
 	int quote;
-	char *str;
 
 	i = 0;
 	quote = 0;
-	str = data->tray[index];
-	while (str[i])
+	word = ft_substr(str, start, j);
+	tmp = 0;
+	if (ft_strchr(word, '$') != 0)
 	{
-		if (str[i] == '\'')
-			quote = (quote + 1) % 2;
-		if (str[i] == '$' && quote == 0)
+		while (word[i])
 		{
-			ft_prepvar(data, index, &str[i], i);
-			str = data->tray[index];
-			i--;
+			if (word[i] == '\'')
+				quote = (quote + 1) % 2;
+			if (word[i] == '$' && quote == 0)
+			{
+				tmp = ft_prepvar(data, word, i);
+				free(word);
+				word = ft_strdup(tmp);
+				free(tmp);
+			}
+			i++;
 		}
-		i++;
 	}
-	return (0);
+	tmp = ft_qtrim(word);
+	free(word);
+	return (tmp);
 }
-
-int ft_expander(t_data *data)
-{
-	int i;
-
-	i = 0;
-	while (data->tray[i])
-	{
-		if (ft_strchr(data->tray[i], '$') != 0)
-			ft_checkex(data, i);
-		ft_qtrim(data, i);
-		i++;
-	}
-	return (0);
-}
-
-/// new
-

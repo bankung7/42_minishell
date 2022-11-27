@@ -25,7 +25,7 @@ RM = rm -rf
 
 SRCS_DIR = srcs/
 SRCS = minishell.c signal.c tokenize.c expander.c parser.c \
-	env.c
+	env.c clean.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))

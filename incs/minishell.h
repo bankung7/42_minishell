@@ -33,7 +33,7 @@ typedef struct s_cmd
 	char *path;
 	int infile;
 	int outfile;
-	int space;
+	int status;
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -53,13 +53,16 @@ int ft_isdelimit(char *str, int i);
 int ft_tokenize(t_data *data, char *str);
 
 // expander.c
-int ft_expander(t_data *data);
-char *ft_nexpander(char *str);
+char *ft_expander(t_data *data, char *str, int start, int j);
 
 // parser.c
+int ft_buildnode(t_data *data, char *str, int type);
 
 // builtin
 // env.c
 char *ft_getenv(t_data *data, char *var);
+
+// clean.c
+int ft_clean(t_data *data, int res);
 
 #endif

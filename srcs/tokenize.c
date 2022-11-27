@@ -18,8 +18,8 @@ int ft_isdelimit(char *str, int i)
 		return (SQUOTE);
 	if (str[i] == '"')
 		return (DQUOTE);
-    if (str[i] == '$')
-        return (DOLLARS);
+	if (str[i] == '$')
+		return (DOLLARS);
 	return (-1);
 }
 
@@ -55,6 +55,7 @@ int ft_buildword(t_data *data, char *str, int i)
 
 	j = 0;
 	quote = 0;
+    tmp = 0;
 	while (str[i + j])
 	{
 		if ((str[i + j] == '\'' || str[i + j] == '"') && quote == 0)
@@ -62,13 +63,12 @@ int ft_buildword(t_data *data, char *str, int i)
 		else if ((str[i + j] == '\'' || str[i + j] == '"') && quote == ft_isdelimit(str, i + j))
 			quote = 0;
 		if (((ft_isdelimit(str, i + j) >= 0 && ft_isdelimit(str, i + j) <= 5) 
-            || str[i + j + 1] == 0) && quote == 0)
+			|| str[i + j + 1] == 0) && quote == 0)
 		{
 			if (ft_isdelimit(str, i + j) != 0 && str[i + j + 1] == 0)
 				j++;
-			tmp = ft_substr(str, i , j);
-			if (ft_rebuild(data, tmp) == -1)
-				return (ft_strlen(str));
+			tmp = ft_expander(data, str, i, j);
+            ft_buildnode(data, tmp, WORD);
 			return (j);
 		}
 		else
@@ -112,6 +112,11 @@ int ft_tokenize(t_data *data, char *str)
 			i += ft_buildschar(data, str, c);
 		else
 			i++;
+		if (i < 0)
+		{
+			printf("some error");
+			return (ft_clean(data, 1));
+		}
 	}
 	return (0);
 }

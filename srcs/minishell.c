@@ -8,27 +8,35 @@ int ft_prompt(t_data *data)
     {
         line = readline(MPROMPT);
         if (!line)
-            break ;
+            break;
         if (ft_strlen(line) == 0)
-            continue ;
-        // printf("%s\n", line);
+            continue;
 
         ft_tokenize(data, line);
-        ft_expander(data);
+        // ft_expander(data);
+
         //// test
 
-        int i = 0;
+        t_cmd *head;
+        head = data->cmdlist;
 
-        while (data->tray[i])
-            printf("[%s] ", data->tray[i++]);
-        printf("\n");
+        while (head)
+        {
+            printf("\n===== node ======\n");
+            printf("argv\t:\t");
+            int i = 0;
+            while (head && head->argv[i])
+                printf("[%s] ", head->argv[i++]);
+            printf("\n");
+            printf("path\t:\t[%s]\n", head->path);
+            printf("infile fd\t:\t[%d]\n", head->infile);
+            printf("outfile fd\t:\t[%d]\n", head->outfile);
+            printf("status\t:\t[%d]\n", head->status);
+            printf("======= end node =======\n");
+            head = head->next;
+        }
 
-        i = 0;
-        while (data->tray[i])
-            free(data->tray[i++]);
-        free(data->tray);
-        data->tray = 0;
-
+        ft_clean(data, 0);
         //// test
 
         free(line);
@@ -40,7 +48,7 @@ int main(int argc, char **argv, char **env)
 {
     (void)argc;
     (void)argv;
-    t_data  data;
+    t_data data;
 
     data.cmdlist = 0;
     data.env = env;
