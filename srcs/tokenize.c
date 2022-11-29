@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int ft_isdelimit(char *str, int i)
+int	ft_isdelimit(char *str, int i)
 {
 	if (str[i] == ' ' || str[i] == '\t' || str[i] == 0)
 		return (DELIMITER);
@@ -23,10 +23,10 @@ int ft_isdelimit(char *str, int i)
 	return (-1);
 }
 
-int ft_rebuild(t_data *data, char *str)
+int	ft_rebuild(t_data *data, char *str)
 {
-	int i;
-	char **tmp;
+	int		i;
+	char	**tmp;
 
 	i = 0;
 	if (!str)
@@ -34,7 +34,7 @@ int ft_rebuild(t_data *data, char *str)
 	while (data->tray && data->tray[i])
 		i++;
 	i += 2;
-	tmp = malloc(sizeof(char*) * (i));
+	tmp = malloc(sizeof(char *) * (i));
 	if (!tmp)
 		return (-1);
 	tmp[--i] = 0;
@@ -47,28 +47,27 @@ int ft_rebuild(t_data *data, char *str)
 	return (0);
 }
 
-int ft_buildword(t_data *data, char *str, int i)
+int	ft_buildword(t_data *data, char *str, int i)
 {
-	int j;
-	int quote;
-	char *tmp;
+	int		j;
+	int		quote;
+	char	*tmp;
 
 	j = 0;
 	quote = 0;
-    tmp = 0;
+	tmp = 0;
 	while (str[i + j])
 	{
 		if ((str[i + j] == '\'' || str[i + j] == '"') && quote == 0)
 			quote = ft_isdelimit(str, i + j);
 		else if ((str[i + j] == '\'' || str[i + j] == '"') && quote == ft_isdelimit(str, i + j))
 			quote = 0;
-		if (((ft_isdelimit(str, i + j) >= 0 && ft_isdelimit(str, i + j) <= 5) 
-			|| str[i + j + 1] == 0) && quote == 0)
+		if (((ft_isdelimit(str, i + j) >= 0 && ft_isdelimit(str, i + j) <= 5) || str[i + j + 1] == 0) && quote == 0)
 		{
 			if (ft_isdelimit(str, i + j) != 0 && str[i + j + 1] == 0)
 				j++;
 			tmp = ft_expander(data, str, i, j);
-            ft_buildnode(data, tmp, WORD);
+			ft_buildnode(data, tmp, WORD);
 			return (j);
 		}
 		else
@@ -77,27 +76,30 @@ int ft_buildword(t_data *data, char *str, int i)
 	return (ft_strlen(str));
 }
 
-int ft_buildschar(t_data *data, char *str, int type)
+int	ft_buildschar(t_data *data, char *str, int type)
 {
-	char *tmp;
+	t_cmd	*head;
 
-	tmp = 0;
+	if (!data->cmdlist)
+		data->cmdlist = ft_newnode();
+	head = data->cmdlist;
+	while (head->next)
+		head = head->next;
+	if (head->status != 0 && head->status != WORD)
+	{
+		printf("deal error here [%d]\n", head->status);
+		return (-ft_strlen(str));
+	}
 	if (type == INFILE)
-		tmp = ft_strdup("<");
-	else if (type == HEREDOC)
-		tmp = ft_strdup("<<");
-	else if (type == OUTFILE)
-		tmp = ft_strdup(">");
-	else if (type == APPEND)
-		tmp = ft_strdup(">>");
+		head->status = type;
+	else if (type == OUTFILE || type == APPEND)
+		head->status = type;
 	else if (type == PIPE)
-		tmp = ft_strdup("|");
-	if (ft_rebuild(data, tmp) == -1)
-		return (ft_strlen(str));
-	return (ft_strlen(tmp));
+		return (ft_bpipe(data, str));
+	return (((type + 1) % 2) + 1);
 }
 
-int ft_tokenize(t_data *data, char *str)
+int	ft_tokenize(t_data *data, char *str)
 {
 	int	i;
 	int	c;
@@ -114,7 +116,7 @@ int ft_tokenize(t_data *data, char *str)
 			i++;
 		if (i < 0)
 		{
-			printf("some error");
+			printf("some error\n");
 			return (ft_clean(data, 1));
 		}
 	}

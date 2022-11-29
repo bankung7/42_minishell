@@ -16,10 +16,10 @@
 
 // delimiter
 # define DELIMITER 0
-# define INFILE 1
-# define HEREDOC 2
-# define OUTFILE 3
-# define APPEND 4
+# define OUTFILE 1
+# define APPEND 2
+# define INFILE 3
+# define HEREDOC 4
 # define PIPE 5
 # define SQUOTE 11
 # define DQUOTE 12
@@ -57,6 +57,8 @@ char *ft_expander(t_data *data, char *str, int start, int j);
 
 // parser.c
 int ft_buildnode(t_data *data, char *str, int type);
+t_cmd *ft_newnode(void);
+int ft_bpipe(t_data *data, char *str);
 
 // builtin
 // env.c
