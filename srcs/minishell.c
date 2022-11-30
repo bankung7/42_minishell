@@ -35,6 +35,8 @@ int ft_prompt(t_data *data)
 			head = head->next;
 		}
 
+        ft_execute(data);
+
 		ft_clean(data, 0);
 		//// test
 

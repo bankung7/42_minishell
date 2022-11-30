@@ -60,11 +60,19 @@ int ft_buildnode(t_data *data, char *str, int type);
 t_cmd *ft_newnode(void);
 int ft_bpipe(t_data *data, char *str);
 
+// executing.c
+int ft_execute(t_data *data);
+
 // builtin
 // env.c
 char *ft_getenv(t_data *data, char *var);
+int ft_env(t_data *data);
+int ft_echo(t_cmd *cmd);
 
-// clean.c
+// redirection.c
+int	ft_redirection(t_data *data, char *file);
+
+// exit.c
 int ft_clean(t_data *data, int res);
 
 #endif

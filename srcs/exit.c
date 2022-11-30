@@ -24,3 +24,9 @@ int	ft_clean(t_data *data, int res)
 	data->cmdlist = 0;
 	return (res);
 }
+
+int ft_exit(t_data *data)
+{
+	ft_clean(data, 0);
+	return (0);
+}

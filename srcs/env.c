@@ -22,3 +22,13 @@ char	*ft_getenv(t_data *data, char *var)
 	free(search);
 	return (0);
 }
+
+int ft_env(t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (data->env && data->env[i])
+		printf("%s\n", data->env[i++]);
+	return (0);
+}
