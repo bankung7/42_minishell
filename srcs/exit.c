@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-int	ft_clean(t_data *data, int res)
+int ft_clean(t_data *data, int res)
 {
-	int		i;
-	t_cmd	*head;
+	int i;
+	t_cmd *head;
 
 	head = data->cmdlist;
 	while (head)
@@ -27,6 +27,13 @@ int	ft_clean(t_data *data, int res)
 
 int ft_exit(t_data *data)
 {
+	int i;
+
+	i = 0;
 	ft_clean(data, 0);
+	while (data->env && data->env[i])
+		free(data->env[i++]);
+	free(data->env);
+	exit(0);
 	return (0);
 }

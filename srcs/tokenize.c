@@ -14,6 +14,8 @@ int	ft_isdelimit(char *str, int i)
 		return (OUTFILE);
 	if (str[i] == '|')
 		return (PIPE);
+	if (str[i] == ';')
+		return (SCOLLON);
 	if (str[i] == '\'')
 		return (SQUOTE);
 	if (str[i] == '"')
@@ -47,22 +49,22 @@ int	ft_rebuild(t_data *data, char *str)
 	return (0);
 }
 
-int	ft_buildword(t_data *data, char *str, int i)
+int	ft_buildword(t_data *data, char *str, int i, int quote)
 {
 	int		j;
-	int		quote;
 	char	*tmp;
 
 	j = 0;
-	quote = 0;
 	tmp = 0;
 	while (str[i + j])
 	{
 		if ((str[i + j] == '\'' || str[i + j] == '"') && quote == 0)
 			quote = ft_isdelimit(str, i + j);
-		else if ((str[i + j] == '\'' || str[i + j] == '"') && quote == ft_isdelimit(str, i + j))
+		else if ((str[i + j] == '\'' || str[i + j] == '"')
+			&& quote == ft_isdelimit(str, i + j))
 			quote = 0;
-		if (((ft_isdelimit(str, i + j) >= 0 && ft_isdelimit(str, i + j) <= 5) || str[i + j + 1] == 0) && quote == 0)
+		if (((ft_isdelimit(str, i + j) >= 0 && ft_isdelimit(str, i + j) <= 7)
+				|| str[i + j + 1] == 0) && quote == 0)
 		{
 			if (ft_isdelimit(str, i + j) != 0 && str[i + j + 1] == 0)
 				j++;
@@ -94,8 +96,8 @@ int	ft_buildschar(t_data *data, char *str, int type)
 		head->status = type;
 	else if (type == OUTFILE || type == APPEND)
 		head->status = type;
-	else if (type == PIPE)
-		return (ft_bpipe(data, str));
+	else if (type == PIPE || type == SCOLLON)
+		return (ft_bpipe(data, str, type));
 	return (((type + 1) % 2) + 1);
 }
 
@@ -109,8 +111,8 @@ int	ft_tokenize(t_data *data, char *str)
 	{
 		c = ft_isdelimit(str, i);
 		if (c == -1 || (c >= SQUOTE && c <= DOLLARS))
-			i += ft_buildword(data, str, i);
-		else if (c >= 1 && c <= 5)
+			i += ft_buildword(data, str, i, 0);
+		else if (c >= 1 && c <= 7)
 			i += ft_buildschar(data, str, c);
 		else
 			i++;

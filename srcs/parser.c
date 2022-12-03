@@ -57,7 +57,8 @@ int	ft_bword(t_data *data, char *str)
 	return (0);
 }
 
-int	ft_bpipe(t_data *data, char *str)
+// deal with double pipe
+int	ft_bpipe(t_data *data, char *str, int type)
 {
 	t_cmd	*head;
 
@@ -66,10 +67,12 @@ int	ft_bpipe(t_data *data, char *str)
 		return (-ft_strlen(str));
 	while (head->next)
 		head = head->next;
-	// deal with double pipe
 	head->next = ft_newnode();
-	head->next->infile = head->outfile;
-	head->status = PIPE;
+	if (type == PIPE)
+	{
+		head->next->infile = head->outfile;
+		head->status = PIPE;
+	}
 	return (1);
 }
 

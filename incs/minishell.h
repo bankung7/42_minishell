@@ -21,6 +21,7 @@
 # define INFILE 3
 # define HEREDOC 4
 # define PIPE 5
+# define SCOLLON 7
 # define SQUOTE 11
 # define DQUOTE 12
 # define DOLLARS 13
@@ -48,6 +49,9 @@ typedef struct	s_data
 // signal.c
 int	ft_sighandle(void);
 
+// init.c
+int	ft_initenv(t_data *data, char **env);
+
 // tokenize.c
 int ft_isdelimit(char *str, int i);
 int ft_tokenize(t_data *data, char *str);
@@ -58,7 +62,7 @@ char *ft_expander(t_data *data, char *str, int start, int j);
 // parser.c
 int ft_buildnode(t_data *data, char *str, int type);
 t_cmd *ft_newnode(void);
-int ft_bpipe(t_data *data, char *str);
+int ft_bpipe(t_data *data, char *str, int type);
 
 // executing.c
 int ft_execute(t_data *data);
@@ -67,12 +71,24 @@ int ft_execute(t_data *data);
 // env.c
 char *ft_getenv(t_data *data, char *var);
 int ft_env(t_data *data);
+
+// echo.c
 int ft_echo(t_cmd *cmd);
+
+// pwd.c
+int ft_pwd(void);
+
+// export.c
+int ft_export(t_data *data, t_cmd *cmd);
+
+// unset.c
+int ft_unset(t_data *data, t_cmd *cmd);
 
 // redirection.c
 int	ft_redirection(t_data *data, char *file);
 
 // exit.c
 int ft_clean(t_data *data, int res);
+int ft_exit(t_data *data);
 
 #endif

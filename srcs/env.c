@@ -23,9 +23,9 @@ char	*ft_getenv(t_data *data, char *var)
 	return (0);
 }
 
-int ft_env(t_data *data)
+int	ft_env(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (data->env && data->env[i])
