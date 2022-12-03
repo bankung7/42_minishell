@@ -34,15 +34,11 @@ int ft_prompt(t_data *data)
 			break;
 		if (ft_strlen(line) == 0)
 			continue;
-
 		ft_tokenize(data, line);
-
 		// ft_test(data);
-
 		ft_execute(data);
-
 		ft_clean(data, 0);
-
+		add_history(line);
 		free(line);
 	}
 	return (0);
@@ -55,10 +51,9 @@ int main(int argc, char **argv, char **env)
 	t_data data;
 
 	data.cmdlist = 0;
-	// data.env = env;
 	ft_initenv(&data, env);
 	data.tray = 0;
-	// ft_sighandle();
+	ft_sighandle();
 	ft_prompt(&data);
 	ft_exit(&data);
 	return (0);

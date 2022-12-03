@@ -34,6 +34,8 @@ int ft_exit(t_data *data)
 	while (data->env && data->env[i])
 		free(data->env[i++]);
 	free(data->env);
+	rl_clear_history();
+	printf("Bye~\n");
 	exit(0);
 	return (0);
 }

@@ -11,12 +11,11 @@ int ft_execve(t_data *data, t_cmd *cmd)
 	else if (pid == 0)
 	{
 		path = ft_strjoin("/bin/", cmd->path);
-		if (access(path, F_OK) != 0)
+		if (access(path, F_OK | X_OK) != 0)
 		{
 			perror("execve error\n");
 			return (-1);
 		}
-		printf("%s\n", path);
 		execve(path, cmd->argv, data->env);
 		exit(0);
 	}
