@@ -59,8 +59,9 @@ int	ft_buildword(t_mini *data, char *str)
 		if (!head->path)
         {
 			// DONT FORGET TO BRING BACK!! IMPORTANT!!
-			// if (ft_iscmd(str) == NULL)
-            //     return (-1);
+			if (ft_iscmd(str) == NULL)
+                return (-1);
+			//////////////////////////////////////////
 			head->path = ft_strdup(str);
         }
 	}
