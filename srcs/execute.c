@@ -3,16 +3,28 @@
 void	ft_freesplit(char **str);
 int	ft_pipex(t_cmd *head);
 
+void	runcmd(t_cmd *head)
+{
+	if (head->type == BUILTIN)
+	{
+		ft_isbuiltin(head, 1);
+	}
+	else
+	{
+		execve(ft_iscmd(head->path), head->argv, 0);
+	}
+}
+
 int ft_checkcmd(t_mini *data)
 {
 	t_cmd *head;
 
 	head = data->cmdlist;
-	// if (!head)
-	// 	return (-1);
+	if (!head)
+		return (-1);
 	while (head)
 	{
-        if (ft_isbuiltin(head, 0) == 0)
+		if (ft_isbuiltin(head, 0) == 0)
             head->type = BUILTIN;
         else if (ft_iscmd(head->path) != NULL)
             head->type = COMMAND;
@@ -63,7 +75,8 @@ int ft_runcmd(t_mini *data)
 	else if (pid == 0)
 	{
 		if (head->next == NULL)
-			execve(ft_iscmd(head->path), head->argv, 0);
+			runcmd(head);
+			// execve(ft_iscmd(head->path), head->argv, 0);
 		else
 			ft_pipex(head);
 	}
@@ -85,14 +98,18 @@ int	ft_pipex(t_cmd *head)
 	}
 	pid = fork();
 	if (pid < 0)
+	{
+		ft_putstr_fd("Error at fork.", 2);
 		return (-1);
+	}
 	else if (pid == 0)
 	{
 		close(fd[0]);
 		if (head->next != NULL)
 			dup2(fd[1], 1);
 		close(fd[1]);
-		execve(ft_iscmd(head->path), head->argv, 0);
+		runcmd(head);
+		// execve(ft_iscmd(head->path), head->argv, 0);
 	}
 	else
 	{
@@ -111,36 +128,3 @@ int	ft_pipex(t_cmd *head)
 	}
 	return (0);
 }
-
-// while (head != NULL)
-	// {
-	// 	printf("cmd is %s\n", head->path);
-	// 	dup2(fd[0], 0);
-	// 	pid = fork();
-	// 	if (pid < 0)
-	// 		return (-1);
-	// 	else if (pid == 0)
-	// 	{
-	// 		printf("In child\n");
-	// 		if (head->next != NULL)
-	// 		{
-	// 			close(fd[0]);
-	// 			printf("dup write for %s\n", head->path);
-	// 			dup2(fd[1], 1);
-	// 			close (fd[1]);
-	// 		}
-	// 		printf("Executing..\n");
-	// 		execve(ft_iscmd(head->path), head->argv, 0);
-	// 	}
-	// 	else
-	// 	{
-	// 		wait(NULL);
-	// 		// printf("In parent\n");
-	// 		// if (head->next == NULL)
-	// 		// 	close(fd[1]);
-	// 		// dup2(fd[0], 0);
-	// 		// close(fd[0]);
-	// 	}
-	// 	printf("NEXT\n");
-	// 	head = head->next;
-	// }

@@ -9,19 +9,19 @@ int ft_isbuiltin(t_cmd *cmd, int x)
 	len = ft_strlen(cmd->argv[0]);
 	if (len == 3 && ft_strncmp(cmd->argv[0], "pwd", len + 1) == 0)
 	{
-		// printf("PWD\n");
+		// dprintf(2, "PWD\n");
 		return (ft_pwd(x));
 	}
 	if (len == 4 && ft_strncmp(cmd->argv[0], "echo", len + 1) == 0)
 	{
-		// printf("ECHO\n");
+		// dprintf(2, "ECHO\n");
 		return (ft_echo(cmd, x));
 	}
-	// if (len == 2 && ft_strncmp(cmd->argv[0], "cd", len + 1) == 0)
-	// {
-	// 	// printf("CD\n");
-	// 	return (ft_cd(cmd, x));
-	// }
+	if (len == 2 && ft_strncmp(cmd->argv[0], "cd", len + 1) == 0)
+	{
+		// printf("CD\n");
+		return (ft_cd(cmd, x));
+	}
 	return (-1);
 }
 
@@ -70,7 +70,6 @@ int ft_echo(t_cmd *cmd, int x)
 
 int ft_cd(t_cmd *cmd, int x)
 {
-    printf("CHANGE DIRECTORY\n");
 	if (x == 0)
         return (0);
     return (chdir(cmd->argv[1]));

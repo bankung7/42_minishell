@@ -1,14 +1,21 @@
 #include "minishell.h"
 
+char	*get_prompt(char *s)
+{
+		return(ft_strjoin("\033[;32m", ft_strjoin(s,"$ \033[;37m")));
+}
+
 int main(void)
 {
 	char *line;
+	char	prompt[100];
 	t_mini data;
 
 	data.cmdlist = 0;
 	while (1)
 	{
-		line = readline(PROMPT);
+		getcwd(prompt, sizeof(prompt));
+		line = readline(get_prompt(ft_strnstr(prompt, "minishell", ft_strlen(prompt))));
 		if (!line)
 			continue;
 		ft_tokenize(&data, line);
