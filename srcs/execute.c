@@ -8,6 +8,7 @@ void	runcmd(t_cmd *head)
 	if (head->type == BUILTIN)
 	{
 		ft_isbuiltin(head, 1);
+		exit(0);
 	}
 	else
 	{

@@ -40,11 +40,13 @@ int main(void)
 		// 	head = head->next;
 		// 	i++;
 		// }
+
 		if (ft_checkcmd(&data) == -1)
 			printf("syntax error\n");
 		else
 			ft_runcmd(&data);
 		ft_clearlist(&data, 0);
+
 		// ===== link list
 		// printf("\n");
 	}

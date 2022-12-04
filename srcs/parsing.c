@@ -58,10 +58,8 @@ int	ft_buildword(t_mini *data, char *str)
 		head->argv = atmp;
 		if (!head->path)
         {
-			// DONT FORGET TO BRING BACK!! IMPORTANT!!
-			if (ft_iscmd(str) == NULL)
+			if (ft_iscmd(str) == NULL && ft_isbuiltin(head, 0) == -1)
                 return (-1);
-			//////////////////////////////////////////
 			head->path = ft_strdup(str);
         }
 	}
