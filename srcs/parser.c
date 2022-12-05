@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-t_cmd	*ft_newnode(void)
+t_cmd *ft_newnode(void)
 {
-	t_cmd	*node;
+	t_cmd *node;
 
 	node = malloc(sizeof(t_cmd));
 	if (!node)
@@ -12,15 +12,16 @@ t_cmd	*ft_newnode(void)
 	node->infile = 0;
 	node->outfile = 1;
 	node->status = 0;
+	node->pipe = 0;
 	node->next = 0;
 	return (node);
 }
 
-int	ft_arebuild(t_data *data, char *str)
+int ft_arebuild(t_data *data, char *str)
 {
-	int		i;
-	char	**tmp;
-	t_cmd	*head;
+	int i;
+	char **tmp;
+	t_cmd *head;
 
 	i = 0;
 	head = data->cmdlist;
@@ -42,9 +43,9 @@ int	ft_arebuild(t_data *data, char *str)
 	return (0);
 }
 
-int	ft_bword(t_data *data, char *str)
+int ft_bword(t_data *data, char *str)
 {
-	t_cmd	*head;
+	t_cmd *head;
 
 	if (data->cmdlist == 0)
 		data->cmdlist = ft_newnode();
@@ -58,9 +59,9 @@ int	ft_bword(t_data *data, char *str)
 }
 
 // deal with double pipe
-int	ft_bpipe(t_data *data, char *str, int type)
+int ft_bpipe(t_data *data, char *str, int type)
 {
-	t_cmd	*head;
+	t_cmd *head;
 
 	head = data->cmdlist;
 	if (!head)
@@ -72,13 +73,14 @@ int	ft_bpipe(t_data *data, char *str, int type)
 	{
 		head->next->infile = head->outfile;
 		head->status = PIPE;
+		head->pipe = 1;
 	}
 	return (1);
 }
 
-int	ft_buildnode(t_data *data, char *str, int type)
+int ft_buildnode(t_data *data, char *str, int type)
 {
-	t_cmd	*head;
+	t_cmd *head;
 
 	if (!data->cmdlist)
 		data->cmdlist = ft_newnode();

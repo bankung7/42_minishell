@@ -30,8 +30,12 @@ int ft_prompt(t_data *data)
 	while (1)
 	{
 		line = readline(MPROMPT);
+		printf("line : %s\n", line);
 		if (!line)
+		{
+			printf("why end\n");
 			break;
+		}
 		if (ft_strlen(line) == 0)
 			continue;
 		ft_tokenize(data, line);
@@ -48,6 +52,7 @@ int main(int argc, char **argv, char **env)
 {
 	(void)argc;
 	(void)argv;
+	// (void)env;
 	t_data data;
 
 	data.cmdlist = 0;

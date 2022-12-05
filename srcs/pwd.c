@@ -10,6 +10,6 @@ int ft_pwd(void)
 	if (getcwd(str, 1023) == NULL)
 		perror("getcwd() error");
 	else
-		printf("current working directory is: %s\n", str);
+		printf("%s\n", str);
 	return (0);
 }

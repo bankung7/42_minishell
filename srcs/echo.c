@@ -14,14 +14,11 @@ int	ft_echo(t_cmd *cmd)
 	}
 	while (cmd->argv[i])
 	{
-		// printf("%s", cmd->argv[i++]);
-		ft_putstr_fd(cmd->argv[i++], 2);
+		ft_putstr_fd(cmd->argv[i++], cmd->outfile);
 		if (cmd->argv[i] != 0)
-			ft_putchar_fd(' ', 2);
-			// printf(" ");
+			ft_putchar_fd(' ', cmd->outfile);
 	}
 	if (nw == 1)
-		ft_putchar_fd('\n', 2);
-		// printf("\n");
+		ft_putchar_fd('\n', cmd->outfile);
 	return (0);
 }
