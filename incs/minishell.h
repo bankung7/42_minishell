@@ -11,70 +11,95 @@
 # include <signal.h>
 # include "libft.h"
 
-// define color
-# define GREEN "\033[;32m"
-# define WHITE "\033[;37m"
+// PROMPT
+# define MPROMPT "\033[0;32mminishell$ \033[0;37m"
 
-// define delimiter
-# define ERROR -1
-# define WHITE_SPACE 0
-# define PIPE 1
-# define OR 2
+// delimiter
+# define DELIMITER 0
+# define OUTFILE 1
+# define APPEND 2
 # define INFILE 3
 # define HEREDOC 4
-# define OUTFILE 5
-# define APPEND 6
+# define PIPE 5
+# define SCOLLON 7
 # define SQUOTE 11
 # define DQUOTE 12
-# define SWORD 97
-# define WORD 98
-# define COMMAND 99
-# define BUILTIN 100
+# define DOLLARS 13
+# define WORD 99
 
-// define prompt
-# define PROMPT "\033[;32mminishell$ \033[;37m"
-# define EXIT_MSG "Exiting Bye~"
-
-// structure
+// struct
 typedef struct s_cmd
 {
-    char **argv;
-    char *path;
-    int infile;
-    int outfile;
-    int type;
-    struct s_cmd *next;
-}   t_cmd;
+	char **argv;
+	char *path;
+	int infile;
+	int outfile;
+	int status;
+	int pipe;
+	struct s_cmd *next;
+}	t_cmd;
 
-typedef struct s_mini
+
+typedef struct	s_data
 {
-    t_cmd *cmdlist;
-}   t_mini;
+	t_cmd	*cmdlist;
+	char	**tray;
+	char	**env;
+}	t_data;
 
-// token.c
-int ft_tokenize(t_mini *data, char *str);
+// signal.c
+int	ft_sighandle(void);
 
-// parsing.c
-t_cmd *ft_newcmd(void);
-char **ft_cmdarray(char **input, char *arg);
-int ft_buildword(t_mini *data, char *str);
-int ft_buildfd(t_mini *data, char *str, int type);
-int ft_buildpipe(t_mini *data, char *str);
+// init.c
+int	ft_initenv(t_data *data, char **env);
 
-// execute.c
-int ft_checkcmd(t_mini *data);
-int ft_runcmd(t_mini *data);
-char *ft_iscmd(char *str);
-// int ft_iscmd(t_mini *data, char *str, t_cmd *head);
+// tokenize.c
+int ft_isdelimit(char *str, int i);
+int ft_tokenize(t_data *data, char *str);
+
+// expander.c
+char *ft_expander(t_data *data, char *str, int start, int j);
+
+// parser.c
+int ft_buildnode(t_data *data, char *str, int type);
+t_cmd *ft_newnode(void);
+int ft_bpipe(t_data *data, char *str, int type);
+
+// executing.c
+int ft_execute(t_data *data);
+int ft_execve(t_data *data, t_cmd *cmd);
+int ft_iscmd(t_data *data, t_cmd *cmd);
+int ft_runcmd(t_data *data, t_cmd *cmd);
+
+// builtin
+// env.c
+char *ft_getenv(t_data *data, char *var);
+int ft_env(t_data *data);
+
+// echo.c
+int ft_echo(t_cmd *cmd);
+
+// pwd.c
+int ft_pwd(void);
+
+// export.c
+int ft_export(t_data *data, t_cmd *cmd);
+
+// unset.c
+int ft_unset(t_data *data, t_cmd *cmd);
+
+// redirection.c
+int	ft_redirection(t_data *data, char *file);
+
+// pipe.c
+int	ft_pipex(t_data *data, t_cmd *head);
+int ft_topipe(t_data *data, t_cmd *cmd);
 
 // exit.c
-void    ft_cleararr(void **arr);
-int     ft_clearlist(t_mini *data, int res);
-
-// builtin.c
-int ft_isbuiltin(t_cmd *cmd, int x);
-int ft_echo(t_cmd *cmd, int x);
-int ft_pwd(int x);
-int ft_cd(t_cmd *cmd, int x);
+int ft_clean(t_data *data, int res);
+int ft_exit(t_data *data);
+int ft_freel1(t_data *data, int i);
+int ft_free2(void **arr, int res);
+int ft_clean1(t_data *data, int res);
 
 #endif

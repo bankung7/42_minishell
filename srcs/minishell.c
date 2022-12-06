@@ -1,54 +1,62 @@
 #include "minishell.h"
 
-char	*get_prompt(char *s)
+int ft_test(t_data *data)
 {
-		return(ft_strjoin("\033[;32m", ft_strjoin(s,"$ \033[;37m")));
+	t_cmd *head;
+	head = data->cmdlist;
+
+	while (head)
+	{
+		printf("\n===== node ======\n");
+		printf("argv\t:\t");
+		int i = 0;
+		while (head->argv && head->argv[i])
+			printf("[%s] ", head->argv[i++]);
+		printf("\n");
+		printf("path\t:\t[%s]\n", head->path);
+		printf("infile fd\t:\t[%d]\n", head->infile);
+		printf("outfile fd\t:\t[%d]\n", head->outfile);
+		printf("status\t:\t[%d]\n", head->status);
+		printf("======= end node =======\n");
+		head = head->next;
+	}
+	return (0);
 }
 
-int main(void)
+int ft_prompt(t_data *data)
 {
 	char *line;
-	char	prompt[100];
-	t_mini data;
 
-	data.cmdlist = 0;
 	while (1)
 	{
-		getcwd(prompt, sizeof(prompt));
-		line = readline(get_prompt(ft_strnstr(prompt, "minishell", ft_strlen(prompt))));
+		line = readline(MPROMPT);
+		// printf("line : %s\n", line);
 		if (!line)
+			break;
+		if (ft_strlen(line) == 0)
 			continue;
-		ft_tokenize(&data, line);
-
-		// ----- link list
-		// int i = 0;
-		// t_cmd *head;
-		// head = data.cmdlist;
-		// while (head)
-		// {
-		// 	printf("\n========== node [%d] =========\n", i);
-		// 	printf("cmd\t:\t");
-		// 	int j = 0;
-		// 	while (head && head->argv[j])
-		// 		printf("%s ;", head->argv[j++]);
-		// 	printf("\n");
-		// 	printf("Path\t:\t[%s]\n", head->path);
-		// 	printf("Infile\t:\t[%d]\n", head->infile);
-		// 	printf("Outfile\t:\t[%d]\n", head->outfile);
-		// 	printf("Type\t:\t[%d]\n", head->type);
-		// 	printf("==============================\n");
-		// 	head = head->next;
-		// 	i++;
-		// }
-
-		if (ft_checkcmd(&data) == -1)
-			printf("syntax error\n");
-		else
-			ft_runcmd(&data);
-		ft_clearlist(&data, 0);
-
-		// ===== link list
-		// printf("\n");
+		ft_tokenize(data, line);
+		ft_test(data);
+		ft_execute(data);
+		ft_clean(data, 0);
+		add_history(line);
+		free(line);
 	}
+	return (0);
+}
+
+int main(int argc, char **argv, char **env)
+{
+	(void)argc;
+	(void)argv;
+	// (void)env;
+	t_data data;
+
+	data.cmdlist = 0;
+	ft_initenv(&data, env);
+	data.tray = 0;
+	ft_sighandle();
+	ft_prompt(&data);
+	ft_exit(&data);
 	return (0);
 }
