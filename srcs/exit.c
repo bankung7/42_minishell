@@ -1,5 +1,19 @@
 #include "minishell.h"
 
+int ft_freel1(t_data *data, int i)
+{
+	t_cmd *head;
+
+	head = data->cmdlist;
+	while (i-- > 0)
+	{
+		head = head->next;
+		ft_clean1(data, 0);
+		data->cmdlist = head;
+	}
+	return (0);
+}
+
 int ft_free2(void **arr, int res)
 {
 	int i;

@@ -35,7 +35,7 @@ typedef struct s_cmd
 	int infile;
 	int outfile;
 	int status;
-    int pipe;
+	int pipe;
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -69,6 +69,7 @@ int ft_bpipe(t_data *data, char *str, int type);
 int ft_execute(t_data *data);
 int ft_execve(t_data *data, t_cmd *cmd);
 int ft_iscmd(t_data *data, t_cmd *cmd);
+int ft_runcmd(t_data *data, t_cmd *cmd);
 
 // builtin
 // env.c
@@ -92,10 +93,12 @@ int	ft_redirection(t_data *data, char *file);
 
 // pipe.c
 int	ft_pipex(t_data *data, t_cmd *head);
+int ft_topipe(t_data *data, t_cmd *cmd);
 
 // exit.c
 int ft_clean(t_data *data, int res);
 int ft_exit(t_data *data);
+int ft_freel1(t_data *data, int i);
 int ft_free2(void **arr, int res);
 int ft_clean1(t_data *data, int res);
 

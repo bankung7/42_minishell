@@ -9,8 +9,8 @@ t_cmd *ft_newnode(void)
 		return (0);
 	node->argv = 0;
 	node->path = 0;
-	node->infile = 0;
-	node->outfile = 1;
+	node->infile = STDIN_FILENO;
+	node->outfile = STDOUT_FILENO;
 	node->status = 0;
 	node->pipe = 0;
 	node->next = 0;

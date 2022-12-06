@@ -48,6 +48,30 @@ int ft_iscmd(t_data *data, t_cmd *cmd)
 	return (ft_free2((void **)path, -1));
 }
 
+int ft_runcmd(t_data *data, t_cmd *cmd)
+{
+	t_cmd *head;
+
+	head = cmd;
+	if (ft_strncmp("echo", head->argv[0], 5) == 0)
+		return (ft_echo(head));
+	else if (ft_strncmp("env", head->argv[0], 4) == 0)
+		return (ft_env(data));
+	else if (ft_strncmp("pwd", head->argv[0], 4) == 0)
+		return (ft_pwd());
+	else if (ft_strncmp("cd", head->argv[0], 3) == 0)
+		return (0);
+	else if (ft_strncmp("export", head->argv[0], 7) == 0)
+		return (ft_export(data, head));
+	else if (ft_strncmp("unset", head->argv[0], 6) == 0)
+		return (ft_unset(data, head));
+	else if (ft_strncmp("exit", head->argv[0], 5) == 0)
+		return (ft_exit(data));
+	else if (ft_iscmd(data, head) == -1)
+		return (-1);
+	return (0);
+}
+
 int ft_execute(t_data *data)
 {
 	t_cmd *head;
@@ -57,44 +81,15 @@ int ft_execute(t_data *data)
 	head = data->cmdlist;
 	while (head)
 	{
-		// printf("command : %s => pipe %d\n", head->path, head->pipe);
-		// if (ft_strncmp("echo", head->argv[0], 5) == 0)
-		// 	ft_echo(head);
-		// else if (ft_strncmp("env", head->argv[0], 4) == 0)
-		// 	ft_env(data);
-		// else if (ft_strncmp("pwd", head->argv[0], 4) == 0)
-		// 	ft_pwd();
-		// else if (ft_strncmp("cd", head->argv[0], 3) == 0)
-		// 	continue;
-		// else if (ft_strncmp("export", head->argv[0], 7) == 0)
-		// 	ft_export(data, head);
-		// else if (ft_strncmp("unset", head->argv[0], 6) == 0)
-		// 	ft_unset(data, head);
-		// else if (ft_strncmp("exit", head->argv[0], 5) == 0)
-		// 	ft_exit(data);
-		// else if (ft_iscmd(data, head) == -1)
-		// 	return (-1);
-		int count = 0;
-		t_cmd *chead;
-		chead = data->cmdlist;
-		while (chead->pipe == 1 && count++ >= 0)
-			chead = chead->next;
+		printf("command : %s => pipe %d\n", head->argv[0], head->pipe);
 		if (head->pipe == 1)
 		{
-			ft_pipex(data, head);
-			while (count-- > 0)
-			{
-				head = head->next;
-				ft_clean1(data, 0);
-				data->cmdlist = head;
-			}
-		}
-		else
-			if (ft_iscmd(data, head) == -1)
+			if (ft_topipe(data, head) == -1)
 				return (-1);
+		}
+		else if (ft_runcmd(data, head) == -1)
+			return (-1);
 		head = head->next;
-		if (head)
-			printf("next : %s\n", head->path);
 		ft_clean1(data, 0);
 	}
 	return (0);

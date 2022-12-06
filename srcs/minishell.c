@@ -30,16 +30,13 @@ int ft_prompt(t_data *data)
 	while (1)
 	{
 		line = readline(MPROMPT);
-		printf("line : %s\n", line);
+		// printf("line : %s\n", line);
 		if (!line)
-		{
-			printf("why end\n");
 			break;
-		}
 		if (ft_strlen(line) == 0)
 			continue;
 		ft_tokenize(data, line);
-		// ft_test(data);
+		ft_test(data);
 		ft_execute(data);
 		ft_clean(data, 0);
 		add_history(line);
