@@ -44,7 +44,7 @@ int ft_iscmd(t_data *data, t_cmd *cmd)
 		free(tmp2);
 		i++;
 	}
-	printf("no command\n");
+	// printf("no command\n");
 	return (ft_free2((void **)path, -1));
 }
 
@@ -60,7 +60,7 @@ int ft_runcmd(t_data *data, t_cmd *cmd)
 	else if (ft_strncmp("pwd", head->argv[0], 4) == 0)
 		return (ft_pwd());
 	else if (ft_strncmp("cd", head->argv[0], 3) == 0)
-		return (0);
+		return (ft_cd(head));
 	else if (ft_strncmp("export", head->argv[0], 7) == 0)
 		return (ft_export(data, head));
 	else if (ft_strncmp("unset", head->argv[0], 6) == 0)
@@ -81,11 +81,12 @@ int ft_execute(t_data *data)
 	head = data->cmdlist;
 	while (head)
 	{
-		printf("command : %s => pipe %d\n", head->argv[0], head->pipe);
+		// printf("command : %s => pipe %d\n", head->argv[0], head->pipe);
 		if (head->pipe == 1)
 		{
 			if (ft_topipe(data, head) == -1)
 				return (-1);
+			break ;
 		}
 		else if (ft_runcmd(data, head) == -1)
 			return (-1);
