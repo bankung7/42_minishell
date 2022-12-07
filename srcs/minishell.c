@@ -58,6 +58,7 @@ int ft_prompt(t_data *data)
 		ft_execute(data);
 		ft_clean(data, 0);
 		add_history(line);
+		// printf("%d\n", g_status);
 		free(line);
 	}
 	return (0);

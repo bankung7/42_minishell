@@ -14,8 +14,6 @@ int	ft_isdelimit(char *str, int i)
 		return (OUTFILE);
 	if (str[i] == '|')
 		return (PIPE);
-	if (str[i] == ';')
-		return (SCOLLON);
 	if (str[i] == '\'')
 		return (SQUOTE);
 	if (str[i] == '"')
@@ -63,7 +61,7 @@ int	ft_buildword(t_data *data, char *str, int i, int quote)
 		else if ((str[i + j] == '\'' || str[i + j] == '"')
 			&& quote == ft_isdelimit(str, i + j))
 			quote = 0;
-		if (((ft_isdelimit(str, i + j) >= 0 && ft_isdelimit(str, i + j) <= 7)
+		if (((ft_isdelimit(str, i + j) >= 0 && ft_isdelimit(str, i + j) <= 5)
 				|| str[i + j + 1] == 0) && quote == 0)
 		{
 			if (ft_isdelimit(str, i + j) != 0 && str[i + j + 1] == 0)
@@ -96,7 +94,7 @@ int	ft_buildschar(t_data *data, char *str, int type)
 		head->status = type;
 	else if (type == OUTFILE || type == APPEND)
 		head->status = type;
-	else if (type == PIPE || type == SCOLLON)
+	else if (type == PIPE)
 		return (ft_bpipe(data, str, type));
 	return (((type + 1) % 2) + 1);
 }

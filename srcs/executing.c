@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-int ft_execve(t_data *data, t_cmd *cmd)
+int	ft_execve(t_data *data, t_cmd *cmd)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid == -1)
@@ -17,12 +17,25 @@ int ft_execve(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-int ft_iscmd(t_data *data, t_cmd *cmd)
+static char	*ft_makepath(char *path, char *name)
 {
-	int i;
-	char *tmp;
-	char *tmp2;
-	char **path;
+	char	*tmp;
+
+	tmp = ft_calloc(sizeof(char), (ft_strlen(path) + ft_strlen(name) + 2));
+	if (!tmp)
+		return (0);
+	ft_memcpy(tmp, path, ft_strlen(path));
+	ft_memcpy(&tmp[ft_strlen(tmp)], "/", 1);
+	ft_memcpy(&tmp[ft_strlen(tmp)], name, ft_strlen(name));
+	return (tmp);
+}
+
+int	ft_iscmd(t_data *data, t_cmd *cmd)
+{
+	int		i;
+	char	*tmp;
+	char	*tmp2;
+	char	**path;
 
 	i = 0;
 	tmp = ft_getenv(data, "PATH");
@@ -30,9 +43,7 @@ int ft_iscmd(t_data *data, t_cmd *cmd)
 	free(tmp);
 	while (path[i])
 	{
-		tmp = ft_strjoin(path[i], "/");
-		tmp2 = ft_strjoin(tmp, cmd->path);
-		free(tmp);
+		tmp2 = ft_makepath(path[i], cmd->path);
 		if (access(tmp2, F_OK | X_OK) == 0)
 		{
 			free(cmd->path);
@@ -44,13 +55,13 @@ int ft_iscmd(t_data *data, t_cmd *cmd)
 		free(tmp2);
 		i++;
 	}
-	// printf("no command\n");
+	ft_putstr_fd("command not found\n", 2);
 	return (ft_free2((void **)path, -1));
 }
 
-int ft_runcmd(t_data *data, t_cmd *cmd)
+int	ft_runcmd(t_data *data, t_cmd *cmd)
 {
-	t_cmd *head;
+	t_cmd	*head;
 
 	head = cmd;
 	if (ft_strncmp("echo", head->argv[0], 5) == 0)
@@ -72,16 +83,15 @@ int ft_runcmd(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-int ft_execute(t_data *data)
+int	ft_execute(t_data *data)
 {
-	t_cmd *head;
+	t_cmd	*head;
 
 	if (!data->cmdlist)
 		return (-1);
 	head = data->cmdlist;
 	while (head)
 	{
-		// printf("command : %s => pipe %d\n", head->argv[0], head->pipe);
 		if (head->pipe == 1)
 		{
 			if (ft_topipe(data, head) == -1)

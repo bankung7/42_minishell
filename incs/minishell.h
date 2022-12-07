@@ -21,11 +21,14 @@
 # define INFILE 3
 # define HEREDOC 4
 # define PIPE 5
-# define SCOLLON 7
+// # define SCOLLON 7
 # define SQUOTE 11
 # define DQUOTE 12
 # define DOLLARS 13
 # define WORD 99
+
+// Global for pipe status
+int g_status;
 
 // struct
 typedef struct s_cmd
