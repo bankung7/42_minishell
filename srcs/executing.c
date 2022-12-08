@@ -9,6 +9,7 @@ int ft_execve(t_data *data, t_cmd *cmd)
 		return (-1);
 	else if (pid == 0)
 	{
+		// printf("infile = %d\t outfile = %d\n", cmd->infile, cmd->outfile);
 		execve(cmd->path, cmd->argv, data->env);
 		exit(0);
 	}
@@ -68,7 +69,9 @@ int ft_runcmd(t_data *data, t_cmd *cmd)
 	else if (ft_strncmp("exit", head->argv[0], 5) == 0)
 		return (ft_exit(data));
 	else if (ft_iscmd(data, head) == -1)
+	{
 		return (-1);
+	}
 	return (0);
 }
 
@@ -79,6 +82,8 @@ int ft_execute(t_data *data)
 	if (!data->cmdlist)
 		return (-1);
 	head = data->cmdlist;
+	dup2(head->infile, 0);
+	dup2(head->outfile, 1);
 	while (head)
 	{
 		// printf("command : %s => pipe %d\n", head->argv[0], head->pipe);

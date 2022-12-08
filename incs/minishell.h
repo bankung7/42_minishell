@@ -27,6 +27,10 @@
 # define DOLLARS 13
 # define WORD 99
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4096
+# endif
+
 // struct
 typedef struct s_cmd
 {
@@ -105,4 +109,15 @@ int ft_freel1(t_data *data, int i);
 int ft_free2(void **arr, int res);
 int ft_clean1(t_data *data, int res);
 
+//get_next_line
+//get_next_line.c
+char	*get_next_line(int fd);
+char	*get_remain(char *s, int nl_id);
+char	*get_line(char *s, int nl_id);
+char	*ft_lastline(char *str);
+char	*ft_read(char *str, int fd);
+
+//get_next_line_utils.c
+int		ft_strlen_nl(char *s, int sel);
+char	*ft_strcpy(char *dst, char *src);
 #endif
