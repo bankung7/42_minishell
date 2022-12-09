@@ -96,6 +96,9 @@ int ft_unset(t_data *data, t_cmd *cmd);
 // redirection.c
 int	ft_redirection(t_data *data, char *file);
 
+// heredoc.c
+int ft_heredoc(t_data *data, char *str);
+
 // pipe.c
 int	ft_pipex(t_data *data, t_cmd *head);
 int ft_topipe(t_data *data, t_cmd *cmd);

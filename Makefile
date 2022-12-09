@@ -26,7 +26,7 @@ RM = rm -rf
 SRCS_DIR = srcs/
 SRCS = minishell.c signal.c init.c \
 	tokenize.c expander.c parser.c executing.c \
-	redirection.c exit.c pipe.c \
+	redirection.c exit.c pipe.c heredoc.c \
 	echo.c pwd.c env.c export.c unset.c cd.c
 
 OBJS_DIR = objs/
