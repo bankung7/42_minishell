@@ -109,7 +109,6 @@ int ft_freel1(t_data *data, int i);
 int ft_free2(void **arr, int res);
 int ft_clean1(t_data *data, int res);
 
-//get_next_line
 //get_next_line.c
 char	*get_next_line(int fd);
 char	*get_remain(char *s, int nl_id);
@@ -120,4 +119,9 @@ char	*ft_read(char *str, int fd);
 //get_next_line_utils.c
 int		ft_strlen_nl(char *s, int sel);
 char	*ft_strcpy(char *dst, char *src);
+
+//heredoc.c
+char	*here_doc(char **av);
+void	here_doc_pipe(int ac, char **av, char **paths);
+
 #endif
