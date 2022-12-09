@@ -19,7 +19,7 @@ int	ft_pipex(t_data *data, t_cmd *cmd)
 	}
 	else
 	{
-		waitpid(pid, &g_status, 0);
+		waitpid(pid, &g_status, WNOHANG);
 		close(fd[1]);
 		dup2(fd[0], 0);
 		close(fd[0]);
