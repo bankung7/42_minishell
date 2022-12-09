@@ -64,6 +64,8 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 	t_cmd	*head;
 
 	head = cmd;
+	if (cmd->outfile != 1)
+		dup2(cmd->outfile, 1);
 	if (ft_strncmp("echo", head->argv[0], 5) == 0)
 		return (ft_echo(head));
 	else if (ft_strncmp("env", head->argv[0], 4) == 0)

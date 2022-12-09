@@ -48,14 +48,13 @@ int ft_prompt(t_data *data)
 	{
 		prompt = getprompt();
 		line = readline(prompt);
-		// line = readline(MPROMPT);
 		free(prompt);
 		if (!line)
 			return (-1);
 		if (ft_strlen(line) == 0)
 			continue ;
 		ft_tokenize(data, line);
-		ft_test(data);
+		// ft_test(data);
 		ft_execute(data);
 		ft_clean(data, 0);
 		add_history(line);
@@ -78,5 +77,4 @@ int main(int argc, char **argv, char **env)
 	ft_sighandle();
 	ft_prompt(&data);
 	ft_exit(&data);
-	return (0);
 }
