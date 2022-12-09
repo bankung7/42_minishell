@@ -54,7 +54,7 @@ int ft_prompt(t_data *data)
 		if (ft_strlen(line) == 0)
 			continue;
 		ft_tokenize(data, line);
-		// ft_test(data);
+		ft_test(data);
 		ft_execute(data);
 		ft_clean(data, 0);
 		add_history(line);
