@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*ft_qtrim(char *str)
+static char	*ft_qtrim(char *str)
 {
 	int		i;
 	int		j;
@@ -29,7 +29,7 @@ char	*ft_qtrim(char *str)
 	return (tmp);
 }
 
-char	*ft_replacevar(t_data *data, char *str, char *find, int start)
+static char	*ft_replacevar(t_data *data, char *str, char *find, int start)
 {
 	int		flen;
 	char	*val;
@@ -69,6 +69,16 @@ static char	*ft_prepvar(t_data *data, char *str, int start)
 	return (tmp);
 }
 
+static char	*ft_exword(t_data *data, char *str, int i)
+{
+	char	*tmp;
+
+	tmp = ft_prepvar(data, str, i);
+	str = ft_strdup(tmp);
+	free(tmp);
+	return (str);
+}
+
 char	*ft_expander(t_data *data, char *str, int start, int j)
 {
 	int		i;
@@ -87,11 +97,7 @@ char	*ft_expander(t_data *data, char *str, int start, int j)
 			if (word[i] == '\'')
 				quote = (quote + 1) % 2;
 			if (word[i] == '$' && quote == 0)
-			{
-				tmp = ft_prepvar(data, word, i);
-				word = ft_strdup(tmp);
-				free(tmp);
-			}
+				word = ft_exword(data, word, i);
 			i++;
 		}
 	}

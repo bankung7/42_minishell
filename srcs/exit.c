@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-int ft_freel1(t_data *data, int i)
+int	ft_freel1(t_data *data, int i)
 {
-	t_cmd *head;
+	t_cmd	*head;
 
 	head = data->cmdlist;
 	while (i-- > 0)
@@ -14,9 +14,9 @@ int ft_freel1(t_data *data, int i)
 	return (0);
 }
 
-int ft_free2(void **arr, int res)
+int	ft_free2(void **arr, int res)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (arr)
@@ -28,10 +28,10 @@ int ft_free2(void **arr, int res)
 	return (res);
 }
 
-int ft_clean(t_data *data, int res)
+int	ft_clean(t_data *data, int res)
 {
-	int i;
-	t_cmd *head;
+	int		i;
+	t_cmd	*head;
 
 	head = data->cmdlist;
 	while (head)
@@ -53,9 +53,9 @@ int ft_clean(t_data *data, int res)
 	return (res);
 }
 
-int ft_clean1(t_data *data, int res)
+int	ft_clean1(t_data *data, int res)
 {
-	t_cmd *head;
+	t_cmd	*head;
 
 	head = data->cmdlist;
 	ft_free2((void **)head->argv, 0);
@@ -66,9 +66,9 @@ int ft_clean1(t_data *data, int res)
 	return (res);
 }
 
-int ft_exit(t_data *data)
+int	ft_exit(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	ft_clean(data, 0);

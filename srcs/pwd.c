@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-int ft_pwd(void)
+int	ft_pwd(void)
 {
-	char *str;
+	char	*str;
 
 	str = ft_calloc(sizeof(char), 1024);
 	if (!str)

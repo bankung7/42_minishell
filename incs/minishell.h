@@ -21,11 +21,13 @@
 # define INFILE 3
 # define HEREDOC 4
 # define PIPE 5
-# define SCOLLON 7
 # define SQUOTE 11
 # define DQUOTE 12
 # define DOLLARS 13
 # define WORD 99
+
+// Global for pipe status
+int g_status;
 
 // struct
 typedef struct s_cmd
@@ -82,6 +84,9 @@ int ft_echo(t_cmd *cmd);
 // pwd.c
 int ft_pwd(void);
 
+//cd.c
+int ft_cd(t_cmd *cmd);
+
 // export.c
 int ft_export(t_data *data, t_cmd *cmd);
 
@@ -90,6 +95,9 @@ int ft_unset(t_data *data, t_cmd *cmd);
 
 // redirection.c
 int	ft_redirection(t_data *data, char *file);
+
+// heredoc.c
+int ft_heredoc(t_data *data, char *str);
 
 // pipe.c
 int	ft_pipex(t_data *data, t_cmd *head);
