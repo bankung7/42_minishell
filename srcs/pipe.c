@@ -1,9 +1,9 @@
 #include "minishell.h"
 
-int ft_pipex(t_data *data, t_cmd *cmd)
+int	ft_pipex(t_data *data, t_cmd *cmd)
 {
-	int fd[2];
-	pid_t pid;
+	int		fd[2];
+	pid_t	pid;
 
 	if (pipe(fd) == -1)
 		return (-1);
@@ -23,7 +23,7 @@ int ft_pipex(t_data *data, t_cmd *cmd)
 	}
 	else
 	{
-		wait(0);
+		waitpid(pid, &g_status, 0);
 		close(fd[1]);
 		dup2(fd[0], 0);
 		close(fd[0]);
@@ -35,11 +35,11 @@ int ft_pipex(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-int ft_topipe(t_data *data, t_cmd *cmd)
+int	ft_topipe(t_data *data, t_cmd *cmd)
 {
-	int i;
-	t_cmd *head;
-	pid_t pid;
+	int		i;
+	pid_t	pid;
+	t_cmd	*head;
 
 	i = 0;
 	head = cmd;
@@ -58,9 +58,7 @@ int ft_topipe(t_data *data, t_cmd *cmd)
 			exit(0);
 		}
 		else
-		{
-			wait(0);
-		}
+			waitpid(pid, 0, 0);
 		return (ft_freel1(data, i));
 	}
 	return (0);

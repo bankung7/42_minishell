@@ -21,7 +21,6 @@
 # define INFILE 3
 # define HEREDOC 4
 # define PIPE 5
-# define SCOLLON 7
 # define SQUOTE 11
 # define DQUOTE 12
 # define DOLLARS 13
@@ -30,6 +29,8 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif
+// Global for pipe status
+int g_status;
 
 // struct
 typedef struct s_cmd
@@ -97,6 +98,9 @@ int ft_unset(t_data *data, t_cmd *cmd);
 
 // redirection.c
 int	ft_redirection(t_data *data, char *file);
+
+// heredoc.c
+int ft_heredoc(t_data *data, char *str);
 
 // pipe.c
 int	ft_pipex(t_data *data, t_cmd *head);
