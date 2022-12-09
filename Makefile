@@ -3,6 +3,7 @@ NAME = minishell
 CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
+# CFLAGS =
 
 LIBFT_DIR = libft
 LIBFT = libft/libft.a

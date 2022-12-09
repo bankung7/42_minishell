@@ -31,8 +31,8 @@ static char	*getprompt(void)
 
 	cwd = malloc(sizeof(char)* 1024);
 	getcwd(cwd, 1023);
-	prompt = ft_strnstr(cwd, "minishell", ft_strlen(cwd));
-	tmp = ft_strjoin(prompt,"$ \033[;37m");
+	// prompt = ft_strnstr(cwd, "minishell", ft_strlen(cwd));
+	tmp = ft_strjoin(cwd,"$ \033[;37m");
 	prompt = ft_strjoin("\033[;32m", tmp);
 	free(cwd);
 	free(tmp);
@@ -48,11 +48,12 @@ int ft_prompt(t_data *data)
 	{
 		prompt = getprompt();
 		line = readline(prompt);
+		// line = readline(MPROMPT);
 		free(prompt);
 		if (!line)
-			break;
+			return (-1);
 		if (ft_strlen(line) == 0)
-			continue;
+			continue ;
 		ft_tokenize(data, line);
 		// ft_test(data);
 		ft_execute(data);

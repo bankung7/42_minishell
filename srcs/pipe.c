@@ -13,10 +13,13 @@ int ft_pipex(t_data *data, t_cmd *cmd)
 	else if (pid == 0)
 	{
 		close(fd[0]);
-		dup2(fd[1], 1);
-		ft_runcmd(data, cmd);
+		if (cmd->outfile != 1)
+			dup2(cmd->outfile, 1);
+		else
+			dup2(fd[1], 1);
 		close(fd[1]);
-		exit(0);
+		ft_runcmd(data, cmd);
+		// exit(0);
 	}
 	else
 	{
@@ -49,6 +52,8 @@ int ft_topipe(t_data *data, t_cmd *cmd)
 			return (-1);
 		if (pid == 0)
 		{
+			if (cmd->infile != 0)
+				dup2(cmd->infile, 0);
 			ft_pipex(data, cmd);
 			exit(0);
 		}
