@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executing.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
+/*   Updated: 2022/12/11 22:32:14 by pjerddee         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_execve(t_data *data, t_cmd *cmd)
@@ -8,10 +20,7 @@ int	ft_execve(t_data *data, t_cmd *cmd)
 	if (pid == -1)
 		return (-1);
 	else if (pid == 0)
-	{
-		// dprintf(2, "infile = %d\t outfile = %d\n", cmd->infile, cmd->outfile);
 		execve(cmd->path, cmd->argv, data->env);
-	}
 	else
 		waitpid(pid, 0, 0);
 	return (0);
@@ -102,25 +111,17 @@ int	ft_execute(t_data *data)
 				return (-1);
 			break ;
 		}
-		// else if (ft_runcmd(data, head) == -1)
-		else
-		{
-			in = dup(0);
-			out = dup(1);
-			dup2(head->infile, 0);
-			dup2(head->outfile, 1);
-			// dup2(head->infile, 0);
-			// dup2(head->outfile, 1);
-			if (ft_runcmd(data, head) == -1)
-				return (0);
-		}
-			// return (-1);
+		in = dup(0);
+		out = dup(1);
+		dup2(head->infile, 0);
+		dup2(head->outfile, 1);
+		if (ft_runcmd(data, head) == -1)
+			return (0);
 		close(head->infile);
 		close(head->outfile);
 		head = head->next;
 		ft_clean1(data, 0);
 	}
-	// printf("in = %d\t out = %d\n", head->infile, head->outfile);
 	dup2(in, 0);
 	dup2(out, 1);
 	close(in);
