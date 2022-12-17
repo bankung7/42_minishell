@@ -30,5 +30,6 @@ int	ft_env(t_data *data)
 	i = 0;
 	while (data->env && data->env[i])
 		printf("%s\n", data->env[i++]);
+		g_status = 0;
 	return (0);
 }

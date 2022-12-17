@@ -72,6 +72,7 @@ int main(int argc, char **argv, char **env)
 	t_data data;
 
 	data.cmdlist = 0;
+	g_status = 0;
 	ft_initenv(&data, env);
 	data.tray = 0;
 	ft_sighandle();

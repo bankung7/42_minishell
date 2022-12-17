@@ -16,6 +16,7 @@ void	ft_handler(int sig, siginfo_t *info, void *context)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		g_status = 130;
 	}
 	else if (sig == SIGQUIT)
 		rl_redisplay();

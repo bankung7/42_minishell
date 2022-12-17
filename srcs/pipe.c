@@ -54,7 +54,7 @@ int	ft_topipe(t_data *data, t_cmd *cmd)
 			exit(0);
 		}
 		else
-			waitpid(pid, 0, 0);
+			waitpid(pid, &g_status, 0);
 		return (ft_freel1(data, i));
 	}
 	return (0);

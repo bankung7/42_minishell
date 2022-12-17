@@ -13,7 +13,8 @@ int	ft_execve(t_data *data, t_cmd *cmd)
 		execve(cmd->path, cmd->argv, data->env);
 	}
 	else
-		waitpid(pid, 0, 0);
+		waitpid(pid, &g_status, 0);
+	// printf("%d\n", g_status);
 	return (0);
 }
 
@@ -80,6 +81,8 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 		return (ft_unset(data, head));
 	else if (ft_strncmp("exit", head->argv[0], 5) == 0)
 		return (ft_exit(data));
+	else if (access(cmd->path, F_OK | X_OK) == 0)
+		return (ft_execve(data, cmd));
 	else if (ft_iscmd(data, head) == -1)
 		return (-1);
 	return (0);

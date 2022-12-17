@@ -60,5 +60,6 @@ int	ft_export(t_data *data, t_cmd *cmd)
 			ft_setvar(data, cmd->argv[i]);
 		i++;
 	}
+	g_status = 0;
 	return (0);
 }

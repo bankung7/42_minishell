@@ -77,6 +77,6 @@ int	ft_exit(t_data *data)
 	free(data->env);
 	rl_clear_history();
 	printf("Bye~\n");
-	exit(0);
+	exit(g_status);
 	return (0);
 }

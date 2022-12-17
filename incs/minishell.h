@@ -29,6 +29,7 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif
+
 // Global for pipe status
 int g_status;
 
