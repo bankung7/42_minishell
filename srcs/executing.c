@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2022/12/11 22:32:14 by pjerddee         ###   ########.fr       */
+/*   Updated: 2022/12/19 14:57:51 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 	else if (ft_strncmp("pwd", head->argv[0], 4) == 0)
 		return (ft_pwd());
 	else if (ft_strncmp("cd", head->argv[0], 3) == 0)
-		return (ft_cd(head));
+		return (ft_cd(data, head));
 	else if (ft_strncmp("export", head->argv[0], 7) == 0)
 		return (ft_export(data, head));
 	else if (ft_strncmp("unset", head->argv[0], 6) == 0)

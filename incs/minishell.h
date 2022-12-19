@@ -88,7 +88,7 @@ int ft_echo(t_cmd *cmd);
 int ft_pwd(void);
 
 //cd.c
-int ft_cd(t_cmd *cmd);
+int	ft_cd(t_data *data, t_cmd *cmd);
 
 // export.c
 int ft_export(t_data *data, t_cmd *cmd);
