@@ -74,7 +74,7 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 	else if (ft_strncmp("pwd", head->argv[0], 4) == 0)
 		return (ft_pwd());
 	else if (ft_strncmp("cd", head->argv[0], 3) == 0)
-		return (ft_cd(head));
+		return (ft_cd(data, head));
 	else if (ft_strncmp("export", head->argv[0], 7) == 0)
 		return (ft_export(data, head));
 	else if (ft_strncmp("unset", head->argv[0], 6) == 0)
