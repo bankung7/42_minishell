@@ -8,7 +8,7 @@ CFLAGS = -Wall -Wextra -Werror
 LIBFT_DIR = libft
 LIBFT = libft/libft.a
 
-RL_DIR = /usr/local/Homebrew/opt/readline
+RL_DIR = /usr/local/opt/readline
 LIB_DIR = -lreadline
 LIB_INC = -Iincs -Ilibft -Itester
 

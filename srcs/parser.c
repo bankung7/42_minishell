@@ -89,6 +89,13 @@ int	ft_buildnode(t_data *data, char *str, int type)
 		head = head->next;
 	if (type == WORD && head->status >= OUTFILE && head->status <= INFILE)
 		ft_redirection(data, str);
+	else if (type == WORD && head->status == HEREDOC)
+	{
+		ft_heredoc(data, str);
+		printf("%s\n", str);
+		// trigger
+		ft_arebuild(data, /);
+	}
 	else if (type == WORD)
 	{
 		if (!head->path)

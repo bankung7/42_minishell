@@ -97,7 +97,7 @@ int	ft_buildschar(t_data *data, char *str, int type)
 	else if (type == PIPE)
 		return (ft_bpipe(data, str, type));
 	else if (type == HEREDOC)
-		return (ft_heredoc(data, str));
+		head->status = HEREDOC;
 	return (((type + 1) % 2) + 1);
 }
 

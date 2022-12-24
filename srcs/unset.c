@@ -60,5 +60,5 @@ int	ft_unset(t_data *data, t_cmd *cmd)
 	while (cmd->argv && cmd->argv[i])
 		ft_setvar(data, cmd->argv[i++]);
 	g_status = 0;
-	return (0);
+	return (1);
 }

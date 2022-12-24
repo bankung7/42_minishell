@@ -20,6 +20,6 @@ int	ft_echo(t_cmd *cmd)
 	}
 	if (nw == 1)
 		ft_putchar_fd('\n', cmd->outfile);
-		g_status = 0;
-	return (0);
+	g_status = 0;
+	return (1);
 }

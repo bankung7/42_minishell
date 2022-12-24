@@ -74,7 +74,10 @@ static char	*ft_exword(t_data *data, char *str, int i)
 	char	*tmp;
 
 	if (ft_strncmp("$?", str, 3) == 0)
+	{
+		printf("status %d\n", g_status);	
 		return (ft_itoa(g_status));
+	}
 	tmp = ft_prepvar(data, str, i);
 	str = ft_strdup(tmp);
 	free(tmp);

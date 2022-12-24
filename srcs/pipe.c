@@ -23,10 +23,10 @@ int	ft_pipex(t_data *data, t_cmd *cmd)
 		close(fd[1]);
 		dup2(fd[0], 0);
 		close(fd[0]);
-		if (cmd->next->pipe == 1)
-			ft_pipex(data, cmd->next);
-		else
-			ft_runcmd(data, cmd->next);
+		// if (cmd->next->pipe == 1)
+		// 	ft_pipex(data, cmd->next);
+		// else
+		// 	ft_runcmd(data, cmd->next);
 	}
 	return (0);
 }

@@ -78,5 +78,5 @@ int	ft_exit(t_data *data)
 	rl_clear_history();
 	printf("Bye~\n");
 	exit(g_status);
-	return (0);
+	return (1);
 }

@@ -61,5 +61,5 @@ int	ft_export(t_data *data, t_cmd *cmd)
 		i++;
 	}
 	g_status = 0;
-	return (0);
+	return (1);
 }

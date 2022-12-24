@@ -42,6 +42,7 @@ typedef struct s_cmd
 	int outfile;
 	int status;
 	int pipe;
+	int pipe_fd[2];
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -73,8 +74,9 @@ int ft_bpipe(t_data *data, char *str, int type);
 
 // executing.c
 int ft_execute(t_data *data);
-int ft_execve(t_data *data, t_cmd *cmd);
-int ft_iscmd(t_data *data, t_cmd *cmd);
+// int ft_execve(t_data *data, t_cmd *cmd);
+// int ft_iscmd(t_data *data, t_cmd *cmd);
+char	*ft_iscmd(t_data *data, t_cmd *cmd);
 int ft_runcmd(t_data *data, t_cmd *cmd);
 
 // builtin
