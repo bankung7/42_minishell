@@ -1,9 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executing.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
+/*   Updated: 2022/12/19 14:57:51 by pjerddee         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 // int	ft_execve(t_data *data, t_cmd *cmd)
 // {
 // 	pid_t	pid;
 
+<<<<<<< HEAD
 // 	pid = fork();
 // 	if (pid == -1)
 // 		return (-1);
@@ -18,6 +31,17 @@
 // {
 	
 // }
+=======
+	pid = fork();
+	if (pid == -1)
+		return (-1);
+	else if (pid == 0)
+		execve(cmd->path, cmd->argv, data->env);
+	else
+		waitpid(pid, 0, 0);
+	return (0);
+}
+>>>>>>> 8c08e95ef9ff84195c545cf9c3a52a3d178cb080
 
 static char	*ft_makepath(char *path, char *name)
 {
@@ -116,6 +140,7 @@ int	ft_execute(t_data *data)
 			if (pipe(head->pipe_fd) == -1)
 				return (-1);
 		}
+<<<<<<< HEAD
 		head = head->next;
 	}
 	head = data->cmdlist;
@@ -133,8 +158,19 @@ int	ft_execute(t_data *data)
 			printf("exit status = %d\n", WEXITSTATUS(g_status));
 				// wait(NULL);
 		}
+=======
+		in = dup(0);
+		out = dup(1);
+		dup2(head->infile, 0);
+		dup2(head->outfile, 1);
+		if (ft_runcmd(data, head) == -1)
+			return (0);
+		close(head->infile);
+		close(head->outfile);
+>>>>>>> 8c08e95ef9ff84195c545cf9c3a52a3d178cb080
 		head = head->next;
 	}
+<<<<<<< HEAD
 	
 		// if (head->pipe == 1)
 		// {
@@ -165,5 +201,11 @@ int	ft_execute(t_data *data)
 	// dup2(out, 1);
 	// close(in);
 	// close(out);
+=======
+	dup2(in, 0);
+	dup2(out, 1);
+	close(in);
+	close(out);
+>>>>>>> 8c08e95ef9ff84195c545cf9c3a52a3d178cb080
 	return (0);
 }
