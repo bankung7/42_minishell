@@ -58,25 +58,4 @@ int	ft_cd(t_data *data, t_cmd *cmd)
 	return (1);
 }
 
-int	ft_cd(t_data *data, t_cmd *cmd)
-{
-	char	*path;
-
-	path = getpath(data, cmd);
-	if (path == NULL)
-		printf("OLDPWD not set\n");
-	else
-	{
-		if (access(path, F_OK) != 0)
-			printf("No such directory\n");
-		else
-		{
-			export_oldpwd(data);
-			chdir(path);
-		}
-		// free(path);
-	}
-	return (0);
-}
-
 

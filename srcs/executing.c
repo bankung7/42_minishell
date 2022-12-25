@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2022/12/19 14:57:51 by pjerddee         ###   ########.fr       */
+/*   Updated: 2022/12/25 13:55:18 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 // {
 // 	pid_t	pid;
 
-<<<<<<< HEAD
 // 	pid = fork();
 // 	if (pid == -1)
 // 		return (-1);
@@ -26,22 +25,6 @@
 // 		waitpid(pid, &g_status, 0);
 // 	return (0);
 // }
-
-// int	ft_execve(t_data *data, t_cmd *cmd)
-// {
-	
-// }
-=======
-	pid = fork();
-	if (pid == -1)
-		return (-1);
-	else if (pid == 0)
-		execve(cmd->path, cmd->argv, data->env);
-	else
-		waitpid(pid, 0, 0);
-	return (0);
-}
->>>>>>> 8c08e95ef9ff84195c545cf9c3a52a3d178cb080
 
 static char	*ft_makepath(char *path, char *name)
 {
@@ -104,7 +87,7 @@ int	ft_builtin(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-int	ft_runcmd(t_data *data, t_cmd *cmd)
+int	ft_runetc(t_data *data, t_cmd *cmd)
 {
 	t_cmd	*head;
 
@@ -114,9 +97,25 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 	else if (ft_iscmd(data, head) != NULL)
 		return (execve(ft_iscmd(data, head), cmd->argv, data->env));
 	else
-	{
-		printf("TEST\n");
 		exit(127);
+	return (0);
+}
+
+int	ft_runcmd(t_data *data, t_cmd *head)
+{
+	int	pid;
+
+	if (ft_builtin(data, head) == 0)
+	{
+		pid = fork();
+		if (pid < 0)
+			return (-1);
+		if (pid == 0)
+			ft_runetc(data, head);
+		else
+			waitpid(pid, &g_status, 0);
+		// printf("exit status = %d\n", WEXITSTATUS(g_status));
+			// wait(NULL);
 	}
 	return (0);
 }
@@ -125,7 +124,7 @@ int	ft_execute(t_data *data)
 {
 	t_cmd *head;
 	int	ncmd = 0;
-	int	pid;
+	// int	pid;
 	// int	in;
 	// int	out;
 
@@ -140,37 +139,38 @@ int	ft_execute(t_data *data)
 			if (pipe(head->pipe_fd) == -1)
 				return (-1);
 		}
-<<<<<<< HEAD
 		head = head->next;
 	}
 	head = data->cmdlist;
 	while (head)
 	{
-		if (ft_builtin(data, head) == 0)
+		if (head->pipe == 1)
 		{
-			pid = fork();
-			if (pid < 0)
-				return (-1);
-			if (pid == 0)
+			printf("PIPE\n");
+			// pid = fork();
+			// if (pid == 0)
+			// {
+				close(head->pipe_fd[0]);
+				dup2(head->pipe_fd[1], 1);
 				ft_runcmd(data, head);
-			else
-				waitpid(pid, &g_status, 0);
-			printf("exit status = %d\n", WEXITSTATUS(g_status));
-				// wait(NULL);
+				// close(head->pipe_fd[1]);
+			// }
+			// else
+			// {
+			// 	wait(NULL);
+			// 	// close(head->pipe_fd[1]);
+			// 	// dup2(head->pipe_fd[0], 0);
+			// 	// close(head->pipe_fd[0]);
+			// }
 		}
-=======
-		in = dup(0);
-		out = dup(1);
-		dup2(head->infile, 0);
-		dup2(head->outfile, 1);
-		if (ft_runcmd(data, head) == -1)
-			return (0);
-		close(head->infile);
-		close(head->outfile);
->>>>>>> 8c08e95ef9ff84195c545cf9c3a52a3d178cb080
+		else
+		{
+			printf("ELSE\n");
+			wait(NULL);
+			ft_runcmd(data, head);
+		}
 		head = head->next;
 	}
-<<<<<<< HEAD
 	
 		// if (head->pipe == 1)
 		// {
@@ -201,11 +201,5 @@ int	ft_execute(t_data *data)
 	// dup2(out, 1);
 	// close(in);
 	// close(out);
-=======
-	dup2(in, 0);
-	dup2(out, 1);
-	close(in);
-	close(out);
->>>>>>> 8c08e95ef9ff84195c545cf9c3a52a3d178cb080
 	return (0);
 }

@@ -94,7 +94,7 @@ int	ft_buildnode(t_data *data, char *str, int type)
 		ft_heredoc(data, str);
 		printf("%s\n", str);
 		// trigger
-		ft_arebuild(data, /);
+		ft_arebuild(data, str);
 	}
 	else if (type == WORD)
 	{
