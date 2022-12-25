@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2022/12/25 13:55:18 by pjerddee         ###   ########.fr       */
+/*   Updated: 2022/12/25 23:46:11 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,16 @@ int	ft_runcmd(t_data *data, t_cmd *head)
 {
 	int	pid;
 
+	printf("RUNN\n");
 	if (ft_builtin(data, head) == 0)
 	{
 		pid = fork();
 		if (pid < 0)
 			return (-1);
 		if (pid == 0)
+		{
 			ft_runetc(data, head);
+		}
 		else
 			waitpid(pid, &g_status, 0);
 		// printf("exit status = %d\n", WEXITSTATUS(g_status));
@@ -123,83 +126,27 @@ int	ft_runcmd(t_data *data, t_cmd *head)
 int	ft_execute(t_data *data)
 {
 	t_cmd *head;
-	int	ncmd = 0;
+	// int	ori_fd[2];
+	// int pipe_fd[2];
 	// int	pid;
-	// int	in;
-	// int	out;
 
 	if (!data->cmdlist)
 		return (-1);
 	head = data->cmdlist;
 	while (head)
 	{
-		ncmd++;
-		if (head->pipe == 1)
-		{
-			if (pipe(head->pipe_fd) == -1)
-				return (-1);
-		}
+		// ori_fd[IN] = dup(STDIN_FILENO);
+		// ori_fd[OUT] = dup(STDOUT_FILENO);
+		// dup2(pipe_fd[IN], STDIN_FILENO);
+		// close(pipe_fd[IN]);
+		// if (pipe(pipe_fd) < 0)
+		// 	return (-1);
+		// dup2(pipe_fd[OUT], STDOUT_FILENO);
+		// close(pipe_fd[OUT]);
+		printf("cmd = %s\n", head->argv[0]);
+		ft_runcmd(data, head);
+		printf("HERE\n");
 		head = head->next;
 	}
-	head = data->cmdlist;
-	while (head)
-	{
-		if (head->pipe == 1)
-		{
-			printf("PIPE\n");
-			// pid = fork();
-			// if (pid == 0)
-			// {
-				close(head->pipe_fd[0]);
-				dup2(head->pipe_fd[1], 1);
-				ft_runcmd(data, head);
-				// close(head->pipe_fd[1]);
-			// }
-			// else
-			// {
-			// 	wait(NULL);
-			// 	// close(head->pipe_fd[1]);
-			// 	// dup2(head->pipe_fd[0], 0);
-			// 	// close(head->pipe_fd[0]);
-			// }
-		}
-		else
-		{
-			printf("ELSE\n");
-			wait(NULL);
-			ft_runcmd(data, head);
-		}
-		head = head->next;
-	}
-	
-		// if (head->pipe == 1)
-		// {
-		// 	if (ft_topipe(data, head) == -1)
-		// 		return (-1);
-		// 	break ;
-		// }
-		// // else if (ft_runcmd(data, head) == -1)
-		// else
-		// {
-		// 	in = dup(0);
-		// 	out = dup(1);
-		// 	dup2(head->infile, 0);
-		// 	dup2(head->outfile, 1);
-		// 	// dup2(head->infile, 0);
-		// 	// dup2(head->outfile, 1);
-		// 	if (ft_runcmd(data, head) == -1)
-		// 		return (0);
-		// }
-		// 	// return (-1);
-		// close(head->infile);
-		// close(head->outfile);
-		// head = head->next;
-		// ft_clean1(data, 0);
-	// }
-	// printf("in = %d\t out = %d\n", head->infile, head->outfile);
-	// dup2(in, 0);
-	// dup2(out, 1);
-	// close(in);
-	// close(out);
 	return (0);
 }

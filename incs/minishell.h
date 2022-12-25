@@ -26,6 +26,9 @@
 # define DOLLARS 13
 # define WORD 99
 
+# define IN 0
+# define OUT 1
+
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif
@@ -42,7 +45,6 @@ typedef struct s_cmd
 	int outfile;
 	int status;
 	int pipe;
-	int pipe_fd[2];
 	struct s_cmd *next;
 }	t_cmd;
 
