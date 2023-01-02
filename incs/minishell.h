@@ -27,8 +27,8 @@
 # define DOLLARS 13
 # define WORD 99
 
-# define IN 0
-# define OUT 1
+# define RD 0
+# define WR 1
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096

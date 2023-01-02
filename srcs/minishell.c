@@ -16,6 +16,7 @@
 			printf("path\t:\t[%s]\n", head->path);
 			printf("infile fd\t:\t[%d]\n", head->infile);
 			printf("outfile fd\t:\t[%d]\n", head->outfile);
+			printf("pipe\t:\t[%d]\n", head->pipe);
 			printf("status\t:\t[%d]\n", head->status);
 			printf("======= end node =======\n");
 			head = head->next;
@@ -56,7 +57,7 @@
 			ft_tokenize(data, line);
 			// ft_test(data);
 			ft_execute(data);
-			ft_clean(data, 0);
+			// ft_clean(data, 0);
 			add_history(line);
 			// printf("%d\n", g_status);
 			free(line);

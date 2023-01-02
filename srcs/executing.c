@@ -6,25 +6,11 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/02 19:24:07 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/02 23:28:21 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// int	ft_execve(t_data *data, t_cmd *cmd)
-// {
-// 	pid_t	pid;
-
-// 	pid = fork();
-// 	if (pid == -1)
-// 		return (-1);
-// 	else if (pid == 0)
-// 		execve(cmd->path, cmd->argv, data->env);
-// 	else
-// 		waitpid(pid, &g_status, 0);
-// 	return (0);
-// }
 
 static char	*ft_makepath(char *path, char *name)
 {
@@ -117,30 +103,63 @@ int	ft_runcmd(t_data *data, t_cmd *head)
 	return (0);
 }
 
+// static int	get_prevcmd(t_data *data)
+// {
+// 	t_cmd	*head;
+// 	t_cmd	*pv;
+
+// 	head = data->cmdlist;
+// 	head->prev = NULL;
+// 	head = head->next;
+// 	while (head)
+// 	{
+// 		pv = data->cmdlist;
+// 		while (pv->next != head)
+// 			pv = pv->next;
+// 		head->prev = pv;
+// 		head = head->next;
+// 	}
+// 	return (0);
+// }
+
 int	ft_execute(t_data *data)
 {
 	t_cmd	*head;
 
 	if (!data->cmdlist)
 		return (-1);
-	// head = data->cmdlist;
-	// while (head->next)
-	// {
-	// 	pipe(head->pfd);
-	// 	head = head->next;
-	// }
+	head = data->cmdlist->next;
+	while (head)
+	{
+		if (pipe(head->pfd) == -1)
+			printf("Error at pipe\n");
+		head = head->next;
+	}
 	head = data->cmdlist;
 	while (head)
 	{
 		head->pid = fork();
 		if (head->pid == 0)
 		{
+			if (head->pipe == 1)
+			{
+				close(head->next->pfd[RD]);
+				dup2(head->next->pfd[WR], STDOUT_FILENO);
+				close(head->next->pfd[WR]);
+			}
+			if (head != data->cmdlist) // not first cmd
+			{
+				close(head->pfd[WR]);
+				dup2(head->pfd[RD], STDIN_FILENO);
+				close(head->pfd[RD]);
+			}
 			ft_runcmd(data, head);
-			printf("%s\n", head->argv[0]);
 			exit(0);
 		}
+		close(head->pfd[WR]);
+		close(head->pfd[RD]);
 		head = head->next;
 	}
-	while (wait(NULL) != -1 || errno != ECHILD) printf("WAITING\n");;
+	while (wait(NULL) != -1 || errno != ECHILD) ;
 	return (0);
 }
