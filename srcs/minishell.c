@@ -54,9 +54,8 @@
 			if (ft_strlen(line) == 0)
 				continue ;
 			ft_tokenize(data, line);
-			printf("IN MAIN\n");
-			ft_test(data);
-			// ft_execute(data);
+			// ft_test(data);
+			ft_execute(data);
 			ft_clean(data, 0);
 			add_history(line);
 			// printf("%d\n", g_status);

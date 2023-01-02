@@ -71,7 +71,7 @@ int	ft_bpipe(t_data *data, char *str, int type)
 	head->next = ft_newnode();
 	if (type == PIPE)
 	{
-		head->next->infile = head->outfile;
+		// head->next->infile = head->outfile;
 		head->status = PIPE;
 		head->pipe = 1;
 	}

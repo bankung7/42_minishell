@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2022/12/25 23:46:11 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/01 23:36:27 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,50 +103,61 @@ int	ft_runetc(t_data *data, t_cmd *cmd)
 
 int	ft_runcmd(t_data *data, t_cmd *head)
 {
-	int	pid;
+	// int	pid;
+	int pipe_fd[2];
+	(void)	data;
+	(void)	head;
 
-	printf("RUNN\n");
-	if (ft_builtin(data, head) == 0)
-	{
-		pid = fork();
-		if (pid < 0)
+	if (pipe(pipe_fd) < 0)
 			return (-1);
-		if (pid == 0)
-		{
-			ft_runetc(data, head);
-		}
-		else
-			waitpid(pid, &g_status, 0);
-		// printf("exit status = %d\n", WEXITSTATUS(g_status));
-			// wait(NULL);
-	}
+	dup2(pipe_fd[IN], STDIN_FILENO);
+	close(pipe_fd[IN]);
+	dup2(pipe_fd[OUT], STDOUT_FILENO);
+	close(pipe_fd[OUT]);
+	// printf("RUNN\n");
+	// if (ft_builtin(data, head) == 0)
+	// {
+	// 	// printf("RUNN\n");
+	// 	pid = fork();
+	// 	if (pid < 0)
+	// 		return (-1);
+	// 	if (pid == 0)
+	// 	{
+	// 		ft_runetc(data, head);
+	// 	}
+	// 	else
+	// 		waitpid(pid, &g_status, 0);
+	// 	// printf("exit status = %d\n", WEXITSTATUS(g_status));
+	// 		// wait(NULL);
+	// }
 	return (0);
 }
 
 int	ft_execute(t_data *data)
 {
 	t_cmd *head;
-	// int	ori_fd[2];
-	// int pipe_fd[2];
+	int	ori_fd[2];
+	// int	status;
 	// int	pid;
 
 	if (!data->cmdlist)
 		return (-1);
 	head = data->cmdlist;
-	while (head)
+	while (head->next)
 	{
-		// ori_fd[IN] = dup(STDIN_FILENO);
-		// ori_fd[OUT] = dup(STDOUT_FILENO);
-		// dup2(pipe_fd[IN], STDIN_FILENO);
-		// close(pipe_fd[IN]);
-		// if (pipe(pipe_fd) < 0)
-		// 	return (-1);
-		// dup2(pipe_fd[OUT], STDOUT_FILENO);
-		// close(pipe_fd[OUT]);
-		printf("cmd = %s\n", head->argv[0]);
+		ori_fd[IN] = dup(STDIN_FILENO);
+		ori_fd[OUT] = dup(STDOUT_FILENO);
+
+
+		// if (head->next == NULL)
+		// {
+		// }
 		ft_runcmd(data, head);
-		printf("HERE\n");
+		// wait(NULL);
 		head = head->next;
 	}
+	dup2(ori_fd[IN], STDIN_FILENO);
+	dup2(ori_fd[OUT], STDOUT_FILENO);
+	ft_runcmd(data, head);
 	return (0);
 }
