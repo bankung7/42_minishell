@@ -57,7 +57,7 @@
 			ft_tokenize(data, line);
 			// ft_test(data);
 			ft_execute(data);
-			// ft_clean(data, 0);
+			ft_clean(data, 0);
 			add_history(line);
 			// printf("%d\n", g_status);
 			free(line);

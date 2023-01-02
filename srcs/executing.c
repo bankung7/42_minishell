@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/02 23:28:21 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/02 23:46:57 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,25 +103,6 @@ int	ft_runcmd(t_data *data, t_cmd *head)
 	return (0);
 }
 
-// static int	get_prevcmd(t_data *data)
-// {
-// 	t_cmd	*head;
-// 	t_cmd	*pv;
-
-// 	head = data->cmdlist;
-// 	head->prev = NULL;
-// 	head = head->next;
-// 	while (head)
-// 	{
-// 		pv = data->cmdlist;
-// 		while (pv->next != head)
-// 			pv = pv->next;
-// 		head->prev = pv;
-// 		head = head->next;
-// 	}
-// 	return (0);
-// }
-
 int	ft_execute(t_data *data)
 {
 	t_cmd	*head;
@@ -154,10 +135,14 @@ int	ft_execute(t_data *data)
 				close(head->pfd[RD]);
 			}
 			ft_runcmd(data, head);
+			// return (0);
 			exit(0);
 		}
-		close(head->pfd[WR]);
-		close(head->pfd[RD]);
+		if (head != data->cmdlist)
+		{
+			close(head->pfd[WR]);
+			close(head->pfd[RD]);
+		}
 		head = head->next;
 	}
 	while (wait(NULL) != -1 || errno != ECHILD) ;
