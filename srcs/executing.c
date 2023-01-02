@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/01 23:36:27 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/02 19:24:07 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,61 +103,44 @@ int	ft_runetc(t_data *data, t_cmd *cmd)
 
 int	ft_runcmd(t_data *data, t_cmd *head)
 {
-	// int	pid;
-	int pipe_fd[2];
-	(void)	data;
-	(void)	head;
-
-	if (pipe(pipe_fd) < 0)
+	int	pid;
+	if (ft_builtin(data, head) == 0)
+	{
+		pid = fork();
+		if (pid < 0)
 			return (-1);
-	dup2(pipe_fd[IN], STDIN_FILENO);
-	close(pipe_fd[IN]);
-	dup2(pipe_fd[OUT], STDOUT_FILENO);
-	close(pipe_fd[OUT]);
-	// printf("RUNN\n");
-	// if (ft_builtin(data, head) == 0)
-	// {
-	// 	// printf("RUNN\n");
-	// 	pid = fork();
-	// 	if (pid < 0)
-	// 		return (-1);
-	// 	if (pid == 0)
-	// 	{
-	// 		ft_runetc(data, head);
-	// 	}
-	// 	else
-	// 		waitpid(pid, &g_status, 0);
-	// 	// printf("exit status = %d\n", WEXITSTATUS(g_status));
-	// 		// wait(NULL);
-	// }
+		if (pid == 0)
+			ft_runetc(data, head);
+		else
+			waitpid(pid, &g_status, 0);
+	}
 	return (0);
 }
 
 int	ft_execute(t_data *data)
 {
-	t_cmd *head;
-	int	ori_fd[2];
-	// int	status;
-	// int	pid;
+	t_cmd	*head;
 
 	if (!data->cmdlist)
 		return (-1);
+	// head = data->cmdlist;
+	// while (head->next)
+	// {
+	// 	pipe(head->pfd);
+	// 	head = head->next;
+	// }
 	head = data->cmdlist;
-	while (head->next)
+	while (head)
 	{
-		ori_fd[IN] = dup(STDIN_FILENO);
-		ori_fd[OUT] = dup(STDOUT_FILENO);
-
-
-		// if (head->next == NULL)
-		// {
-		// }
-		ft_runcmd(data, head);
-		// wait(NULL);
+		head->pid = fork();
+		if (head->pid == 0)
+		{
+			ft_runcmd(data, head);
+			printf("%s\n", head->argv[0]);
+			exit(0);
+		}
 		head = head->next;
 	}
-	dup2(ori_fd[IN], STDIN_FILENO);
-	dup2(ori_fd[OUT], STDOUT_FILENO);
-	ft_runcmd(data, head);
+	while (wait(NULL) != -1 || errno != ECHILD) printf("WAITING\n");;
 	return (0);
 }

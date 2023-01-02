@@ -9,6 +9,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <errno.h>
 # include "libft.h"
 
 // PROMPT
@@ -45,6 +46,8 @@ typedef struct s_cmd
 	int outfile;
 	int status;
 	int pipe;
+	int pfd[2];
+	int pid;
 	struct s_cmd *next;
 }	t_cmd;
 

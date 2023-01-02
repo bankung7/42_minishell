@@ -5,57 +5,31 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <fcntl.h>
-#include "libft.h"
+// #include "libft.h"
 
-int	main(int ac, char **av)
+#define NPROC	3
+// int	main(int ac, char **av)
+int	main()
 {
-	int	pid[ac - 3];
-	int pipes[ac - 4][2]; //3
+	int	pid[NPROC];
+	// int pipes[ac - 4][2]; //3
 	int	i;
-	char **argv;
+	// char **argv;
 
-	for (i = 0; i < ac - 4; i++)
-		pipe(pipes[i]);
+	// for (i = 0; i < ac - 4; i++) //3
+	// 	pipe(pipes[i]);
 
-	for (i = 0; i < ac - 3; i++)
+	for (i = 0; i < NPROC; i++)
 	{
 		pid[i] = fork();
 		if (pid[i] == 0)
 		{
 			// Child process
-			if (i == 0) //first cmd
-			{
-				close(pipes[i][0]);
-				// int infile = open(av[1], O_RDONLY);
-				// dup2(infile, STDIN_FILENO);
-				dup2(pipes[i][1], STDOUT_FILENO);
-				// close(infile);
-				close(pipes[i][1]);
-			}
-			else if (i == ac - 4) //last cmd
-			{
-				close(pipes[i - 1][1]);
-				// int outfile = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0775);
-				dup2(pipes[i - 1][0], STDIN_FILENO);
-				// dup2(outfile, STDOUT_FILENO);
-				// close(outfile);
-				close(pipes[i - 1][0]);
-			}
-			else
-			{
-				close(pipes[i - 1][1]);
-				dup2(pipes[i - 1][0], STDIN_FILENO);
-				dup2(pipes[i][1], STDOUT_FILENO);
-				close(pipes[i - 1][0]);
-				close(pipes[i][1]);
-			}
-			argv = ft_split(av[i + 1], ' ');
-			execlp(argv[0], argv[0], argv[1], NULL);
+			printf("(%d) return : %d\n", i, sleep(3 - i));
 			return (0);
 		}
 	}
-
 	// Main process
-	while (wait(NULL) != -1 || errno != ECHILD)
+	while (wait(NULL) != -1 || errno != ECHILD) ;
 	return (0);
 }
