@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/02 23:46:57 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/03 17:22:58 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,11 @@ int	ft_runetc(t_data *data, t_cmd *cmd)
 int	ft_runcmd(t_data *data, t_cmd *head)
 {
 	int	pid;
+	
 	if (ft_builtin(data, head) == 0)
 	{
-		pid = fork();
+		// dprintf(2, "ETC\n");
+		pid = fork(); // fork for execve
 		if (pid < 0)
 			return (-1);
 		if (pid == 0)
@@ -100,6 +102,19 @@ int	ft_runcmd(t_data *data, t_cmd *head)
 		else
 			waitpid(pid, &g_status, 0);
 	}
+	// else
+	// 	dprintf(2, "BUILTIN\n");
+
+	// pid = fork();
+	// if (pid < 0)
+	// 	return (-1);
+	// if (pid == 0)
+	// {
+	// 	if (ft_builtin(data, head) == 0)
+	// 		ft_runetc(data, head);
+	// }
+	// else
+	// 	waitpid(pid, &g_status, 0);
 	return (0);
 }
 
@@ -119,7 +134,7 @@ int	ft_execute(t_data *data)
 	head = data->cmdlist;
 	while (head)
 	{
-		head->pid = fork();
+		head->pid = fork(); //fork for pipe
 		if (head->pid == 0)
 		{
 			if (head->pipe == 1)
@@ -135,8 +150,9 @@ int	ft_execute(t_data *data)
 				close(head->pfd[RD]);
 			}
 			ft_runcmd(data, head);
+			dprintf(2, "HERE\n");
 			// return (0);
-			exit(0);
+			// exit(0);
 		}
 		if (head != data->cmdlist)
 		{

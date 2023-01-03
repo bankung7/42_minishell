@@ -78,5 +78,6 @@
 		data.tray = 0;
 		ft_sighandle();
 		ft_prompt(&data);
+		dprintf(2, "EXITING\n");
 		ft_exit(&data);
 	}
