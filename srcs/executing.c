@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/03 17:22:58 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/05 00:31:01 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,39 @@ int	ft_builtin(t_data *data, t_cmd *cmd)
 		dup2(cmd->outfile, 1);
 	if (ft_strncmp("echo", head->argv[0], 5) == 0)
 		return (ft_echo(head));
-	else if (ft_strncmp("env", head->argv[0], 4) == 0)
+	if (ft_strncmp("env", head->argv[0], 4) == 0)
 		return (ft_env(data));
-	else if (ft_strncmp("pwd", head->argv[0], 4) == 0)
+	if (ft_strncmp("pwd", head->argv[0], 4) == 0)
 		return (ft_pwd());
-	else if (ft_strncmp("cd", head->argv[0], 3) == 0)
+	if (ft_strncmp("cd", head->argv[0], 3) == 0)
+		return (1);
+	if (ft_strncmp("export", head->argv[0], 7) == 0)
+		return (1);
+	if (ft_strncmp("unset", head->argv[0], 6) == 0)
+		return (1);
+	if (ft_strncmp("exit", head->argv[0], 5) == 0)
+		return (1);
+	return (0);
+}
+
+int	ft_builtin_out(t_data *data, t_cmd *cmd)
+{
+	t_cmd	*head;
+
+	head = cmd;
+	if (cmd->outfile != 1)
+		dup2(cmd->outfile, 1);
+	// if (ft_strncmp("echo", head->argv[0], 5) == 0)
+	// 	return (ft_echo(head));
+	// if (ft_strncmp("env", head->argv[0], 4) == 0)
+	// 	return (ft_env(data));
+	// if (ft_strncmp("pwd", head->argv[0], 4) == 0)
+	// 	return (ft_pwd());
+	if (ft_strncmp("cd", head->argv[0], 3) == 0)
 		return (ft_cd(data, head));
-	else if (ft_strncmp("export", head->argv[0], 7) == 0)
+	if (ft_strncmp("export", head->argv[0], 7) == 0)
 		return (ft_export(data, head));
-	else if (ft_strncmp("unset", head->argv[0], 6) == 0)
+	if (ft_strncmp("unset", head->argv[0], 6) == 0)
 		return (ft_unset(data, head));
 	else if (ft_strncmp("exit", head->argv[0], 5) == 0)
 		return (ft_exit(data));
@@ -89,19 +113,23 @@ int	ft_runetc(t_data *data, t_cmd *cmd)
 
 int	ft_runcmd(t_data *data, t_cmd *head)
 {
-	int	pid;
-	
-	if (ft_builtin(data, head) == 0)
-	{
-		// dprintf(2, "ETC\n");
-		pid = fork(); // fork for execve
-		if (pid < 0)
-			return (-1);
-		if (pid == 0)
-			ft_runetc(data, head);
-		else
-			waitpid(pid, &g_status, 0);
-	}
+	// int	pid;
+
+	// if (ft_builtin_out(data, head) == 0)
+	// {
+		if (ft_builtin(data, head) == 0)
+		{
+			// pid = fork(); // fork for execve
+			// if (pid < 0)
+			// 	return (-1);
+			// if (pid == 0)
+				ft_runetc(data, head);
+			// else
+			// 	waitpid(pid, &g_status, 0);
+		}
+		// else
+		// 	exit(0);
+	// }
 	// else
 	// 	dprintf(2, "BUILTIN\n");
 
@@ -114,7 +142,7 @@ int	ft_runcmd(t_data *data, t_cmd *head)
 	// 		ft_runetc(data, head);
 	// }
 	// else
-	// 	waitpid(pid, &g_status, 0);
+		// waitpid(pid, &g_status, 0);
 	return (0);
 }
 
@@ -122,6 +150,8 @@ int	ft_execute(t_data *data)
 {
 	t_cmd	*head;
 
+	data->ori_fd[RD] = dup(STDIN_FILENO);
+	data->ori_fd[WR] = dup(STDOUT_FILENO);
 	if (!data->cmdlist)
 		return (-1);
 	head = data->cmdlist->next;
@@ -132,32 +162,38 @@ int	ft_execute(t_data *data)
 		head = head->next;
 	}
 	head = data->cmdlist;
+	dup2(head->infile, STDIN_FILENO);
 	while (head)
 	{
-		head->pid = fork(); //fork for pipe
-		if (head->pid == 0)
+		// if (ft_builtout(data, head) == 0)
 		{
-			if (head->pipe == 1)
+			head->pid = fork(); //fork for pipe
+			if (head->pid == 0)
 			{
-				close(head->next->pfd[RD]);
-				dup2(head->next->pfd[WR], STDOUT_FILENO);
-				close(head->next->pfd[WR]);
+				if (head->pipe == 1)
+				{
+					close(head->next->pfd[RD]);
+					dup2(head->next->pfd[WR], STDOUT_FILENO);
+					close(head->next->pfd[WR]);
+				}
+				dup2(head->outfile, STDOUT_FILENO);
+				if (head != data->cmdlist) // not first cmd
+				{
+					close(head->pfd[WR]);
+					dup2(head->pfd[RD], STDIN_FILENO);
+					close(head->pfd[RD]);
+				}
+				ft_runcmd(data, head);
+				// return (0);
+				exit(0);
 			}
-			if (head != data->cmdlist) // not first cmd
+			if (head != data->cmdlist) // for parent
 			{
 				close(head->pfd[WR]);
-				dup2(head->pfd[RD], STDIN_FILENO);
 				close(head->pfd[RD]);
 			}
-			ft_runcmd(data, head);
-			dprintf(2, "HERE\n");
-			// return (0);
-			// exit(0);
-		}
-		if (head != data->cmdlist)
-		{
-			close(head->pfd[WR]);
-			close(head->pfd[RD]);
+			waitpid(head->pid, &g_status, WNOHANG);
+			ft_builtin_out(data, head);
 		}
 		head = head->next;
 	}

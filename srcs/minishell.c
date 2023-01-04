@@ -33,8 +33,8 @@
 		cwd = malloc(sizeof(char)* 1024);
 		getcwd(cwd, 1023);
 		// prompt = ft_strnstr(cwd, "minishell", ft_strlen(cwd));
-		tmp = ft_strjoin(cwd,"$ \033[;37m");
-		prompt = ft_strjoin("\033[;32m", tmp);
+		tmp = ft_strjoin(cwd,"$ \e[;37m \e[0m");
+		prompt = ft_strjoin("\e[;32m", tmp);
 		free(cwd);
 		free(tmp);
 		return(prompt);
@@ -78,6 +78,5 @@
 		data.tray = 0;
 		ft_sighandle();
 		ft_prompt(&data);
-		dprintf(2, "EXITING\n");
 		ft_exit(&data);
 	}

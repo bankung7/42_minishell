@@ -57,6 +57,7 @@ typedef struct	s_data
 	t_cmd	*cmdlist;
 	char	**tray;
 	char	**env;
+	int		ori_fd[2];
 }	t_data;
 
 // signal.c
