@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/05 00:31:01 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/05 01:33:55 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,13 @@ int	ft_execute(t_data *data)
 		head = head->next;
 	}
 	head = data->cmdlist;
-	dup2(head->infile, STDIN_FILENO);
+	if (head->infile > 0)
+		dup2(head->infile, STDIN_FILENO);
+	else
+	{
+		printf("No such file or directory\n");
+		return (0);
+	}
 	while (head)
 	{
 		// if (ft_builtout(data, head) == 0)
@@ -184,7 +190,6 @@ int	ft_execute(t_data *data)
 					close(head->pfd[RD]);
 				}
 				ft_runcmd(data, head);
-				// return (0);
 				exit(0);
 			}
 			if (head != data->cmdlist) // for parent
