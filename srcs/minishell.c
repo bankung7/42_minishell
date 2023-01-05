@@ -48,6 +48,7 @@
 		while (1)
 		{
 			prompt = getprompt();
+			// dprintf(2, "prompt is (%s)\n", prompt);
 			line = readline(prompt);
 			free(prompt);
 			if (!line)
@@ -61,6 +62,7 @@
 			add_history(line);
 			// printf("%d\n", g_status);
 			free(line);
+			// dprintf(2, "end of loop\n");
 		}
 		return (0);
 	}

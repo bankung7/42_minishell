@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/05 14:44:50 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/05 19:59:27 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,45 +162,43 @@ int	ft_execute(t_data *data)
 		head = head->next;
 	}
 	head = data->cmdlist;
-	if (head->infile < 0)
+	if (dup2(head->infile, STDIN_FILENO) < 0)
 	{
 		printf("No such file or directory\n");
 		return (0);
 	}
-	dup2(head->infile, STDIN_FILENO);
 	while (head)
 	{
-		// if (ft_builtout(data, head) == 0)
+		head->pid = fork(); //fork for pipe
+		if (head->pid == 0)
 		{
-			head->pid = fork(); //fork for pipe
-			if (head->pid == 0)
+			if (head->pipe == 1)
 			{
-				if (head->pipe == 1)
-				{
-					close(head->next->pfd[RD]);
-					dup2(head->next->pfd[WR], STDOUT_FILENO);
-					close(head->next->pfd[WR]);
-				}
-				dup2(head->outfile, STDOUT_FILENO);
-				if (head != data->cmdlist) // not first cmd
-				{
-					close(head->pfd[WR]);
-					dup2(head->pfd[RD], STDIN_FILENO);
-					close(head->pfd[RD]);
-				}
-				ft_runcmd(data, head);
-				exit(0);
+				close(head->next->pfd[RD]);
+				dup2(head->next->pfd[WR], STDOUT_FILENO);
+				close(head->next->pfd[WR]);
 			}
-			if (head != data->cmdlist) // for parent
+			dup2(head->outfile, STDOUT_FILENO);
+			if (head != data->cmdlist) // not first cmd
 			{
 				close(head->pfd[WR]);
+				dup2(head->pfd[RD], STDIN_FILENO);
 				close(head->pfd[RD]);
 			}
-			waitpid(head->pid, &g_status, WNOHANG);
-			ft_builtin_out(data, head);
+			ft_runcmd(data, head);
+			exit(0);
 		}
+		if (head != data->cmdlist) // for parent
+		{
+			close(head->pfd[WR]);
+			close(head->pfd[RD]);
+		}
+		// wait(NULL);
+		// waitpid(head->pid, &g_status, WNOHANG);
+		ft_builtin_out(data, head);
 		head = head->next;
 	}
-	while (wait(NULL) != -1 || errno != ECHILD) ;
+	// while (wait(&g_status) != -1 || errno != ECHILD) ;
+	while (wait(&g_status) != -1 || errno != ECHILD) ;
 	return (0);
 }

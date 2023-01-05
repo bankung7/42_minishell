@@ -34,6 +34,10 @@ int	ft_clean(t_data *data, int res)
 	t_cmd	*head;
 
 	head = data->cmdlist;
+	dup2(data->ori_fd[RD], STDIN_FILENO);
+	dup2(data->ori_fd[WR], STDOUT_FILENO);
+	close(data->ori_fd[WR]);
+	close(data->ori_fd[RD]);
 	while (head)
 	{
 		i = 0;
@@ -44,11 +48,7 @@ int	ft_clean(t_data *data, int res)
 		if (head->infile > 2)
 			close(head->infile);
 		if (head->outfile > 2)
-		{
-			dup2(data->ori_fd[RD], STDIN_FILENO);
-			dup2(data->ori_fd[WR], STDOUT_FILENO);
 			close(head->outfile);
-		}
 		head = head->next;
 		free(data->cmdlist);
 		data->cmdlist = head;
