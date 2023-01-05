@@ -1,24 +1,5 @@
 #include "minishell.h"
 
-// void	here_doc_pipe(int ac, char **av, char **paths)
-// {
-// 	int		hd_fd[2];
-
-// 	if (pipe(hd_fd) != 0)
-// 	{
-// 		ft_free(paths);
-// 		ft_err("Error at pipe\n");
-// 	}
-// 	else
-// 	{
-// 		ft_putstr_fd(here_doc(av), hd_fd[1]);
-// 		dup2(hd_fd[0], 0);
-// 		close(hd_fd[0]);
-// 		close(hd_fd[1]);
-// 		ft_pipex(ac, av, paths, 3);
-// 	}
-// }
-
 // static char	*here_doc(char *str)
 // {
 // 	char	*limiter;
@@ -48,13 +29,13 @@ int ft_heredoc(t_data *data, char *str)
 	(void) str;
 	// t_cmd	*head;
 
-
+	// here_doc(str);
+	// printf("%s", here_doc(str));
 	// head = data->cmdlist;
-	// while(head)
+	// while(head->next)
 	// {
 
 	// 	head = head->next;
 	// }
-	// printf("%s", here_doc(str));
 	return (2);
 }

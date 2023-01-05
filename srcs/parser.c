@@ -14,6 +14,7 @@ t_cmd	*ft_newnode(void)
 	node->status = 0;
 	node->pipe = 0;
 	node->next = 0;
+	node->hd_lmt = 0;
 	return (node);
 }
 
@@ -91,10 +92,10 @@ int	ft_buildnode(t_data *data, char *str, int type)
 		ft_redirection(data, str);
 	else if (type == WORD && head->status == HEREDOC)
 	{
+		head->hd_lmt = str;
+		head->status = WORD;
 		ft_heredoc(data, str);
-		printf("%s\n", str);
-		// trigger
-		ft_arebuild(data, str);
+		// ft_arebuild(data, str);
 	}
 	else if (type == WORD)
 	{

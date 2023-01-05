@@ -48,6 +48,7 @@ typedef struct s_cmd
 	int pipe;
 	int pfd[2];
 	int pid;
+	char *hd_lmt;
 	struct s_cmd *next;
 }	t_cmd;
 
@@ -134,7 +135,7 @@ int		ft_strlen_nl(char *s, int sel);
 char	*ft_strcpy(char *dst, char *src);
 
 //heredoc.c
-char	*here_doc(char **av);
+// char	*here_doc(char **av);
 void	here_doc_pipe(int ac, char **av, char **paths);
 
 #endif

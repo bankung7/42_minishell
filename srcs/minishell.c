@@ -18,6 +18,7 @@
 			printf("outfile fd\t:\t[%d]\n", head->outfile);
 			printf("pipe\t:\t[%d]\n", head->pipe);
 			printf("status\t:\t[%d]\n", head->status);
+			printf("heredeoc limiter\t:\t[%s]\n", head->hd_lmt);
 			printf("======= end node =======\n");
 			head = head->next;
 		}
@@ -56,8 +57,9 @@
 			if (ft_strlen(line) == 0)
 				continue ;
 			ft_tokenize(data, line);
-			// ft_test(data);
-			ft_execute(data);
+			ft_test(data);
+			// pritnf()
+			// ft_execute(data);
 			ft_clean(data, 0);
 			add_history(line);
 			// printf("%d\n", g_status);
