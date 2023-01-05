@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/05 01:33:55 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/05 14:44:50 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,13 +162,12 @@ int	ft_execute(t_data *data)
 		head = head->next;
 	}
 	head = data->cmdlist;
-	if (head->infile > 0)
-		dup2(head->infile, STDIN_FILENO);
-	else
+	if (head->infile < 0)
 	{
 		printf("No such file or directory\n");
 		return (0);
 	}
+	dup2(head->infile, STDIN_FILENO);
 	while (head)
 	{
 		// if (ft_builtout(data, head) == 0)
