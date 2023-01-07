@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+// case "'$PWD'" should be expanded
+
 static char	*ft_qtrim(char *str)
 {
 	int		i;
@@ -56,11 +58,10 @@ static char	*ft_prepvar(t_data *data, char *str, int start)
 	i = 1;
 	while (str[start + i])
 	{
-		if (ft_isdelimit(str, start + i) == 0
-			|| ft_isdelimit(str, start + i) >= 11)
-			break ;
-		else
-			i++;
+		if (ft_isalnum(str[start + i]) == 1 || str[start + i] == '_')
+            i++;
+        else
+            break ;
 	}
 	substr = ft_substr(str, start + 1, i - 1);
 	tmp = ft_replacevar(data, str, substr, start);
@@ -74,7 +75,10 @@ static char	*ft_exword(t_data *data, char *str, int i)
 	char	*tmp;
 
 	if (ft_strncmp("$?", str, 3) == 0)
+	{
+		// printf("status %d\n", g_status);	
 		return (ft_itoa(g_status));
+	}
 	tmp = ft_prepvar(data, str, i);
 	str = ft_strdup(tmp);
 	free(tmp);

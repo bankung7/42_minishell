@@ -1,22 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executing.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
+/*   Updated: 2023/01/05 19:59:27 by pjerddee         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-int	ft_execve(t_data *data, t_cmd *cmd)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == -1)
-		return (-1);
-	else if (pid == 0)
-	{
-		// dprintf(2, "infile = %d\t outfile = %d\n", cmd->infile, cmd->outfile);
-		execve(cmd->path, cmd->argv, data->env);
-	}
-	else
-		waitpid(pid, &g_status, 0);
-	// printf("%d\n", g_status);
-	return (0);
-}
 
 static char	*ft_makepath(char *path, char *name)
 {
@@ -31,7 +25,7 @@ static char	*ft_makepath(char *path, char *name)
 	return (tmp);
 }
 
-int	ft_iscmd(t_data *data, t_cmd *cmd)
+char	*ft_iscmd(t_data *data, t_cmd *cmd)
 {
 	int		i;
 	char	*tmp;
@@ -46,21 +40,16 @@ int	ft_iscmd(t_data *data, t_cmd *cmd)
 	{
 		tmp2 = ft_makepath(path[i], cmd->path);
 		if (access(tmp2, F_OK | X_OK) == 0)
-		{
-			free(cmd->path);
-			cmd->path = tmp2;
-			ft_execve(data, cmd);
-			ft_free2((void **)path, 0);
-			return (0);
-		}
+			return (tmp2);
 		free(tmp2);
 		i++;
 	}
 	ft_putstr_fd("command not found\n", 2);
-	return (ft_free2((void **)path, -1));
+	ft_free2((void **)path, -1);
+	return (NULL);
 }
 
-int	ft_runcmd(t_data *data, t_cmd *cmd)
+int	ft_builtin(t_data *data, t_cmd *cmd)
 {
 	t_cmd	*head;
 
@@ -69,64 +58,147 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 		dup2(cmd->outfile, 1);
 	if (ft_strncmp("echo", head->argv[0], 5) == 0)
 		return (ft_echo(head));
-	else if (ft_strncmp("env", head->argv[0], 4) == 0)
+	if (ft_strncmp("env", head->argv[0], 4) == 0)
 		return (ft_env(data));
-	else if (ft_strncmp("pwd", head->argv[0], 4) == 0)
+	if (ft_strncmp("pwd", head->argv[0], 4) == 0)
 		return (ft_pwd());
-	else if (ft_strncmp("cd", head->argv[0], 3) == 0)
+	if (ft_strncmp("cd", head->argv[0], 3) == 0)
+		return (1);
+	if (ft_strncmp("export", head->argv[0], 7) == 0)
+		return (1);
+	if (ft_strncmp("unset", head->argv[0], 6) == 0)
+		return (1);
+	if (ft_strncmp("exit", head->argv[0], 5) == 0)
+		return (1);
+	return (0);
+}
+
+int	ft_builtin_out(t_data *data, t_cmd *cmd)
+{
+	t_cmd	*head;
+
+	head = cmd;
+	if (cmd->outfile != 1)
+		dup2(cmd->outfile, 1);
+	// if (ft_strncmp("echo", head->argv[0], 5) == 0)
+	// 	return (ft_echo(head));
+	// if (ft_strncmp("env", head->argv[0], 4) == 0)
+	// 	return (ft_env(data));
+	// if (ft_strncmp("pwd", head->argv[0], 4) == 0)
+	// 	return (ft_pwd());
+	if (ft_strncmp("cd", head->argv[0], 3) == 0)
 		return (ft_cd(data, head));
-	else if (ft_strncmp("export", head->argv[0], 7) == 0)
+	if (ft_strncmp("export", head->argv[0], 7) == 0)
 		return (ft_export(data, head));
-	else if (ft_strncmp("unset", head->argv[0], 6) == 0)
+	if (ft_strncmp("unset", head->argv[0], 6) == 0)
 		return (ft_unset(data, head));
 	else if (ft_strncmp("exit", head->argv[0], 5) == 0)
 		return (ft_exit(data));
-	else if (access(cmd->path, F_OK | X_OK) == 0)
-		return (ft_execve(data, cmd));
-	else if (ft_iscmd(data, head) == -1)
-		return (-1);
+	return (0);
+}
+
+int	ft_runetc(t_data *data, t_cmd *cmd)
+{
+	t_cmd	*head;
+
+	head = cmd;
+	if (access(cmd->path, F_OK | X_OK) == 0)
+		return (execve(cmd->path, cmd->argv, data->env));
+	else if (ft_iscmd(data, head) != NULL)
+		return (execve(ft_iscmd(data, head), cmd->argv, data->env));
+	else
+		exit(127);
+	return (0);
+}
+
+int	ft_runcmd(t_data *data, t_cmd *head)
+{
+	// int	pid;
+
+	// if (ft_builtin_out(data, head) == 0)
+	// {
+		if (ft_builtin(data, head) == 0)
+		{
+			// pid = fork(); // fork for execve
+			// if (pid < 0)
+			// 	return (-1);
+			// if (pid == 0)
+				ft_runetc(data, head);
+			// else
+			// 	waitpid(pid, &g_status, 0);
+		}
+		// else
+		// 	exit(0);
+	// }
+	// else
+	// 	dprintf(2, "BUILTIN\n");
+
+	// pid = fork();
+	// if (pid < 0)
+	// 	return (-1);
+	// if (pid == 0)
+	// {
+	// 	if (ft_builtin(data, head) == 0)
+	// 		ft_runetc(data, head);
+	// }
+	// else
+		// waitpid(pid, &g_status, 0);
 	return (0);
 }
 
 int	ft_execute(t_data *data)
 {
-	t_cmd *head;
-	int	in;
-	int	out;
+	t_cmd	*head;
 
+	data->ori_fd[RD] = dup(STDIN_FILENO);
+	data->ori_fd[WR] = dup(STDOUT_FILENO);
 	if (!data->cmdlist)
 		return (-1);
-	head = data->cmdlist;
+	head = data->cmdlist->next;
 	while (head)
 	{
-		if (head->pipe == 1)
-		{
-			if (ft_topipe(data, head) == -1)
-				return (-1);
-			break ;
-		}
-		// else if (ft_runcmd(data, head) == -1)
-		else
-		{
-			in = dup(0);
-			out = dup(1);
-			dup2(head->infile, 0);
-			dup2(head->outfile, 1);
-			// dup2(head->infile, 0);
-			// dup2(head->outfile, 1);
-			if (ft_runcmd(data, head) == -1)
-				return (0);
-		}
-			// return (-1);
-		close(head->infile);
-		close(head->outfile);
+		if (pipe(head->pfd) == -1)
+			printf("Error at pipe\n");
 		head = head->next;
-		ft_clean1(data, 0);
 	}
-	// printf("in = %d\t out = %d\n", head->infile, head->outfile);
-	dup2(in, 0);
-	dup2(out, 1);
-	close(in);
-	close(out);
+	head = data->cmdlist;
+	if (dup2(head->infile, STDIN_FILENO) < 0)
+	{
+		printf("No such file or directory\n");
+		return (0);
+	}
+	while (head)
+	{
+		head->pid = fork(); //fork for pipe
+		if (head->pid == 0)
+		{
+			if (head->pipe == 1)
+			{
+				close(head->next->pfd[RD]);
+				dup2(head->next->pfd[WR], STDOUT_FILENO);
+				close(head->next->pfd[WR]);
+			}
+			dup2(head->outfile, STDOUT_FILENO);
+			if (head != data->cmdlist) // not first cmd
+			{
+				close(head->pfd[WR]);
+				dup2(head->pfd[RD], STDIN_FILENO);
+				close(head->pfd[RD]);
+			}
+			ft_runcmd(data, head);
+			exit(0);
+		}
+		if (head != data->cmdlist) // for parent
+		{
+			close(head->pfd[WR]);
+			close(head->pfd[RD]);
+		}
+		// wait(NULL);
+		// waitpid(head->pid, &g_status, WNOHANG);
+		ft_builtin_out(data, head);
+		head = head->next;
+	}
+	// while (wait(&g_status) != -1 || errno != ECHILD) ;
+	while (wait(&g_status) != -1 || errno != ECHILD) ;
 	return (0);
 }

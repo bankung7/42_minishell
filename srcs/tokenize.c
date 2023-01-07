@@ -97,23 +97,24 @@ int	ft_buildschar(t_data *data, char *str, int type)
 	else if (type == PIPE)
 		return (ft_bpipe(data, str, type));
 	else if (type == HEREDOC)
-		return (ft_heredoc(data, str));
+		head->status = HEREDOC;
 	return (((type + 1) % 2) + 1);
 }
 
-int	ft_tokenize(t_data *data, char *str)
+// int	ft_tokenize(t_data *data, char *str)
+int ft_tokenize(t_data *data)
 {
 	int	i;
 	int	c;
 
 	i = 0;
-	while (str[i])
+	while (data->line[i])
 	{
-		c = ft_isdelimit(str, i);
+		c = ft_isdelimit(data->line, i);
 		if (c == -1 || (c >= SQUOTE && c <= DOLLARS))
-			i += ft_buildword(data, str, i, 0);
+			i += ft_buildword(data, data->line, i, 0);
 		else if (c >= 1 && c <= 7)
-			i += ft_buildschar(data, str, c);
+			i += ft_buildschar(data, data->line, c);
 		else
 			i++;
 		if (i < 0)

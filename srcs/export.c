@@ -1,51 +1,55 @@
 #include "minishell.h"
 
-static int	ft_addenv(t_data *data, char *str)
+int ft_arrlen(char **arr)
 {
-	int		i;
+	int i;
+
+	i = 0;
+	while (arr && arr[i])
+		i++;
+	return (i);
+}
+
+// set new variable in environment
+int	ft_addenv(t_data *data, char *var)
+{
+	int	i;
+	int	len;
 	char	**tmp;
 
 	i = 0;
-	while (data->env[i])
-		i++;
-	i += 2;
-	tmp = malloc(sizeof(char *) * i);
+	len = ft_arrlen(data->env);
+	tmp = ft_calloc(sizeof(char*), len + 2);
 	if (!tmp)
 		return (-1);
-	tmp[--i] = 0;
-	tmp[--i] = ft_strdup(str);
-	while (--i >= 0)
+	while (i < len)
+	{
 		tmp[i] = data->env[i];
+		i++;
+	}
+	tmp[i] = ft_strdup(var);
 	free(data->env);
 	data->env = tmp;
 	return (0);
 }
 
-static int	ft_setvar(t_data *data, char *str)
+// set variable to environment
+int ft_setenv(t_data *data, char *var)
 {
-	int		i;
-	char	*find;
+	int	i;
 
 	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	find = ft_substr(str, 0, i);
-	if ((int)ft_strlen(find) == 0)
+	while (data->env && data->env[i])
 	{
-		free(find);
-		return (-1);
-	}
-	i = 0;
-	while (data->env[i] && ft_strncmp(find, data->env[i], ft_strlen(find)) != 0)
+		if (ft_strncmp(var, data->env[i], ft_strchr(var, '=') - var) == 0)
+		{
+			free(data->env[i]);
+			data->env[i] = ft_strdup(var);
+			return (0);
+		}
 		i++;
-	free(find);
-	if (data->env[i] == 0)
-		ft_addenv(data, str);
-	else
-	{
-		free(data->env[i]);
-		data->env[i] = ft_strdup(str);
 	}
+	ft_addenv(data, var);
 	return (0);
 }
 
@@ -57,9 +61,9 @@ int	ft_export(t_data *data, t_cmd *cmd)
 	while (cmd->argv && cmd->argv[i])
 	{
 		if (ft_strchr(cmd->argv[i], '=') != 0)
-			ft_setvar(data, cmd->argv[i]);
+			ft_setenv(data, cmd->argv[i]);
 		i++;
 	}
 	g_status = 0;
-	return (0);
+	return (1);
 }

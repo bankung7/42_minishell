@@ -55,5 +55,7 @@ int	ft_cd(t_data *data, t_cmd *cmd)
 		// free(path);
 	}
 	g_status = 0;
-	return (0);
+	return (1);
 }
+
+

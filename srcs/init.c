@@ -5,6 +5,8 @@ int	ft_initenv(t_data *data, char **env)
 	int	i;
 
 	i = 0;
+    data->len = 0;
+    data->line = 0;
 	while (env && env[i])
 		i++;
 	if (i == 0)
