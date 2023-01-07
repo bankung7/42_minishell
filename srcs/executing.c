@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/07 16:24:52 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/07 19:16:59 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,14 @@ int	ft_execute(t_data *data)
 				close(head->next->pfd[WR]);
 			}
 			dup2(head->outfile, STDOUT_FILENO);
-			if (head != data->cmdlist) // not first cmd
+			if (head->hd_lmt != NULL)
+			{
+				ft_putstr_fd(here_doc(head->hd_lmt), head->hdfd[WR]);
+				close(head->hdfd[WR]);
+				dup2(head->hdfd[RD], STDIN_FILENO);
+				close(head->hdfd[RD]);
+			}
+			else if (head != data->cmdlist) // not first cmd
 			{
 				close(head->pfd[WR]);
 				dup2(head->pfd[RD], STDIN_FILENO);
@@ -150,6 +157,11 @@ int	ft_execute(t_data *data)
 		{
 			close(head->pfd[WR]);
 			close(head->pfd[RD]);
+		}
+		if (head->hd_lmt != NULL)
+		{
+			close(head->hdfd[WR]);
+			close(head->hdfd[RD]);
 		}
 		// wait(NULL);
 		// waitpid(head->pid, &g_status, WNOHANG);

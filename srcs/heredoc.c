@@ -26,16 +26,10 @@ char	*here_doc(char *str)
 
 int ft_heredoc(t_data *data)
 {
-	(void)	data;
-	// t_cmd	*head;
+	t_cmd	*head;
 
-	// here_doc(str);
-	// printf("%s", here_doc(str));
-	// head = data->cmdlist;
-	// while(head->next)
-	// {
-
-	// 	head = head->next;
-	// }
+	head = data->cmdlist;
+	if (head->hd_lmt != NULL)
+		pipe(head->hdfd);
 	return (2);
 }

@@ -46,8 +46,9 @@ typedef struct s_cmd
 	int outfile;
 	int status;
 	int pipe;
-	int pfd[2];
 	int pid;
+	int pfd[2];
+	int hdfd[2];
 	char *hd_lmt;
 	struct s_cmd *next;
 }	t_cmd;

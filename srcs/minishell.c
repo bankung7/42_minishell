@@ -60,7 +60,6 @@
 				continue ;
 			ft_tokenize(data, line);
 			// ft_test(data);
-			// pritnf()
 			ft_execute(data);
 			ft_clean(data, 0);
 			add_history(line);
