@@ -28,6 +28,26 @@ int	ft_free2(void **arr, int res)
 	return (res);
 }
 
+// free token
+int	ft_freetoken(t_data *data)
+{
+	t_token *token;
+
+	if (!data->token)
+		return (0);
+	token = data->token;
+	while (token)
+	{
+		if (token->str)
+			free(token->str);
+		token = token->next;
+		free(data->token);
+		data->token = token;
+	}
+    data->token = 0;
+	return (0);
+}
+
 int	ft_clean(t_data *data, int res)
 {
 	int		i;
@@ -36,15 +56,20 @@ int	ft_clean(t_data *data, int res)
 	head = data->cmdlist;
 	dup2(data->ori_fd[RD], STDIN_FILENO);
 	dup2(data->ori_fd[WR], STDOUT_FILENO);
-	close(data->ori_fd[WR]);
-	close(data->ori_fd[RD]);
+    // try close
+	// close(data->ori_fd[WR]);
+	// close(data->ori_fd[RD]);
 	while (head)
 	{
 		i = 0;
-		while (head->argv && head->argv[i])
-			free(head->argv[i++]);
-		free(head->path);
-		free(head->argv);
+        if (head->argv)
+        {
+            while (head->argv[i])
+                free(head->argv[i++]);
+            free(head->argv);
+        }
+        if (head->path)
+		    free(head->path);
 		if (head->infile > 2)
 			close(head->infile);
 		if (head->outfile > 2)
@@ -54,6 +79,7 @@ int	ft_clean(t_data *data, int res)
 		data->cmdlist = head;
 	}
 	data->cmdlist = 0;
+    ft_freetoken(data);
 	return (res);
 }
 
