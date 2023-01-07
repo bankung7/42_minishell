@@ -4,13 +4,20 @@
 char *ft_getenv(t_data *data, char *var)
 {
 	int	i;
+	int len;
 	char	*value;
 
 	i = 0;
+	len = ft_strlen(var);
 	while (data->env[i] != 0)
 	{
 		value = ft_strchr(data->env[i], '=');
-		if (value != 0 && ft_strncmp(var, data->env[i], ft_strlen(var)) == 0)
+		if (len != (value - data->env[i]))
+		{
+			i++;
+			continue;
+		}
+		if (value != 0 && ft_strncmp(var, data->env[i], value - data->env[i]) == 0)
 			return (ft_strdup(value + 1));
 		i++;
 	}

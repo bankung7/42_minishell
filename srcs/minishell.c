@@ -59,7 +59,8 @@ int ft_prompt(t_data *data)
 		ft_lexical(data);
 		// ft_tokenize(data);
 		// ft_test(data);
-		ft_execute(data);
+		if (data->status == 0)
+			ft_execute(data);
 		ft_clean(data, 0);
 		add_history(data->line);
 		// printf("%d\n", g_status);
@@ -84,4 +85,5 @@ int main(int argc, char **argv, char **env)
 	ft_sighandle();
 	ft_prompt(&data);
 	ft_exit(&data);
+	return (0);
 }

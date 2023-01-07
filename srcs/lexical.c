@@ -115,6 +115,7 @@ int ft_ttoken(t_data *data)
 
 // define
 int ft_parser1(t_data *data);
+int ft_expander1(t_data *data, t_token *token);
 
 // check each char and send to tokenize
 int ft_lexical(t_data *data)
@@ -131,9 +132,10 @@ int ft_lexical(t_data *data)
 		else
 			data->len++;
 	}
-	if (data->status != 0)
-		printf("quote error\n");
+	// if (data->status != 0)
+	// 	printf("quote error\n");
 	// ft_ttoken(data);
+	// printf("lexical status : %d\n", data->status);
 	ft_parser1(data);
 	return (0);
 }
@@ -168,12 +170,14 @@ int ft_wparser(t_data *data, t_token *token)
 		tmp[i] = head->argv[i];
 		i++;
 	}
+	ft_expander1(data, token);
 	tmp[i++] = ft_strdup(token->str);
 	tmp[i] = 0;
 	free(head->argv);
 	head->argv = tmp;
 	if (head->path == 0)
 		head->path = ft_strdup(token->str);
+	head->status = WORD;
 	return (0);
 }
 
@@ -215,6 +219,7 @@ int ft_ppipe(t_data *data, t_token *token)
 		data->status = -1;
 		return (-1);
 	}
+	// after redirection and pipe it seem work like no pipe
 	head->next = ft_newnode();
 	return (0);
 }
@@ -224,7 +229,7 @@ int ft_parser1(t_data *data)
 {
 	t_token *token;
 
-	token = data->token;
+	token = data->token;						
 	while (data->status == 0 && token)
 	{
 		if (token->type == WORD)
@@ -238,7 +243,86 @@ int ft_parser1(t_data *data)
 			ft_ppipe(data, token);
 		token = token->next;
 	}
-	if (data->status == -1)
-		printf("parser error\n");
+	// printf("parser status : %d\n", data->status);
 	return (0);
 }
+
+/////////////////////////////////////////////////////////
+
+int ft_unquote(t_token *token, int i, int quote)
+{
+	int j;
+
+	j = 1;
+	// printf("to unquote : %s\n", &token->str[i]);
+	ft_memmove(&token->str[i], &token->str[i + j], ft_strlen(token->str) - (i + j) + 1);
+	// printf("first move : %s\n", &token->str[i]);
+	while (token->str[i + j] && token->str[i + j] != quote)
+		j++;
+	if (token->str[i + j] == 0)
+		token->str[i] = 0;
+	else
+		ft_memmove(&token->str[i + j], &token->str[i + j + 1], ft_strlen(token->str) - (i + j));
+	return (j);
+}
+
+int ft_getexpand(t_data *data, t_token *token, int i)
+{
+	int j;
+
+	j = 1;
+	while (token->str[i + j] && (ft_isalnum(token->str[i + j]) == 1 || token->str[i + j] == '_'))
+		j++;
+	char *tmp = ft_substr(token->str, i + 1, j - 1);
+	char *env = ft_getenv(data, tmp);
+	// printf("tmp %s : %s\n", tmp, env);
+	char *new = ft_calloc(sizeof(char), ft_strlen(token->str) + (ft_strlen(env) - ft_strlen(tmp)) + 1);
+	ft_memcpy(new, token->str, i);
+	ft_memcpy(&new[ft_strlen(new)], env, ft_strlen(env));
+	ft_memcpy(&new[ft_strlen(new)], &token->str[i + j], ft_strlen(token->str) - (i + j));
+	// printf("new : %s\n", new);
+	// free(new);
+	free(tmp);
+	free(env);
+	free(token->str);
+	token->str = new;
+	return (ft_strlen(env));
+}
+
+int ft_dquote(t_data *data, t_token *token, int i)
+{
+	int j;
+
+	j = 1;
+	while (token->str[i + j] && token->str[i + j] != '"')
+	{
+		if (token->str[i + j] == '$')
+			j += ft_getexpand(data, token, i + j);
+		j++;
+	}
+	ft_unquote(token, i, '"');
+	return (j - 1);
+}
+
+int ft_expander1(t_data *data, t_token *token)
+{
+	int i;
+	(void)data;
+
+	i = 0;
+	while (token->str[i])
+	{
+		if (token->str[i] == '\'')
+			i += ft_unquote(token, i, '\'');
+		else if (token->str[i] == '"')
+			i += ft_dquote(data, token, i);
+		else if (token->str[i] == '$')
+			i += ft_getexpand(data, token, i);
+		else
+			i++;
+	}
+	// printf("after expanded : %s\n", token->str);
+	return (0);
+}
+
+//  "golf$USER'golf'"
