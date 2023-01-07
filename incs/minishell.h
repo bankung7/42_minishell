@@ -110,7 +110,8 @@ int ft_unset(t_data *data, t_cmd *cmd);
 int	ft_redirection(t_data *data, char *file);
 
 // heredoc.c
-int ft_heredoc(t_data *data, char *str);
+char	*here_doc(char *str);
+int ft_heredoc(t_data *data);
 
 // pipe.c
 int	ft_pipex(t_data *data, t_cmd *head);

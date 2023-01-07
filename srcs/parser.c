@@ -94,7 +94,7 @@ int	ft_buildnode(t_data *data, char *str, int type)
 	{
 		head->hd_lmt = str;
 		head->status = WORD;
-		ft_heredoc(data, str);
+		ft_heredoc(data);
 		// ft_arebuild(data, str);
 	}
 	else if (type == WORD)

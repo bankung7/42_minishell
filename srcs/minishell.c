@@ -46,6 +46,8 @@
 		char *line;
 		char	*prompt;
 
+		data->ori_fd[RD] = dup(STDIN_FILENO);
+		data->ori_fd[WR] = dup(STDOUT_FILENO);
 		while (1)
 		{
 			prompt = getprompt();
@@ -57,9 +59,9 @@
 			if (ft_strlen(line) == 0)
 				continue ;
 			ft_tokenize(data, line);
-			ft_test(data);
+			// ft_test(data);
 			// pritnf()
-			// ft_execute(data);
+			ft_execute(data);
 			ft_clean(data, 0);
 			add_history(line);
 			// printf("%d\n", g_status);

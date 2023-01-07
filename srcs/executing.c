@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/05 19:59:27 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/07 16:24:52 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	ft_builtin_out(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-int	ft_runetc(t_data *data, t_cmd *cmd)
+int	ft_runcmd(t_data *data, t_cmd *cmd)
 {
 	t_cmd	*head;
 
@@ -111,56 +111,12 @@ int	ft_runetc(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-int	ft_runcmd(t_data *data, t_cmd *head)
-{
-	// int	pid;
-
-	// if (ft_builtin_out(data, head) == 0)
-	// {
-		if (ft_builtin(data, head) == 0)
-		{
-			// pid = fork(); // fork for execve
-			// if (pid < 0)
-			// 	return (-1);
-			// if (pid == 0)
-				ft_runetc(data, head);
-			// else
-			// 	waitpid(pid, &g_status, 0);
-		}
-		// else
-		// 	exit(0);
-	// }
-	// else
-	// 	dprintf(2, "BUILTIN\n");
-
-	// pid = fork();
-	// if (pid < 0)
-	// 	return (-1);
-	// if (pid == 0)
-	// {
-	// 	if (ft_builtin(data, head) == 0)
-	// 		ft_runetc(data, head);
-	// }
-	// else
-		// waitpid(pid, &g_status, 0);
-	return (0);
-}
-
 int	ft_execute(t_data *data)
 {
 	t_cmd	*head;
 
-	data->ori_fd[RD] = dup(STDIN_FILENO);
-	data->ori_fd[WR] = dup(STDOUT_FILENO);
 	if (!data->cmdlist)
 		return (-1);
-	head = data->cmdlist->next;
-	while (head)
-	{
-		if (pipe(head->pfd) == -1)
-			printf("Error at pipe\n");
-		head = head->next;
-	}
 	head = data->cmdlist;
 	if (dup2(head->infile, STDIN_FILENO) < 0)
 	{
@@ -169,6 +125,7 @@ int	ft_execute(t_data *data)
 	}
 	while (head)
 	{
+		pipe(head->next->pfd);
 		head->pid = fork(); //fork for pipe
 		if (head->pid == 0)
 		{
@@ -185,7 +142,8 @@ int	ft_execute(t_data *data)
 				dup2(head->pfd[RD], STDIN_FILENO);
 				close(head->pfd[RD]);
 			}
-			ft_runcmd(data, head);
+			if (ft_builtin(data, head) == 0)
+				ft_runcmd(data, head);
 			exit(0);
 		}
 		if (head != data->cmdlist) // for parent
@@ -198,7 +156,6 @@ int	ft_execute(t_data *data)
 		ft_builtin_out(data, head);
 		head = head->next;
 	}
-	// while (wait(&g_status) != -1 || errno != ECHILD) ;
 	while (wait(&g_status) != -1 || errno != ECHILD) ;
 	return (0);
 }
