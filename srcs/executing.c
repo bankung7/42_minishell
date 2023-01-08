@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/07 19:16:59 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/08 22:56:39 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,23 +125,26 @@ int	ft_execute(t_data *data)
 	}
 	while (head)
 	{
-		pipe(head->next->pfd);
-		head->pid = fork(); //fork for pipe
+		if (head->next != NULL)
+			pipe(head->next->pfd);
+		head->pid = fork();
 		if (head->pid == 0)
 		{
-			if (head->pipe == 1)
-			{
-				close(head->next->pfd[RD]);
-				dup2(head->next->pfd[WR], STDOUT_FILENO);
-				close(head->next->pfd[WR]);
-			}
-			dup2(head->outfile, STDOUT_FILENO);
 			if (head->hd_lmt != NULL)
 			{
 				ft_putstr_fd(here_doc(head->hd_lmt), head->hdfd[WR]);
 				close(head->hdfd[WR]);
 				dup2(head->hdfd[RD], STDIN_FILENO);
 				close(head->hdfd[RD]);
+			}
+			if (head->pipe == 1)
+			{
+				close(head->next->pfd[RD]);
+				if (head->outfile == 1)
+					dup2(head->next->pfd[WR], STDOUT_FILENO);
+				else
+					dup2(head->outfile, STDOUT_FILENO);
+				close(head->next->pfd[WR]);
 			}
 			else if (head != data->cmdlist) // not first cmd
 			{

@@ -46,10 +46,10 @@
 		char *line;
 		char	*prompt;
 
-		data->ori_fd[RD] = dup(STDIN_FILENO);
-		data->ori_fd[WR] = dup(STDOUT_FILENO);
 		while (1)
 		{
+			data->ori_fd[RD] = dup(STDIN_FILENO);
+			data->ori_fd[WR] = dup(STDOUT_FILENO);
 			prompt = getprompt();
 			// dprintf(2, "prompt is (%s)\n", prompt);
 			line = readline(prompt);
@@ -65,7 +65,6 @@
 			add_history(line);
 			// printf("%d\n", g_status);
 			free(line);
-			// dprintf(2, "end of loop\n");
 		}
 		return (0);
 	}
