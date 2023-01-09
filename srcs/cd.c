@@ -5,7 +5,7 @@ static void	export_oldpwd(t_data *data)
 	char	*cwd;
 	t_cmd	tmp;
 
-	cwd = malloc(sizeof(char)* 1024);
+	cwd = malloc(sizeof(char) * 1024);
 	getcwd(cwd, 1023);
 	tmp.path = ft_strjoin("export OLDPWD=", cwd);
 	free(cwd);
@@ -19,9 +19,9 @@ static char	*getpath(t_data *data, t_cmd *cmd)
 {
 	char	*old_path;
 
-	if (cmd->argv[1] == NULL || ft_strncmp(cmd->argv[1], "~", 2)  == 0)
+	if (cmd->argv[1] == NULL || ft_strncmp(cmd->argv[1], "~", 2) == 0)
 		return (ft_getenv(data, "HOME"));
-	else if (ft_strncmp(cmd->argv[1], "-", 2)  == 0)
+	else if (ft_strncmp(cmd->argv[1], "-", 2) == 0)
 	{
 		old_path = ft_getenv(data, "OLDPWD");
 		if (old_path == NULL)
@@ -30,7 +30,8 @@ static char	*getpath(t_data *data, t_cmd *cmd)
 		return (old_path);
 	}
 	else if (ft_strchr(cmd->argv[1], '~'))
-		return (ft_strjoin(ft_getenv(data, "HOME"), ft_strchr(cmd->argv[1], '~') + 1));
+		return (ft_strjoin(ft_getenv(data, "HOME"),
+				ft_strchr(cmd->argv[1], '~') + 1));
 	else
 		return (cmd->argv[1]);
 }
@@ -52,10 +53,7 @@ int	ft_cd(t_data *data, t_cmd *cmd)
 			export_oldpwd(data);
 			chdir(path);
 		}
-		// free(path);
 	}
 	g_status = 0;
 	return (1);
 }
-
-

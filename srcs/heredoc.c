@@ -1,6 +1,17 @@
 #include "minishell.h"
 
-char	*here_doc(char *str)
+void	heredoc_dup(t_cmd *head)
+{
+	if (head->hd_lmt != NULL)
+	{
+		ft_putstr_fd(heredoc(head->hd_lmt), head->hdfd[WR]);
+		close(head->hdfd[WR]);
+		dup2(head->hdfd[RD], STDIN_FILENO);
+		close(head->hdfd[RD]);
+	}
+}
+
+char	*heredoc(char *str)
 {
 	char	*limiter;
 	char	*line;
@@ -19,12 +30,11 @@ char	*here_doc(char *str)
 		free(tmp_input_s);
 		line = get_next_line(0);
 	}
-
 	free(limiter);
 	return (input_s);
 }
 
-int ft_heredoc(t_data *data)
+int	ft_heredoc(t_data *data)
 {
 	t_cmd	*head;
 

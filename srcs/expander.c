@@ -75,7 +75,7 @@ static char	*ft_exword(t_data *data, char *str, int i)
 
 	if (ft_strncmp("$?", str, 3) == 0)
 	{
-		printf("status %d\n", g_status);	
+		printf("status %d\n", g_status);
 		return (ft_itoa(g_status));
 	}
 	tmp = ft_prepvar(data, str, i);

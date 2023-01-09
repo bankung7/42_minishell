@@ -35,26 +35,25 @@
 # endif
 
 // Global for pipe status
-int g_status;
+int	g_status;
 
 // struct
 typedef struct s_cmd
 {
-	char **argv;
-	char *path;
-	int infile;
-	int outfile;
-	int status;
-	int pipe;
-	int pid;
-	int pfd[2];
-	int hdfd[2];
-	char *hd_lmt;
-	struct s_cmd *next;
+	char			**argv;
+	char			*path;
+	int				infile;
+	int				outfile;
+	int				status;
+	int				pipe;
+	int				pid;
+	int				pfd[2];
+	int				hdfd[2];
+	char			*hd_lmt;
+	struct s_cmd	*next;
 }	t_cmd;
 
-
-typedef struct	s_data
+typedef struct s_data
 {
 	t_cmd	*cmdlist;
 	char	**tray;
@@ -63,67 +62,72 @@ typedef struct	s_data
 }	t_data;
 
 // signal.c
-int	ft_sighandle(void);
+int		ft_sighandle(void);
 
 // init.c
-int	ft_initenv(t_data *data, char **env);
+int		ft_initenv(t_data *data, char **env);
 
 // tokenize.c
-int ft_isdelimit(char *str, int i);
-int ft_tokenize(t_data *data, char *str);
+int		ft_isdelimit(char *str, int i);
+int		ft_tokenize(t_data *data, char *str);
 
 // expander.c
-char *ft_expander(t_data *data, char *str, int start, int j);
+char	*ft_expander(t_data *data, char *str, int start, int j);
 
 // parser.c
-int ft_buildnode(t_data *data, char *str, int type);
-t_cmd *ft_newnode(void);
-int ft_bpipe(t_data *data, char *str, int type);
+int		ft_buildnode(t_data *data, char *str, int type);
+t_cmd	*ft_newnode(void);
+int		ft_bpipe(t_data *data, char *str, int type);
+
+// cmd.c
+char	*ft_iscmd(t_data *data, t_cmd *cmd);
+int		ft_builtin(t_data *data, t_cmd *cmd);
+int		ft_builtin_out(t_data *data, t_cmd *cmd);
+int		ft_runcmd(t_data *data, t_cmd *cmd);
 
 // executing.c
-int ft_execute(t_data *data);
-// int ft_execve(t_data *data, t_cmd *cmd);
-// int ft_iscmd(t_data *data, t_cmd *cmd);
-char	*ft_iscmd(t_data *data, t_cmd *cmd);
-int ft_runcmd(t_data *data, t_cmd *cmd);
+int		ft_execute(t_data *data);
 
 // builtin
 // env.c
-char *ft_getenv(t_data *data, char *var);
-int ft_env(t_data *data);
+char	*ft_getenv(t_data *data, char *var);
+int		ft_env(t_data *data);
 
 // echo.c
-int ft_echo(t_cmd *cmd);
+int		ft_echo(t_cmd *cmd);
 
 // pwd.c
-int ft_pwd(void);
+int		ft_pwd(void);
 
-//cd.c
-int	ft_cd(t_data *data, t_cmd *cmd);
+// cd.c
+int		ft_cd(t_data *data, t_cmd *cmd);
 
 // export.c
-int ft_export(t_data *data, t_cmd *cmd);
+int		ft_export(t_data *data, t_cmd *cmd);
 
 // unset.c
-int ft_unset(t_data *data, t_cmd *cmd);
+int		ft_unset(t_data *data, t_cmd *cmd);
 
 // redirection.c
-int	ft_redirection(t_data *data, char *file);
+int		ft_redirection(t_data *data, char *file);
 
 // heredoc.c
-char	*here_doc(char *str);
-int ft_heredoc(t_data *data);
+void	heredoc_dup(t_cmd *head);
+char	*heredoc(char *str);
+int		ft_heredoc(t_data *data);
 
 // pipe.c
-int	ft_pipex(t_data *data, t_cmd *head);
-int ft_topipe(t_data *data, t_cmd *cmd);
+int		pipe_next(t_data *data, t_cmd *head);
+int		infile_dup(t_data *data, t_cmd *head);
+void	stdout_dup(t_data *data, t_cmd *head);
+void	stdin_dup(t_data *data, t_cmd *head);
 
 // exit.c
-int ft_clean(t_data *data, int res);
-int ft_exit(t_data *data);
-int ft_freel1(t_data *data, int i);
-int ft_free2(void **arr, int res);
-int ft_clean1(t_data *data, int res);
+int		ft_clean(t_data *data, int res);
+int		ft_exit(t_data *data);
+int		ft_freel1(t_data *data, int i);
+int		ft_free2(void **arr, int res);
+int		ft_clean1(t_data *data, int res);
 
 //get_next_line.c
 char	*get_next_line(int fd);
@@ -135,9 +139,5 @@ char	*ft_read(char *str, int fd);
 //get_next_line_utils.c
 int		ft_strlen_nl(char *s, int sel);
 char	*ft_strcpy(char *dst, char *src);
-
-//heredoc.c
-// char	*here_doc(char **av);
-void	here_doc_pipe(int ac, char **av, char **paths);
 
 #endif

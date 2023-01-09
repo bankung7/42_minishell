@@ -7,8 +7,8 @@ int	ft_pwd(void)
 	str = ft_calloc(sizeof(char), 1024);
 	if (!str)
 	{
-		// g_status = 126;
-		// return (-1);
+		g_status = 126;
+		return (-1);
 		exit(126);
 	}
 	if (getcwd(str, 1023) == NULL)

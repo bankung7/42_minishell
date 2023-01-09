@@ -35,7 +35,6 @@ static int	ft_setvar(t_data *data, char *str)
 	while (str[i] && str[i] != '=')
 		i++;
 	find = ft_substr(str, 0, i);
-	// printf("unset : %s\n", find);
 	if ((int)ft_strlen(find) == 0)
 	{
 		free(find);

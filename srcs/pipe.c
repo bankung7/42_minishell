@@ -1,61 +1,51 @@
 #include "minishell.h"
 
-int	ft_pipex(t_data *data, t_cmd *cmd)
+int	pipe_next(t_data *data, t_cmd *head)
 {
-	int		fd[2];
-	pid_t	pid;
-
-	if (pipe(fd) == -1)
-		return (-1);
-	pid = fork();
-	if (pid == -1)
-		return (-1);
-	else if (pid == 0)
+	(void) data;
+	if (head->next != NULL)
 	{
-		close(fd[0]);
-		dup2(fd[1], 1);
-		close(fd[1]);
-		ft_runcmd(data, cmd);
-	}
-	else
-	{
-		waitpid(pid, &g_status, WNOHANG);
-		close(fd[1]);
-		dup2(fd[0], 0);
-		close(fd[0]);
-		// if (cmd->next->pipe == 1)
-		// 	ft_pipex(data, cmd->next);
-		// else
-		// 	ft_runcmd(data, cmd->next);
+		if (pipe(head->next->pfd) == -1)
+		{
+			printf("Error at pipe\n");
+			return (-1);
+		}
 	}
 	return (0);
 }
 
-int	ft_topipe(t_data *data, t_cmd *cmd)
+int	infile_dup(t_data *data, t_cmd *head)
 {
-	int		i;
-	pid_t	pid;
-	t_cmd	*head;
-
-	i = 0;
-	head = cmd;
-	while (head && head->pipe == 1 && i++ >= 0)
-		head = head->next;
-	if (cmd->pipe == 1)
+	(void) data;
+	if (dup2(head->infile, STDIN_FILENO) < 0)
 	{
-		pid = fork();
-		if (pid == -1)
-			return (-1);
-		if (pid == 0)
-		{
-			if (cmd->infile != 0)
-				dup2(cmd->infile, 0);
-			ft_pipex(data, cmd);
-			exit(0);
-		}
-		else
-			waitpid(pid, &g_status, 0);
-		return (ft_freel1(data, i));
+		printf("No such file or directory\n");
+		return (-1);
 	}
 	return (0);
+}
+
+void	stdout_dup(t_data *data, t_cmd *head)
+{
+	(void) data;
+	if (head->pipe == 1)
+	{
+		close(head->next->pfd[RD]);
+		if (head->outfile == 1)
+			dup2(head->next->pfd[WR], STDOUT_FILENO);
+		else
+			dup2(head->outfile, STDOUT_FILENO);
+		close(head->next->pfd[WR]);
+	}
+}
+
+void	stdin_dup(t_data *data, t_cmd *head)
+{
+	(void) data;
+	if (head != data->cmdlist)
+	{
+		close(head->pfd[WR]);
+		dup2(head->pfd[RD], STDIN_FILENO);
+		close(head->pfd[RD]);
+	}
 }

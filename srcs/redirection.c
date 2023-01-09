@@ -13,9 +13,8 @@ int	ft_redirection(t_data *data, char *file)
 		head->outfile = open(file, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	else if (head->status == APPEND)
 		head->outfile = open(file, O_RDWR | O_APPEND | O_CREAT, 0644);
-	//Is these part needed??
-	// if (head->infile < 0 || head->outfile < 0)
-	// 	return (-1);
+	if (head->infile < 0 || head->outfile < 0)
+		return (-1);
 	head->status = 0;
 	free(file);
 	return (0);
