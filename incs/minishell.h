@@ -48,6 +48,7 @@ typedef struct s_cmd
     int pipe;
     int pfd[2];
     int pid;
+    int seq;
     char *hd_lmt;
     struct s_cmd *next;
 } t_cmd;
@@ -67,33 +68,35 @@ typedef struct s_data
     int status;
     char *line;
     int len;
+    int tp;
+    int **pipe;
     t_token *token;
     int ori_fd[2];
 } t_data;
 
+// ===== Section 1 : Initialize ===== //
 // signal.c
 int ft_sighandle(void);
 
 // init.c
 int ft_initenv(t_data *data, char **env);
 
+// ===== Section 2 : Lexer, Expander and Parser ===== //
 // lexical.c
 int ft_lexical(t_data *data);
 
 // tokenize.c
-int ft_isdelimit(char *str, int i);
-// int ft_tokenize(t_data *data, char *str);
-int ft_tokenize(t_data *data);
-int ft_buildword(t_data *data, char *str, int i, int quote);
-int ft_buildschar(t_data *data, char *str, int type);
+int ft_addtoken(t_data *data, char *str, int type);
 
 // expander.c
-char *ft_expander(t_data *data, char *str, int start, int j);
+int ft_expander(t_data *data, t_token *token);
 
 // parser.c
-int ft_buildnode(t_data *data, char *str, int type);
-t_cmd *ft_newnode(void);
-int ft_bpipe(t_data *data, char *str, int type);
+t_cmd *ft_lastcmd(t_cmd *cmd);
+int ft_parser(t_data *data);
+
+// ===== Section 3 : Executor ===== //
+int ft_execute1(t_data *data);
 
 // executing.c
 int ft_execute(t_data *data);
@@ -102,7 +105,7 @@ int ft_execute(t_data *data);
 char *ft_iscmd(t_data *data, t_cmd *cmd);
 int ft_runcmd(t_data *data, t_cmd *cmd);
 
-// builtin
+// ===== Section 4 : build-in function ===== //
 // env.c
 char *ft_getenv(t_data *data, char *var);
 int ft_env(t_data *data);
@@ -123,6 +126,7 @@ int ft_export(t_data *data, t_cmd *cmd);
 // unset.c
 int ft_unset(t_data *data, t_cmd *cmd);
 
+// ===== Section 5 :  Support Function ===== //
 // redirection.c
 int ft_redirection(t_data *data, char *file);
 

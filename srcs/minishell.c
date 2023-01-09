@@ -60,7 +60,7 @@ int ft_prompt(t_data *data)
 		// ft_tokenize(data);
 		// ft_test(data);
 		if (data->status == 0)
-			ft_execute(data);
+			ft_execute1(data);
 		ft_clean(data, 0);
 		add_history(data->line);
 		// printf("%d\n", g_status);
