@@ -81,19 +81,16 @@ int ft_initenv(t_data *data, char **env);
 int ft_lexical(t_data *data);
 
 // tokenize.c
-int ft_isdelimit(char *str, int i);
-// int ft_tokenize(t_data *data, char *str);
-int ft_tokenize(t_data *data);
-int ft_buildword(t_data *data, char *str, int i, int quote);
-int ft_buildschar(t_data *data, char *str, int type);
+int ft_ttoken(t_data *data);
+int ft_addtoken(t_data *data, char *str, int type);
 
 // expander.c
-char *ft_expander(t_data *data, char *str, int start, int j);
+int ft_expander(t_data *data, t_token *token);
 
 // parser.c
-int ft_buildnode(t_data *data, char *str, int type);
-t_cmd *ft_newnode(void);
-int ft_bpipe(t_data *data, char *str, int type);
+t_cmd	*ft_newnode(void);
+t_cmd *ft_lastcmd(t_cmd *cmd);
+int ft_parser(t_data *data);
 
 // executing.c
 int ft_execute(t_data *data);
@@ -124,7 +121,7 @@ int ft_export(t_data *data, t_cmd *cmd);
 int ft_unset(t_data *data, t_cmd *cmd);
 
 // redirection.c
-int ft_redirection(t_data *data, char *file);
+int ft_redirection(t_data *data, t_token *token);
 
 // heredoc.c
 int ft_heredoc(t_data *data, char *str);

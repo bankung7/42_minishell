@@ -18,88 +18,79 @@ t_cmd	*ft_newnode(void)
 	return (node);
 }
 
-int	ft_arebuild(t_data *data, char *str)
+t_cmd *ft_lastcmd(t_cmd *cmd)
 {
-	int		i;
-	char	**tmp;
-	t_cmd	*head;
+	t_cmd *head;
 
-	i = 0;
-	head = data->cmdlist;
+	if (cmd == 0)
+		return (cmd);
+	head = cmd;
 	while (head->next)
 		head = head->next;
-	while (head->argv && head->argv[i])
-		i++;
-	i += 2;
-	tmp = malloc(sizeof(char *) * i);
-	if (!tmp)
-		return (-1);
-	tmp[--i] = 0;
-	tmp[--i] = str;
-	while (--i >= 0)
-		tmp[i] = head->argv[i];
-	if (head->argv)
-		free(head->argv);
-	head->argv = tmp;
-	return (0);
+	return (head);
 }
 
-int	ft_bword(t_data *data, char *str)
+int ft_wparser(t_data *data, t_token *token)
 {
-	t_cmd	*head;
+	t_cmd *head;
 
 	if (data->cmdlist == 0)
 		data->cmdlist = ft_newnode();
-	head = data->cmdlist;
-	while (head->next)
-		head = head->next;
+	head = ft_lastcmd(data->cmdlist);
+	char **tmp = malloc(sizeof(char *) * (ft_arrlen(head->argv) + 2));
+	if (!tmp)
+		return (-1);
+	int i = 0;
+	while (head->argv && head->argv[i])
+	{
+		tmp[i] = head->argv[i];
+		i++;
+	}
+	ft_expander(data, token);
+	tmp[i++] = ft_strdup(token->str);
+	tmp[i] = 0;
+	free(head->argv);
+	head->argv = tmp;
 	if (head->path == 0)
-		head->path = ft_strdup(str);
-	ft_arebuild(data, str);
+		head->path = ft_strdup(token->str);
+	head->status = WORD;
 	return (0);
 }
 
-// deal with double pipe
-int	ft_bpipe(t_data *data, char *str, int type)
+// parser pipe
+int ft_ppipe(t_data *data, t_token *token)
 {
-	t_cmd	*head;
+	t_cmd *head;
 
-	head = data->cmdlist;
-	if (!head)
-		return (-ft_strlen(str));
-	while (head->next)
-		head = head->next;
-	head->next = ft_newnode();
-	if (type == PIPE)
+	head = ft_lastcmd(data->cmdlist);
+	if (head == 0 || head->status != WORD || token->next == 0)
 	{
-		// head->next->infile = head->outfile;
-		head->status = PIPE;
-		head->pipe = 1;
+		data->status = -1;
+		return (-1);
 	}
-	return (1);
+	head->next = ft_newnode();
+	return (0);
 }
 
-int	ft_buildnode(t_data *data, char *str, int type)
+// parser
+int ft_parser(t_data *data)
 {
-	t_cmd	*head;
+	t_token *token;
 
-	if (!data->cmdlist)
-		data->cmdlist = ft_newnode();
-	head = data->cmdlist;
-	while (head->next)
-		head = head->next;
-	if (type == WORD && head->status >= OUTFILE && head->status <= INFILE)
-		ft_redirection(data, str);
-	else if (type == WORD && head->status == HEREDOC)
+	token = data->token;						
+	while (data->status == 0 && token)
 	{
-        head->hd_lmt = str;
-		ft_heredoc(data, str);
+		if (token->type == WORD)
+			ft_wparser(data, token);
+		else if (token->type >= OUTFILE && token->type <= HEREDOC)
+		{
+			data->status = ft_redirection(data, token);
+			token = token->next;
+		}
+		else if (token->type == PIPE)
+			ft_ppipe(data, token);
+		token = token->next;
 	}
-	else if (type == WORD)
-	{
-		if (!head->path)
-			head->path = ft_strdup(str);
-		ft_arebuild(data, str);
-	}
+	// printf("parser status : %d\n", data->status);
 	return (0);
 }

@@ -57,7 +57,6 @@ int ft_prompt(t_data *data)
 		if (ft_strlen(data->line) == 0)
 			continue;
 		ft_lexical(data);
-		// ft_tokenize(data);
 		// ft_test(data);
 		if (data->status == 0)
 			ft_execute(data);
