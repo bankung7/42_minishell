@@ -13,8 +13,8 @@ LIB_DIR = -lreadline
 LIB_INC = -Iincs -Ilibft -Itester
 
 ifeq ($(shell uname), Darwin)
-LIB_DIR += -L$(RL_DIR)/lib
-LIB_INC += -I$(RL_DIR)/include
+LIB_DIR += -L$(RL_DIR)/lib -L/usr/local/Homebrew/opt/readline/lib
+LIB_INC += -I$(RL_DIR)/include -I/usr/local/Homebrew/opt/readline/include
 endif
 
 ifeq ($(shell uname), Linux)
@@ -26,7 +26,7 @@ RM = rm -rf
 
 SRCS_DIR = srcs/
 SRCS = minishell.c signal.c init.c \
-	tokenize.c expander.c parser.c executing.c \
+	lexical.c tokenize.c expander.c parser.c executing.c \
 	redirection.c exit.c pipe.c cmd.c\
 	echo.c pwd.c env.c export.c unset.c cd.c \
 	heredoc.c get_next_line.c get_next_line_utils.c

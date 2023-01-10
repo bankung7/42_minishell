@@ -1,112 +1,77 @@
 #include "minishell.h"
 
-static char	*ft_qtrim(char *str)
+static int ft_unquote(t_token *token, int i, int quote)
 {
-	int		i;
-	int		j;
-	int		quote;
-	char	*tmp;
+	int j;
 
-	i = 0;
-	j = 0;
-	quote = 0;
-	tmp = ft_calloc(sizeof(char), (ft_strlen(str) + 1));
-	if (!tmp)
-		return (0);
-	while (str[i])
-	{
-		if (ft_isdelimit(str, i) == SQUOTE || ft_isdelimit(str, i) == DQUOTE)
-		{
-			quote = ft_isdelimit(str, i++);
-			while (ft_isdelimit(str, i) != quote)
-				tmp[j++] = str[i++];
-			quote = 0;
-			i++;
-		}
-		else
-			tmp[j++] = str[i++];
-	}
-	return (tmp);
+	j = 1;
+	// printf("to unquote : %s\n", &token->str[i]);
+	ft_memmove(&token->str[i], &token->str[i + j], ft_strlen(token->str) - (i + j) + 1);
+	// printf("first move : %s\n", &token->str[i]);
+	while (token->str[i + j] && token->str[i + j] != quote)
+		j++;
+	if (token->str[i + j] == 0)
+		token->str[i] = 0;
+	else
+		ft_memmove(&token->str[i + j], &token->str[i + j + 1], ft_strlen(token->str) - (i + j));
+	return (j);
 }
 
-static char	*ft_replacevar(t_data *data, char *str, char *find, int start)
+static int ft_getexpand(t_data *data, t_token *token, int i)
 {
-	int		flen;
-	char	*val;
-	char	*tmp;
+	int j;
 
-	flen = ft_strlen(find) + 1;
-	val = ft_getenv(data, find);
-	tmp = ft_calloc(sizeof(char), ft_strlen(str) + ft_strlen(val) - flen + 1);
-	ft_memcpy(tmp, str, start);
-	ft_memcpy(&tmp[ft_strlen(tmp)], val, ft_strlen(val));
-	ft_memcpy(&tmp[ft_strlen(tmp)], &str[start + flen],
-		ft_strlen(str) - (start - flen));
-	if (val)
-		free(val);
-	return (tmp);
-}
-
-static char	*ft_prepvar(t_data *data, char *str, int start)
-{
-	int		i;
-	char	*tmp;
-	char	*substr;
-
-	i = 1;
-	while (str[start + i])
-	{
-		if (ft_isdelimit(str, start + i) == 0
-			|| ft_isdelimit(str, start + i) >= 11)
-			break ;
-		else
-			i++;
-	}
-	substr = ft_substr(str, start + 1, i - 1);
-	tmp = ft_replacevar(data, str, substr, start);
-	free(substr);
-	free(str);
-	return (tmp);
-}
-
-static char	*ft_exword(t_data *data, char *str, int i)
-{
-	char	*tmp;
-
-	if (ft_strncmp("$?", str, 3) == 0)
-	{
-		printf("status %d\n", g_status);
-		return (ft_itoa(g_status));
-	}
-	tmp = ft_prepvar(data, str, i);
-	str = ft_strdup(tmp);
+	j = 1;
+	while (token->str[i + j] && (ft_isalnum(token->str[i + j]) == 1 || token->str[i + j] == '_'))
+		j++;
+	char *tmp = ft_substr(token->str, i + 1, j - 1);
+	char *env = ft_getenv(data, tmp);
+	// printf("tmp %s : %s\n", tmp, env);
+	char *new = ft_calloc(sizeof(char), ft_strlen(token->str) + (ft_strlen(env) - ft_strlen(tmp)) + 1);
+	ft_memcpy(new, token->str, i);
+	ft_memcpy(&new[ft_strlen(new)], env, ft_strlen(env));
+	ft_memcpy(&new[ft_strlen(new)], &token->str[i + j], ft_strlen(token->str) - (i + j));
+	// printf("new : %s\n", new);
+	// free(new);
 	free(tmp);
-	return (str);
+	free(env);
+	free(token->str);
+	token->str = new;
+	return (ft_strlen(env));
 }
 
-char	*ft_expander(t_data *data, char *str, int start, int j)
+static int ft_dquote(t_data *data, t_token *token, int i)
 {
-	int		i;
-	int		quote;
-	char	*tmp;
-	char	*word;
+	int j;
+
+	j = 1;
+	while (token->str[i + j] && token->str[i + j] != '"')
+	{
+		if (token->str[i + j] == '$')
+			j += ft_getexpand(data, token, i + j);
+		j++;
+	}
+	ft_unquote(token, i, '"');
+	return (j - 1);
+}
+
+int ft_expander(t_data *data, t_token *token)
+{
+	int i;
+	(void)data;
 
 	i = 0;
-	quote = 0;
-	word = ft_substr(str, start, j);
-	tmp = 0;
-	if (ft_strchr(word, '$') != 0)
+	while (token->str[i])
 	{
-		while (word[i])
-		{
-			if (word[i] == '\'')
-				quote = (quote + 1) % 2;
-			if (word[i] == '$' && quote == 0)
-				word = ft_exword(data, word, i);
+		if (token->str[i] == '\'')
+			i += ft_unquote(token, i, '\'');
+		else if (token->str[i] == '"')
+			i += ft_dquote(data, token, i);
+		else if (token->str[i] == '$')
+			i += ft_getexpand(data, token, i);
+		else
 			i++;
-		}
 	}
-	tmp = ft_qtrim(word);
-	free(word);
-	return (tmp);
+	// printf("after expanded : %s\n", token->str);
+	return (0);
 }

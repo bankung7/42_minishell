@@ -43,25 +43,32 @@ static char	*getprompt(void)
 
 int	ft_prompt(t_data *data)
 {
-	char	*line;
 	char	*prompt;
 
 	while (1)
 	{
+        data->cmdlist = 0;
+        data->line = 0;
+        data->len = 0;
+        data->status = 0;
+        data->token = 0;
 		data->ori_fd[RD] = dup(STDIN_FILENO);
 		data->ori_fd[WR] = dup(STDOUT_FILENO);
 		prompt = getprompt();
-		line = readline(prompt);
+		data->line = readline(prompt);
 		free(prompt);
-		if (!line)
+		if (!data->line)
 			return (-1);
-		if (ft_strlen(line) == 0)
+		if (ft_strlen(data->line) == 0)
 			continue ;
-		ft_tokenize(data, line);
-		ft_execute(data);
+		if (ft_lexical(data) == 0 && ft_parser(data) == 0)
+        {
+            // ft_test(data);
+		    ft_execute(data);
+        }
 		ft_clean(data, 0);
-		add_history(line);
-		free(line);
+		add_history(data->line);
+		free(data->line);
 	}
 	return (0);
 }
