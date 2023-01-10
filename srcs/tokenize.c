@@ -1,9 +1,10 @@
 #include "minishell.h"
 
 // test token
-int ft_ttoken(t_data *data)
+int	ft_ttoken(t_data *data)
 {
-	t_token *token;
+	t_token	*token;
+
 	token = data->token;
 	while (token)
 	{
@@ -20,16 +21,20 @@ int ft_ttoken(t_data *data)
 	return (0);
 }
 
-int ft_addtoken(t_data *data, char *str, int type)
+int	ft_addtoken(t_data *data, char *str, int type)
 {
-	t_token *node;
-	t_token *head;
+	t_token	*node;
+	t_token	*head;
 
 	node = malloc(sizeof(t_token));
 	if (!node)
 		return (-1);
 	node->str = str;
 	node->type = type;
+	node->len = 0;
+	node->tmp = 0;
+	node->env = 0;
+	node->new = 0;
 	node->next = 0;
 	if (data->token == 0)
 		data->token = node;

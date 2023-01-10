@@ -14,13 +14,13 @@ t_cmd	*ft_newnode(void)
 	node->status = 0;
 	node->pipe = 0;
 	node->next = 0;
-    node->hd_lmt = 0;
+	node->hd_lmt = 0;
 	return (node);
 }
 
-t_cmd *ft_lastcmd(t_cmd *cmd)
+t_cmd	*ft_lastcmd(t_cmd *cmd)
 {
-	t_cmd *head;
+	t_cmd	*head;
 
 	if (cmd == 0)
 		return (cmd);
@@ -30,25 +30,27 @@ t_cmd *ft_lastcmd(t_cmd *cmd)
 	return (head);
 }
 
-int ft_wparser(t_data *data, t_token *token)
+int	ft_wparser(t_data *data, t_token *token)
 {
-	t_cmd *head;
+	char	**tmp;
+	t_cmd	*head;
 
 	if (data->cmdlist == 0)
 		data->cmdlist = ft_newnode();
+	if (data->cmdlist == 0)
+		return (-1);
 	head = ft_lastcmd(data->cmdlist);
-	char **tmp = malloc(sizeof(char *) * (ft_arrlen(head->argv) + 2));
+	tmp = malloc(sizeof(char *) * (ft_arrlen(head->argv) + 2));
 	if (!tmp)
 		return (-1);
-	int i = 0;
-	while (head->argv && head->argv[i])
+	while (head->argv && head->argv[token->len])
 	{
-		tmp[i] = head->argv[i];
-		i++;
+		tmp[token->len] = head->argv[token->len];
+		token->len++;
 	}
 	ft_expander(data, token);
-	tmp[i++] = ft_strdup(token->str);
-	tmp[i] = 0;
+	tmp[token->len++] = ft_strdup(token->str);
+	tmp[token->len] = 0;
 	free(head->argv);
 	head->argv = tmp;
 	if (head->path == 0)
@@ -58,9 +60,9 @@ int ft_wparser(t_data *data, t_token *token)
 }
 
 // parser pipe
-int ft_ppipe(t_data *data, t_token *token)
+int	ft_ppipe(t_data *data, t_token *token)
 {
-	t_cmd *head;
+	t_cmd	*head;
 
 	head = ft_lastcmd(data->cmdlist);
 	if (head == 0 || head->status != WORD || token->next == 0)
@@ -69,16 +71,18 @@ int ft_ppipe(t_data *data, t_token *token)
 		return (-1);
 	}
 	head->next = ft_newnode();
-    head->pipe = 1;
+	if (head->next == 0)
+		return (-1);
+	head->pipe = 1;
 	return (0);
 }
 
 // parser
-int ft_parser(t_data *data)
+int	ft_parser(t_data *data)
 {
-	t_token *token;
+	t_token	*token;
 
-	token = data->token;						
+	token = data->token;
 	while (data->status == 0 && token)
 	{
 		if (token->type == WORD)
@@ -89,9 +93,8 @@ int ft_parser(t_data *data)
 			token = token->next;
 		}
 		else if (token->type == PIPE)
-			ft_ppipe(data, token);
+			data->status = ft_ppipe(data, token);
 		token = token->next;
 	}
-	// printf("parser status : %d\n", data->status);
 	return (0);
 }

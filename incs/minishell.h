@@ -42,6 +42,10 @@ typedef struct s_token
 {
     char *str;
     int type;
+    int len;
+    char *tmp;
+    char *env;
+    char *new;
     struct s_token *next;
 } t_token;
 
@@ -88,7 +92,7 @@ int ft_ttoken(t_data *data);
 int ft_addtoken(t_data *data, char *str, int type);
 
 // expander.c
-int ft_expander(t_data *data, t_token *token);
+int ft_expander(t_data *data, t_token *token); // wait for error handling
 
 // parser.c
 t_cmd *ft_lastcmd(t_cmd *cmd);
