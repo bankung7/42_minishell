@@ -90,11 +90,15 @@ int	ft_parser(t_data *data)
 		else if (token->type >= OUTFILE && token->type <= HEREDOC)
 		{
 			data->status = ft_redirection(data, token);
+			if (data->status != 0)
+				break ;
 			token = token->next;
 		}
 		else if (token->type == PIPE)
 			data->status = ft_ppipe(data, token);
 		token = token->next;
 	}
-	return (0);
+	if (data->status != 0)
+		printf("parser error\n");
+	return (data->status);
 }

@@ -17,30 +17,40 @@ static int	ft_unquote(t_token *token, int i, int quote)
 	return (j);
 }
 
+int	ft_envlen(char *tmp, char *env)
+{
+	int	len;
+
+	len = ft_strlen(env);
+	free(tmp);
+	free(env);
+	return (len);
+}
+
 static int	ft_getexpand(t_data *data, t_token *token, int i)
 {
 	int		j;
+	char	*tmp;
+	char	*env;
+	char	*new;
 
 	j = 1;
 	while (token->str[i + j] && (ft_isalnum(token->str[i + j]) == 1
 			|| token->str[i + j] == '_'))
 		j++;
-	token->tmp = ft_substr(token->str, i + 1, j - 1);
-	token->env = ft_getenv(data, token->tmp);
-	token->new = ft_calloc(sizeof(char), ft_strlen(token->str)
-			+ (ft_strlen(token->env) - ft_strlen(token->tmp)) + 1);
-	if (token->tmp == 0 || token->new == 0)
+	tmp = ft_substr(token->str, i + 1, j - 1);
+	env = ft_getenv(data, tmp);
+	new = ft_calloc(sizeof(char), ft_strlen(token->str)
+			+ (ft_strlen(env) - ft_strlen(tmp)) + 1);
+	if (tmp == 0 || new == 0)
 		return (ft_freetoken(data, -1));
-	ft_memcpy(token->new, token->str, i);
-	ft_memcpy(&token->new[ft_strlen(token->new)],
-		token->env, ft_strlen(token->env));
-	ft_memcpy(&token->new[ft_strlen(token->new)], &token->str[i + j],
+	ft_memcpy(new, token->str, i);
+	ft_memcpy(&new[ft_strlen(new)], env, ft_strlen(env));
+	ft_memcpy(&new[ft_strlen(new)], &token->str[i + j],
 		ft_strlen(token->str) - (i + j));
-	free(token->tmp);
-	free(token->env);
 	free(token->str);
-	token->str = token->new;
-	return (ft_strlen(token->env));
+	token->str = new;
+	return (ft_envlen(tmp, env));
 }
 
 static int	ft_dquote(t_data *data, t_token *token, int i)

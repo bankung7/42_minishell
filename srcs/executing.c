@@ -41,7 +41,7 @@ int	ft_execute(t_data *data)
 {
 	t_cmd	*head;
 
-	if (!data->cmdlist)
+	if (!data->cmdlist || data->status != 0)
 		return (-1);
 	head = data->cmdlist;
 	if (infile_dup(data, head) == -1)

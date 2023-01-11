@@ -56,6 +56,8 @@ int	ft_freetoken(t_data *data, int res)
 		if (token->new)
 			free(token->new);
 		token = token->next;
+		free(data->token);
+		data->token = token;
 	}
 	data->status = res;
 	return (res);

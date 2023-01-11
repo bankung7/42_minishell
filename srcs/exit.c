@@ -4,6 +4,7 @@ int	ft_clean(t_data *data, int res)
 {
 	t_cmd	*head;
 
+	ft_freetoken(data, res);
 	if (data->cmdlist == 0)
 		return (res);
 	head = data->cmdlist;
@@ -15,7 +16,6 @@ int	ft_clean(t_data *data, int res)
 		data->cmdlist = head;
 	}
 	data->cmdlist = 0;
-	ft_freetoken(data, res);
 	return (res);
 }
 

@@ -67,12 +67,12 @@ typedef struct s_cmd
 typedef struct s_data
 {
 	t_cmd *cmdlist;
+	t_token *token;
 	char **env;
 	int ori_fd[2];
 	int status;
 	char *line;
 	int len;
-	t_token *token;
 } t_data;
 
 // ==== PART 1 : Initialize and Preparation ================ //
