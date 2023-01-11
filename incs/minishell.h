@@ -40,40 +40,39 @@ int g_status;
 // struct
 typedef struct s_token
 {
-    char *str;
-    int type;
-    int len;
-    char *tmp;
-    char *env;
-    char *new;
-    struct s_token *next;
+	char *str;
+	int type;
+	int len;
+	char *tmp;
+	char *env;
+	char *new;
+	struct s_token *next;
 } t_token;
 
 typedef struct s_cmd
 {
-    char **argv;
-    char *path;
-    int infile;
-    int outfile;
-    int status;
-    int pipe;
-    int pid;
-    int pfd[2];
-    int hdfd[2];
-    char *hd_lmt;
-    struct s_cmd *next;
+	char **argv;
+	char *path;
+	int infile;
+	int outfile;
+	int status;
+	int pipe;
+	int pid;
+	int pfd[2];
+	int hdfd[2];
+	char *hd_lmt;
+	struct s_cmd *next;
 } t_cmd;
 
 typedef struct s_data
 {
-    t_cmd *cmdlist;
-    char **tray;
-    char **env;
-    int ori_fd[2];
-    int status;
-    char *line;
-    int len;
-    t_token *token;
+	t_cmd *cmdlist;
+	char **env;
+	int ori_fd[2];
+	int status;
+	char *line;
+	int len;
+	t_token *token;
 } t_data;
 
 // ==== PART 1 : Initialize and Preparation ================ //
@@ -81,6 +80,7 @@ typedef struct s_data
 int ft_sighandle(void);
 
 // init.c
+int	ft_resetdata(t_data *data);
 int ft_initenv(t_data *data, char **env);
 
 // ==== PART 2 : Lexical, Tokenize, Expander and Parser ==== //
@@ -88,7 +88,6 @@ int ft_initenv(t_data *data, char **env);
 int ft_lexical(t_data *data);
 
 // tokenize.c
-int ft_ttoken(t_data *data);
 int ft_addtoken(t_data *data, char *str, int type);
 
 // expander.c
@@ -109,7 +108,7 @@ int ft_runcmd(t_data *data, t_cmd *cmd);
 // executing.c
 int ft_execute(t_data *data);
 
-// ==== PART 4 : Helper Function ============================ //
+// ==== PART 4 : Redirection & Pipe ========================== //
 // redirection.c
 int ft_redirection(t_data *data, t_token *token);
 
@@ -123,17 +122,6 @@ int pipe_next(t_data *data, t_cmd *head);
 int infile_dup(t_data *data, t_cmd *head);
 void stdout_dup(t_data *data, t_cmd *head);
 void stdin_dup(t_data *data, t_cmd *head);
-
-// get_next_line.c
-char *get_next_line(int fd);
-char *get_remain(char *s, int nl_id);
-char *get_line(char *s, int nl_id);
-char *ft_lastline(char *str);
-char *ft_read(char *str, int fd);
-
-// get_next_line_utils.c
-int ft_strlen_nl(char *s, int sel);
-char *ft_strcpy(char *dst, char *src);
 
 // ==== PART 5 : Built-in Function ========================== //
 // env.c
@@ -159,8 +147,27 @@ int ft_unset(t_data *data, t_cmd *cmd);
 // exit.c
 int ft_clean(t_data *data, int res);
 int ft_exit(t_data *data);
-int ft_freel1(t_data *data, int i);
+
+// ==== PART 6 : Utilities Function ==========================//
+// get_next_line.c
+char *get_next_line(int fd);
+char *get_remain(char *s, int nl_id);
+char *get_line(char *s, int nl_id);
+char *ft_lastline(char *str);
+char *ft_read(char *str, int fd);
+
+// get_next_line_utils.c
+int ft_strlen_nl(char *s, int sel);
+char *ft_strcpy(char *dst, char *src);
+
+// utils.c
+int ft_ttoken(t_data *data);
+int	ft_tast(t_data *data);
+
+// free.c
+int ft_closefd(t_data *data, int res);
+int	ft_freecmd(t_cmd *head, int res);
+int	ft_freetoken(t_data *data, int res);
 int ft_free2(void **arr, int res);
-int ft_clean1(t_data *data, int res);
 
 #endif

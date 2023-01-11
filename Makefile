@@ -26,10 +26,11 @@ RM = rm -rf
 
 SRCS_DIR = srcs/
 SRCS = minishell.c signal.c init.c \
-	lexical.c tokenize.c expander.c parser.c executing.c \
-	redirection.c exit.c pipe.c cmd.c\
-	echo.c pwd.c env.c export.c unset.c cd.c \
-	heredoc.c get_next_line.c get_next_line_utils.c
+	lexical.c tokenize.c expander.c parser.c \
+	executing.c cmd.c \
+	redirection.c pipe.c heredoc.c \
+	echo.c pwd.c env.c export.c unset.c cd.c exit.c \
+	get_next_line.c get_next_line_utils.c utils.c free.c
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))

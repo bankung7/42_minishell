@@ -32,7 +32,8 @@ static int	ft_getexpand(t_data *data, t_token *token, int i)
 	if (token->tmp == 0 || token->new == 0)
 		return (ft_freetoken(data, -1));
 	ft_memcpy(token->new, token->str, i);
-	ft_memcpy(&token->new[ft_strlen(token->new)], token->env, ft_strlen(token->env));
+	ft_memcpy(&token->new[ft_strlen(token->new)],
+		token->env, ft_strlen(token->env));
 	ft_memcpy(&token->new[ft_strlen(token->new)], &token->str[i + j],
 		ft_strlen(token->str) - (i + j));
 	free(token->tmp);

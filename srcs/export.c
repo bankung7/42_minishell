@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-int ft_arrlen(char **arr)
+int	ft_arrlen(char **arr)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (arr && arr[i])
@@ -13,13 +13,13 @@ int ft_arrlen(char **arr)
 // set new variable in environment
 int	ft_addenv(t_data *data, char *var)
 {
-	int	i;
-	int	len;
+	int		i;
+	int		len;
 	char	**tmp;
 
 	i = 0;
 	len = ft_arrlen(data->env);
-	tmp = ft_calloc(sizeof(char*), len + 2);
+	tmp = ft_calloc(sizeof(char *), len + 2);
 	if (!tmp)
 		return (-1);
 	while (i < len)
@@ -34,7 +34,7 @@ int	ft_addenv(t_data *data, char *var)
 }
 
 // set variable to environment
-int ft_setenv(t_data *data, char *var)
+int	ft_setenv(t_data *data, char *var)
 {
 	int	i;
 

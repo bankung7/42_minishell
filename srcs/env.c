@@ -1,10 +1,10 @@
 #include "minishell.h"
 
 // get variable from environment
-char *ft_getenv(t_data *data, char *var)
+char	*ft_getenv(t_data *data, char *var)
 {
-	int	i;
-	int len;
+	int		i;
+	int		len;
 	char	*value;
 
 	i = 0;
@@ -15,9 +15,10 @@ char *ft_getenv(t_data *data, char *var)
 		if (len != (value - data->env[i]))
 		{
 			i++;
-			continue;
+			continue ;
 		}
-		if (value != 0 && ft_strncmp(var, data->env[i], value - data->env[i]) == 0)
+		if (value != 0 && ft_strncmp(var, data->env[i],
+				value - data->env[i]) == 0)
 			return (ft_strdup(value + 1));
 		i++;
 	}
