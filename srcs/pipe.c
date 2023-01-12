@@ -7,7 +7,7 @@ int	pipe_next(t_data *data, t_cmd *head)
 	{
 		if (pipe(head->next->pfd) == -1)
 		{
-			printf("Error at pipe\n");
+			perror("Error in pipe : ");
 			return (-1);
 		}
 	}
@@ -19,7 +19,7 @@ int	infile_dup(t_data *data, t_cmd *head)
 	(void) data;
 	if (dup2(head->infile, STDIN_FILENO) < 0)
 	{
-		printf("No such file or directory\n");
+		perror("Error dup file : ");
 		return (-1);
 	}
 	return (0);

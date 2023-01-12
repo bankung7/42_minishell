@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	parent(t_data *data, t_cmd *head)
+static void parent(t_data *data, t_cmd *head)
 {
 	if (head != data->cmdlist)
 	{
@@ -27,7 +27,7 @@ static void	parent(t_data *data, t_cmd *head)
 	ft_builtin_out(data, head);
 }
 
-static void	child(t_data *data, t_cmd *head)
+static void child(t_data *data, t_cmd *head)
 {
 	heredoc_dup(head);
 	stdout_dup(data, head);
@@ -37,9 +37,9 @@ static void	child(t_data *data, t_cmd *head)
 	exit(0);
 }
 
-int	ft_execute(t_data *data)
+int ft_execute(t_data *data)
 {
-	t_cmd	*head;
+	t_cmd *head;
 
 	if (!data->cmdlist || data->status != 0)
 		return (-1);
@@ -48,11 +48,14 @@ int	ft_execute(t_data *data)
 		return (-1);
 	while (head)
 	{
-		pipe_next(data, head);
-		head->pid = fork();
-		if (head->pid == 0)
-			child(data, head);
-		parent(data, head);
+		if (head->path != 0)
+		{
+			pipe_next(data, head);
+			head->pid = fork();
+			if (head->pid == 0)
+				child(data, head);
+			parent(data, head);
+		}
 		head = head->next;
 	}
 	while (wait(&g_status) != -1 || errno != ECHILD)

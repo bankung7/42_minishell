@@ -73,7 +73,8 @@ int	ft_ppipe(t_data *data, t_token *token)
 	head->next = ft_newnode();
 	if (head->next == 0)
 		return (-1);
-	head->pipe = 1;
+	if (head->path != 0)
+		head->pipe = 1;
 	return (0);
 }
 

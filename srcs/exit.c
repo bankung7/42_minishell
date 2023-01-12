@@ -15,6 +15,7 @@ int	ft_clean(t_data *data, int res)
 		free(data->cmdlist);
 		data->cmdlist = head;
 	}
+	ft_closefd(data, res);
 	data->cmdlist = 0;
 	return (res);
 }
