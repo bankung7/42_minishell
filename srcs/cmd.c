@@ -33,6 +33,7 @@ char	*ft_iscmd(t_data *data, t_cmd *cmd)
 		i++;
 	}
 	ft_putstr_fd("command not found\n", 2);
+	g_status = 126;
 	return (NULL);
 }
 
@@ -86,6 +87,9 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 		return (execve(cmd->path, cmd->argv, data->env));
 	}
 	else
+	{
+		g_status = 127;
 		exit(127);
+	}
 	return (0);
 }

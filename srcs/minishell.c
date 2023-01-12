@@ -29,8 +29,9 @@ int	ft_prompt(t_data *data)
 			return (-1);
 		if (ft_strlen(data->line) == 0)
 			continue ;
-		if (ft_lexical(data) == 0 && ft_parser(data) == 0)
-			ft_execute(data);
+		if (ft_lexical(data) == 0)
+			if (ft_parser(data) == 0)
+				ft_execute(data);
 		ft_clean(data, 0);
 		add_history(data->line);
 		free(data->line);

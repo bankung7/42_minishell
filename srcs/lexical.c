@@ -89,5 +89,5 @@ int	ft_lexical(t_data *data)
 	}
 	if (data->status != 0)
 		printf("lexical error\n");
-	return (0);
+	return (data->status);
 }

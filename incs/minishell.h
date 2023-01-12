@@ -38,6 +38,13 @@
 int g_status;
 
 // struct
+
+typedef struct s_expd
+{
+	char	*tmp;
+	char	*env;
+	char	*new;
+}	t_expd;
 typedef struct s_token
 {
 	char *str;
