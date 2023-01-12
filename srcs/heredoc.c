@@ -5,6 +5,7 @@ void	heredoc_dup(t_cmd *head)
 	if (head->hd_lmt != NULL)
 	{
 		ft_putstr_fd(heredoc(head->hd_lmt), head->hdfd[WR]);
+		free(head->hd_lmt);
 		close(head->hdfd[WR]);
 		dup2(head->hdfd[RD], STDIN_FILENO);
 		close(head->hdfd[RD]);

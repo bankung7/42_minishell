@@ -15,6 +15,29 @@ static char	*getprompt(void)
 	return (prompt);
 }
 
+int ft_test(t_data *data)
+{
+	t_cmd *head;
+	head = data->cmdlist;
+
+	while (head)
+	{
+		printf("\n===== node ======\n");
+		printf("argv\t:\t");
+		int i = 0;
+		while (head->argv && head->argv[i])
+			printf("[%s] ", head->argv[i++]);
+		printf("\n");
+		printf("path\t:\t[%s]\n", head->path);
+		printf("infile fd\t:\t[%d]\n", head->infile);
+		printf("outfile fd\t:\t[%d]\n", head->outfile);
+		printf("status\t:\t[%d]\n", head->status);
+		printf("======= end node =======\n");
+		head = head->next;
+	}
+	return (0);
+}
+
 int	ft_prompt(t_data *data)
 {
 	char	*prompt;
@@ -31,7 +54,8 @@ int	ft_prompt(t_data *data)
 			continue ;
 		if (ft_lexical(data) == 0)
 			if (ft_parser(data) == 0)
-				ft_execute(data);
+				// ft_execute(data);
+				ft_test(data);
 		ft_clean(data, 0);
 		add_history(data->line);
 		free(data->line);
