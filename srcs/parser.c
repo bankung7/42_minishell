@@ -60,6 +60,7 @@ int	ft_wparser(t_data *data, t_token *token)
 }
 
 // parser pipe
+// test case if no cmd has to be parsed, just open and close then skip
 int	ft_ppipe(t_data *data, t_token *token)
 {
 	t_cmd	*head;

@@ -29,8 +29,6 @@ int	ft_freecmd(t_cmd *head, int res)
 		ft_free2((void **)head->argv, 0);
 	if (head->path)
 		free(head->path);
-	if (head->hd_lmt)
-		free(head->hd_lmt);
 	if (head->infile > 2)
 		close(head->infile);
 	if (head->outfile > 2)
