@@ -54,8 +54,10 @@ int	ft_prompt(t_data *data)
 			continue ;
 		if (ft_lexical(data) == 0)
 			if (ft_parser(data) == 0)
-				// ft_execute(data);
-				ft_test(data);
+            {
+                ft_tast(data);
+				ft_execute(data);
+            }
 		ft_clean(data, 0);
 		add_history(data->line);
 		free(data->line);

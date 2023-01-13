@@ -32,7 +32,8 @@ char	*ft_iscmd(t_data *data, t_cmd *cmd)
 		free(tmp2);
 		i++;
 	}
-	ft_putstr_fd("command not found\n", 2);
+	ft_putstr_fd(cmd->path, 2);
+	ft_putstr_fd(": command not found\n", 2);
 	g_status = 126;
 	return (NULL);
 }
@@ -73,6 +74,7 @@ int	ft_builtin_out(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
+// test case error status only for the last pipe
 int	ft_runcmd(t_data *data, t_cmd *cmd)
 {
 	char	*path;
@@ -87,9 +89,6 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 		return (execve(cmd->path, cmd->argv, data->env));
 	}
 	else
-	{
-		g_status = 127;
 		exit(127);
-	}
 	return (0);
 }
