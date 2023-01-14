@@ -48,7 +48,7 @@ int	ft_wparser(t_data *data, t_token *token)
 		tmp[token->len] = head->argv[token->len];
 		token->len++;
 	}
-	ft_expander(data, token);
+	ft_expander(data, token, 1);
 	tmp[token->len++] = ft_strdup(token->str);
 	tmp[token->len] = 0;
 	free(head->argv);
@@ -91,7 +91,10 @@ int	ft_parser(t_data *data)
 			ft_wparser(data, token);
 		else if (token->type >= OUTFILE && token->type <= HEREDOC)
 		{
-			data->status = ft_redirection(data, token);
+			if (token->type == HEREDOC)
+				data->status = ft_reheredoc(data, token);
+			else
+				data->status = ft_redirection(data, token);
 			if (data->status != 0)
 				break ;
 			token = token->next;

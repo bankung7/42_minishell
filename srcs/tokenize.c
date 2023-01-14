@@ -11,9 +11,6 @@ int	ft_addtoken(t_data *data, char *str, int type)
 	node->str = str;
 	node->type = type;
 	node->len = 0;
-	node->tmp = 0;
-	node->env = 0;
-	node->new = 0;
 	node->next = 0;
 	if (data->token == 0)
 		data->token = node;

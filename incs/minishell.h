@@ -50,9 +50,6 @@ typedef struct s_token
 	char *str;
 	int type;
 	int len;
-	char *tmp;
-	char *env;
-	char *new;
 	struct s_token *next;
 } t_token;
 
@@ -98,7 +95,7 @@ int ft_lexical(t_data *data);
 int ft_addtoken(t_data *data, char *str, int type);
 
 // expander.c
-int ft_expander(t_data *data, t_token *token); // wait for error handling
+int ft_expander(t_data *data, t_token *token, int x);
 
 // parser.c
 t_cmd *ft_lastcmd(t_cmd *cmd);
@@ -117,6 +114,7 @@ int ft_execute(t_data *data);
 
 // ==== PART 4 : Redirection & Pipe ========================== //
 // redirection.c
+int	ft_reheredoc(t_data *data, t_token *token);
 int ft_redirection(t_data *data, t_token *token);
 
 // heredoc.c

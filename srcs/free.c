@@ -47,12 +47,6 @@ int	ft_freetoken(t_data *data, int res)
 	{
 		if (token->str)
 			free(token->str);
-		if (token->tmp)
-			free(token->tmp);
-		if (token->env)
-			free(token->env);
-		if (token->new)
-			free(token->new);
 		token = token->next;
 		free(data->token);
 		data->token = token;

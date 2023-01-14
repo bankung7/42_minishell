@@ -78,7 +78,7 @@ static int	ft_dquote(t_data *data, t_token *token, int i)
 	return (j - 1);
 }
 
-int	ft_expander(t_data *data, t_token *token)
+int	ft_expander(t_data *data, t_token *token, int x)
 {
 	int		i;
 
@@ -89,7 +89,7 @@ int	ft_expander(t_data *data, t_token *token)
 			i += ft_unquote(token, i, '\'');
 		else if (token->str[i] == '"')
 			i += ft_dquote(data, token, i);
-		else if (token->str[i] == '$')
+		else if (token->str[i] == '$' && x == 1)
 			i += ft_getexpand(data, token, i);
 		else
 			i++;
