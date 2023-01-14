@@ -27,7 +27,8 @@ int	ft_addenv(t_data *data, char *var)
 		tmp[i] = data->env[i];
 		i++;
 	}
-	tmp[i] = ft_strdup(var);
+	if (tmp[i])
+		tmp[i] = ft_strdup(var);
 	free(data->env);
 	data->env = tmp;
 	return (0);

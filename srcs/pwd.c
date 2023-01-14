@@ -15,5 +15,6 @@ int	ft_pwd(void)
 	else
 		printf("%s\n", str);
 	g_status = 0;
+	free(str);
 	return (0);
 }

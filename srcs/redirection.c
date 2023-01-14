@@ -36,7 +36,10 @@ int	ft_redirection(t_data *data, t_token *token)
 		head->outfile = open(token->next->str,
 				O_RDWR | O_APPEND | O_CREAT, 0644);
 	if (head->infile == -1 || head->outfile == -1)
+	{
+		perror("nofile ");
 		return (-1);
+	}
 	head->status = WORD;
 	return (0);
 }

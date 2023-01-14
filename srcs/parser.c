@@ -103,7 +103,7 @@ int	ft_parser(t_data *data)
 			data->status = ft_ppipe(data, token);
 		token = token->next;
 	}
-	if (data->status != 0)
-		printf("parser error\n");
+	// if (data->status != 0)
+	// 	printf("parser error\n");
 	return (data->status);
 }

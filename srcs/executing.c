@@ -14,18 +14,21 @@
 
 static void	parent(t_data *data, t_cmd *head)
 {
-	if (head != data->cmdlist)
+	if (head->pipe == 1)
 	{
 		close(head->pfd[WR]);
 		close(head->pfd[RD]);
 	}
-	ft_builtin_out(data, head, 0);
+	if (head->path != NULL)
+		ft_builtin_out(data, head, 0);
 }
 
 static void	child(t_data *data, t_cmd *head)
 {
 	stdout_dup(data, head);
 	stdin_dup(data, head);
+	if (head->path == NULL)
+		exit(0);
 	if (ft_builtin(data, head) == 0)
 		ft_runcmd(data, head);
 	exit(0);
@@ -47,7 +50,6 @@ static void	ft_wait(t_data *data)
 		}
 		head = head->next;
 	}
-	return (0);
 }
 
 int	ft_execute(t_data *data)
@@ -61,7 +63,7 @@ int	ft_execute(t_data *data)
 		return (-1);
 	while (head)
 	{
-		if (head->path != 0)
+		// if (head->path != 0)
 		{
 			pipe_next(data, head);
 			head->pid = fork();

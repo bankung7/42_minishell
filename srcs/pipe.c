@@ -10,14 +10,7 @@ int	pipe_next(t_data *data, t_cmd *head)
 			perror("Error in pipe : ");
 			return (-1);
 		}
-	}
-	else
-	{
-		if (pipe(head->lfd) == -1)
-		{
-			perror("Error in pipe : ");
-			return (-1);
-		}
+		dprintf(2, "PIPE\n");
 	}
 	return (0);
 }
@@ -25,11 +18,17 @@ int	pipe_next(t_data *data, t_cmd *head)
 int	infile_dup(t_data *data, t_cmd *head)
 {
 	(void) data;
+	if (head->path == NULL)
+	{
+		dprintf(2,"path NULL\n");
+		return (0);
+	}
 	if (dup2(head->infile, STDIN_FILENO) < 0)
 	{
 		perror("Error dup file : ");
 		return (-1);
 	}
+	dprintf(2, "HERE\n");
 	return (0);
 }
 
@@ -49,8 +48,8 @@ void	stdout_dup(t_data *data, t_cmd *head)
 
 void	stdin_dup(t_data *data, t_cmd *head)
 {
-	(void) data;
-	if (head != data->cmdlist)
+	(void)data;
+	// if (head != data->cmdlist)
 	{
 		close(head->pfd[WR]);
 		dup2(head->pfd[RD], STDIN_FILENO);

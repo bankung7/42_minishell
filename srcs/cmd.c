@@ -28,13 +28,17 @@ char	*ft_iscmd(t_data *data, t_cmd *cmd)
 	{
 		tmp2 = ft_makepath(path[i], cmd->path);
 		if (access(tmp2, F_OK | X_OK) == 0)
+		{
+			ft_free2((void**)path, 0);
 			return (tmp2);
+		}
 		free(tmp2);
 		i++;
 	}
 	ft_putstr_fd(cmd->path, 2);
 	ft_putstr_fd(": command not found\n", 2);
 	g_status = 126;
+	ft_free2((void**)path, -1);
 	return (NULL);
 }
 

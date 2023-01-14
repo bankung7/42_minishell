@@ -29,9 +29,9 @@ int	ft_sighandle(void)
 	struct sigaction	acquit;
 
 	acint.sa_sigaction = ft_handler;
-	acint.sa_flags = SA_SIGINFO;
+	// acint.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &acint, 0);
-	acquit.sa_handler = SIG_IGN;
+	// acquit.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &acquit, 0);
 	return (0);
 }

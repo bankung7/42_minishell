@@ -33,7 +33,7 @@ static char	*getpath(t_data *data, t_cmd *cmd)
 		return (ft_strjoin(ft_getenv(data, "HOME"),
 				ft_strchr(cmd->argv[1], '~') + 1));
 	else
-		return (cmd->argv[1]);
+		return (ft_strdup(cmd->argv[1]));
 }
 
 int	ft_cd(t_data *data, t_cmd *cmd, int mode)
@@ -51,12 +51,15 @@ int	ft_cd(t_data *data, t_cmd *cmd, int mode)
 		{
 			printf("No such directory\n");
 			g_status = 1;
+			free(path);
 			return (0);
 		}
 		else
 		{
 			export_oldpwd(data);
 			chdir(path);
+			if (path)
+				free(path);
 		}
 	}
 	g_status = 0;
