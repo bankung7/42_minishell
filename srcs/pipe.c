@@ -11,6 +11,14 @@ int	pipe_next(t_data *data, t_cmd *head)
 			return (-1);
 		}
 	}
+	else
+	{
+		if (pipe(head->lfd) == -1)
+		{
+			perror("Error in pipe : ");
+			return (-1);
+		}
+	}
 	return (0);
 }
 

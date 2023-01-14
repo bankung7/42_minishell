@@ -43,11 +43,11 @@ int	ft_builtin(t_data *data, t_cmd *cmd)
 	if (cmd->outfile != 1)
 		dup2(cmd->outfile, 1);
 	if (ft_strncmp("echo", cmd->argv[0], 5) == 0)
-		return (ft_echo(cmd));
+		exit(ft_echo(cmd));
 	if (ft_strncmp("env", cmd->argv[0], 4) == 0)
-		return (ft_env(data));
+		exit(ft_env(data));
 	if (ft_strncmp("pwd", cmd->argv[0], 4) == 0)
-		return (ft_pwd());
+		exit(ft_pwd());
 	if (ft_strncmp("cd", cmd->argv[0], 3) == 0)
 		return (1);
 	if (ft_strncmp("export", cmd->argv[0], 7) == 0)
@@ -59,19 +59,20 @@ int	ft_builtin(t_data *data, t_cmd *cmd)
 	return (0);
 }
 
-int	ft_builtin_out(t_data *data, t_cmd *cmd)
+// mode = 1(not runcmd)
+int	ft_builtin_out(t_data *data, t_cmd *cmd, int mode)
 {
 	if (cmd->outfile != 1)
 		dup2(cmd->outfile, 1);
 	if (ft_strncmp("cd", cmd->argv[0], 3) == 0)
-		return (ft_cd(data, cmd));
+		return (ft_cd(data, cmd, mode));
 	if (ft_strncmp("export", cmd->argv[0], 7) == 0)
-		return (ft_export(data, cmd));
+		return (ft_export(data, cmd, mode));
 	if (ft_strncmp("unset", cmd->argv[0], 6) == 0)
-		return (ft_unset(data, cmd));
+		return (ft_unset(data, cmd, mode));
 	else if (ft_strncmp("exit", cmd->argv[0], 5) == 0)
-		return (ft_exit(data));
-	return (0);
+		return (ft_exit(data, mode));
+	return (1);
 }
 
 // test case error status only for the last pipe

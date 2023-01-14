@@ -53,10 +53,12 @@ int	ft_setenv(t_data *data, char *var)
 	return (0);
 }
 
-int	ft_export(t_data *data, t_cmd *cmd)
+int	ft_export(t_data *data, t_cmd *cmd, int mode)
 {
 	int	i;
 
+	if (mode == 1)
+		return (0);
 	i = 1;
 	while (cmd->argv && cmd->argv[i])
 	{
@@ -65,5 +67,5 @@ int	ft_export(t_data *data, t_cmd *cmd)
 		i++;
 	}
 	g_status = 0;
-	return (1);
+	return (0);
 }

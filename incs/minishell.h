@@ -64,6 +64,7 @@ typedef struct s_cmd
 	int pid;
 	int pfd[2];
 	int hdfd[2];
+	int	lfd[2];
 	char *hd_lmt;
 	struct s_cmd *next;
 } t_cmd;
@@ -106,7 +107,7 @@ int ft_parser(t_data *data);
 // cmd.c
 char *ft_iscmd(t_data *data, t_cmd *cmd);
 int ft_builtin(t_data *data, t_cmd *cmd);
-int ft_builtin_out(t_data *data, t_cmd *cmd);
+int ft_builtin_out(t_data *data, t_cmd *cmd, int mode);
 int ft_runcmd(t_data *data, t_cmd *cmd);
 
 // executing.c
@@ -140,18 +141,18 @@ int ft_echo(t_cmd *cmd);
 int ft_pwd(void);
 
 // cd.c
-int ft_cd(t_data *data, t_cmd *cmd);
+int ft_cd(t_data *data, t_cmd *cmd, int mode);
 
 // export.c
 int ft_arrlen(char **arr);
-int ft_export(t_data *data, t_cmd *cmd);
+int ft_export(t_data *data, t_cmd *cmd, int mode);
 
 // unset.c
-int ft_unset(t_data *data, t_cmd *cmd);
+int ft_unset(t_data *data, t_cmd *cmd, int mode);
 
 // exit.c
 int ft_clean(t_data *data, int res);
-int ft_exit(t_data *data);
+int ft_exit(t_data *data, int mode);
 
 // ==== PART 6 : Utilities Function ==========================//
 // get_next_line.c

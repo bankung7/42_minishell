@@ -20,10 +20,12 @@ int	ft_clean(t_data *data, int res)
 	return (res);
 }
 
-int	ft_exit(t_data *data)
+int	ft_exit(t_data *data, int mode)
 {
 	int	i;
 
+	if (mode == 1)
+		return (0);
 	i = 0;
 	ft_clean(data, 0);
 	while (data->env && data->env[i])
@@ -32,5 +34,5 @@ int	ft_exit(t_data *data)
 	rl_clear_history();
 	printf("Bye~\n");
 	exit(g_status);
-	return (1);
+	return (0);
 }

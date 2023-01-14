@@ -8,13 +8,12 @@ int	ft_pwd(void)
 	if (!str)
 	{
 		g_status = 126;
-		return (-1);
-		exit(126);
+		return (126);
 	}
 	if (getcwd(str, 1023) == NULL)
 		perror("getcwd() error");
 	else
 		printf("%s\n", str);
 	g_status = 0;
-	return (1);
+	return (0);
 }

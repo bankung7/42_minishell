@@ -10,7 +10,7 @@ static void	export_oldpwd(t_data *data)
 	tmp.path = ft_strjoin("export OLDPWD=", cwd);
 	free(cwd);
 	tmp.argv = ft_split(tmp.path, ' ');
-	ft_export(data, &tmp);
+	ft_export(data, &tmp, 0);
 	free(tmp.path);
 	ft_free2((void **)tmp.argv, 0);
 }
@@ -36,18 +36,23 @@ static char	*getpath(t_data *data, t_cmd *cmd)
 		return (cmd->argv[1]);
 }
 
-int	ft_cd(t_data *data, t_cmd *cmd)
+int	ft_cd(t_data *data, t_cmd *cmd, int mode)
 {
 	char	*path;
 
+	if (mode == 1)
+		return (0);
 	path = getpath(data, cmd);
-	g_status = 0;
 	if (path == NULL)
 		printf("OLDPWD not set\n");
 	else
 	{
 		if (access(path, F_OK) != 0)
+		{
 			printf("No such directory\n");
+			g_status = 1;
+			return (0);
+		}
 		else
 		{
 			export_oldpwd(data);
@@ -55,5 +60,5 @@ int	ft_cd(t_data *data, t_cmd *cmd)
 		}
 	}
 	g_status = 0;
-	return (1);
+	return (0);
 }
