@@ -54,3 +54,15 @@ int	ft_freetoken(t_data *data, int res)
 	data->status = res;
 	return (res);
 }
+
+// free what in expand
+int	ft_freeexpd(t_expd *stc)
+{
+	if (stc->tmp)
+		free(stc->tmp);
+	if (stc->env)
+		free(stc->env);
+	if (stc->next)
+		free(stc->next);
+	return (0);
+}

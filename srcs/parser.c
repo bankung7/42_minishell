@@ -40,6 +40,7 @@ int	ft_wparser(t_data *data, t_token *token)
 	if (data->cmdlist == 0)
 		return (-1);
 	head = ft_lastcmd(data->cmdlist);
+	ft_expander(data, token, 1);
 	tmp = malloc(sizeof(char *) * (ft_arrlen(head->argv) + 2));
 	if (!tmp)
 		return (-1);
@@ -48,13 +49,12 @@ int	ft_wparser(t_data *data, t_token *token)
 		tmp[token->len] = head->argv[token->len];
 		token->len++;
 	}
-	ft_expander(data, token, 1);
 	tmp[token->len++] = ft_strdup(token->str);
 	tmp[token->len] = 0;
 	free(head->argv);
 	head->argv = tmp;
-	if (head->path == 0)
-		head->path = ft_strdup(token->str);
+	if (head->path == 0 && head->argv && head->argv[0])
+		head->path = ft_strdup(head->argv[0]);
 	head->status = WORD;
 	return (0);
 }
@@ -103,7 +103,5 @@ int	ft_parser(t_data *data)
 			data->status = ft_ppipe(data, token);
 		token = token->next;
 	}
-	// if (data->status != 0)
-	// 	printf("parser error\n");
 	return (data->status);
 }

@@ -44,6 +44,10 @@ typedef struct s_expd
 	char	*tmp;
 	char	*env;
 	char	*new;
+	char	*next;
+	char	**stmp;
+	int	x;
+	int	j;
 }	t_expd;
 typedef struct s_token
 {
@@ -94,9 +98,20 @@ int ft_lexical(t_data *data);
 
 // tokenize.c
 int ft_addtoken(t_data *data, char *str, int type);
+int ft_reargv(t_data *data, char *str);
+
+// quote.c
+int	ft_unquote(t_token *token, int i, int quote);
+int	ft_dquote(t_data *data, t_token *token, int i);
 
 // expander.c
+int	ft_getexpand(t_data *data, t_token *token, int i);
 int ft_expander(t_data *data, t_token *token, int x);
+
+// expander2.c
+int	ft_xset(t_expd *stc, t_token *token, int i, t_data *data);
+int	ft_xjoin(t_token *token, int i, t_expd *stc);
+int	ft_xsplit(t_data *data, t_token *token, int i);
 
 // parser.c
 t_cmd *ft_lastcmd(t_cmd *cmd);
@@ -169,11 +184,13 @@ char *ft_strcpy(char *dst, char *src);
 // utils.c
 int ft_ttoken(t_data *data);
 int	ft_tast(t_data *data);
+int ft_print2a(char **arr);
 
 // free.c
 int ft_closefd(t_data *data, int res);
 int	ft_freecmd(t_cmd *head, int res);
 int	ft_freetoken(t_data *data, int res);
 int ft_free2(void **arr, int res);
+int	ft_freeexpd(t_expd *stc);
 
 #endif

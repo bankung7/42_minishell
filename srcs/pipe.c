@@ -28,7 +28,7 @@ int	infile_dup(t_data *data, t_cmd *head)
 		perror("Error dup file : ");
 		return (-1);
 	}
-	dprintf(2, "HERE\n");
+	// dprintf(2, "HERE\n");
 	return (0);
 }
 
