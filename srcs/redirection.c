@@ -1,5 +1,17 @@
 #include "minishell.h"
 
+int ft_clearfd(t_cmd *head, int type)
+{
+	(void)head;
+	(void)type;
+
+	if (type == INFILE && head->infile > 2)
+		close(head->infile);
+	else if ((type == OUTFILE || type == APPEND) && head->outfile > 2)
+		close(head->outfile);
+	return (0);
+}
+
 int	ft_reheredoc(t_data *data, t_token *token)
 {
 	t_cmd	*head;
@@ -27,6 +39,7 @@ int	ft_redirection(t_data *data, t_token *token)
 		data->cmdlist = ft_newnode();
 	head = ft_lastcmd(data->cmdlist);
 	ft_expander(data, token->next, 1);
+	ft_clearfd(head, token->type);
 	if (token->type == INFILE)
 		head->infile = open(token->next->str, O_RDONLY);
 	else if (token->type == OUTFILE)

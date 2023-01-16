@@ -36,5 +36,5 @@ int	ft_dquote(t_data *data, t_token *token, int i)
 		j++;
 	}
 	ft_unquote(token, i, '"');
-	return (j - 1);
+	return (j - 2);
 }
