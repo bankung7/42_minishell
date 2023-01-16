@@ -6,7 +6,7 @@
 /*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/10 01:18:57 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/17 02:30:02 by pjerddee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,12 @@ static void	child(t_data *data, t_cmd *head)
 	stdout_dup(data, head);
 	stdin_dup(data, head);
 	if (head->path == NULL)
+	{
+		dprintf(2, "next %s: close pfds in child\n", head->next->path);
+		close(head->next->pfd[WR]);
+		close(head->next->pfd[RD]);
 		exit(0);
+	}
 	if (ft_builtin(data, head) == 0)
 		ft_runcmd(data, head);
 	exit(0);
