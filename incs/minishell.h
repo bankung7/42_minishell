@@ -44,15 +44,16 @@ typedef struct s_expd
 	char	*tmp;
 	char	*env;
 	char	*new;
+	char	*next;
+	char	**stmp;
+	int	x;
+	int	j;
 }	t_expd;
 typedef struct s_token
 {
 	char *str;
 	int type;
 	int len;
-	char *tmp;
-	char *env;
-	char *new;
 	struct s_token *next;
 } t_token;
 
@@ -67,6 +68,7 @@ typedef struct s_cmd
 	int pid;
 	int pfd[2];
 	int hdfd[2];
+	int	lfd[2];
 	char *hd_lmt;
 	struct s_cmd *next;
 } t_cmd;
@@ -96,9 +98,20 @@ int ft_lexical(t_data *data);
 
 // tokenize.c
 int ft_addtoken(t_data *data, char *str, int type);
+int ft_reargv(t_data *data, char *str);
+
+// quote.c
+int	ft_unquote(t_token *token, int i, int quote);
+int	ft_dquote(t_data *data, t_token *token, int i);
 
 // expander.c
-int ft_expander(t_data *data, t_token *token); // wait for error handling
+int	ft_getexpand(t_data *data, t_token *token, int i);
+int ft_expander(t_data *data, t_token *token, int x);
+
+// expander2.c
+int	ft_xset(t_expd *stc, t_token *token, int i, t_data *data);
+int	ft_xjoin(t_token *token, int i, t_expd *stc);
+int	ft_xsplit(t_data *data, t_token *token, int i);
 
 // parser.c
 t_cmd *ft_lastcmd(t_cmd *cmd);
@@ -109,7 +122,7 @@ int ft_parser(t_data *data);
 // cmd.c
 char *ft_iscmd(t_data *data, t_cmd *cmd);
 int ft_builtin(t_data *data, t_cmd *cmd);
-int ft_builtin_out(t_data *data, t_cmd *cmd);
+int ft_builtin_out(t_data *data, t_cmd *cmd, int mode);
 int ft_runcmd(t_data *data, t_cmd *cmd);
 
 // executing.c
@@ -117,6 +130,7 @@ int ft_execute(t_data *data);
 
 // ==== PART 4 : Redirection & Pipe ========================== //
 // redirection.c
+int	ft_reheredoc(t_data *data, t_token *token);
 int ft_redirection(t_data *data, t_token *token);
 
 // heredoc.c
@@ -142,18 +156,18 @@ int ft_echo(t_cmd *cmd);
 int ft_pwd(void);
 
 // cd.c
-int ft_cd(t_data *data, t_cmd *cmd);
+int ft_cd(t_data *data, t_cmd *cmd, int mode);
 
 // export.c
 int ft_arrlen(char **arr);
-int ft_export(t_data *data, t_cmd *cmd);
+int ft_export(t_data *data, t_cmd *cmd, int mode);
 
 // unset.c
-int ft_unset(t_data *data, t_cmd *cmd);
+int ft_unset(t_data *data, t_cmd *cmd, int mode);
 
 // exit.c
 int ft_clean(t_data *data, int res);
-int ft_exit(t_data *data);
+int ft_exit(t_data *data, int mode);
 
 // ==== PART 6 : Utilities Function ==========================//
 // get_next_line.c
@@ -170,11 +184,13 @@ char *ft_strcpy(char *dst, char *src);
 // utils.c
 int ft_ttoken(t_data *data);
 int	ft_tast(t_data *data);
+int ft_print2a(char **arr);
 
 // free.c
 int ft_closefd(t_data *data, int res);
 int	ft_freecmd(t_cmd *head, int res);
 int	ft_freetoken(t_data *data, int res);
 int ft_free2(void **arr, int res);
+int	ft_freeexpd(t_expd *stc);
 
 #endif

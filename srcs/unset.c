@@ -42,13 +42,15 @@ static int	ft_checkvar(t_data *data, char *var)
 	return (0);
 }
 
-int	ft_unset(t_data *data, t_cmd *cmd)
+int	ft_unset(t_data *data, t_cmd *cmd, int mode)
 {
 	int	i;
 
+	if (mode == 1)
+		return (0);
 	i = 1;
 	while (cmd->argv && cmd->argv[i])
 		ft_checkvar(data, cmd->argv[i++]);
 	g_status = 0;
-	return (1);
+	return (0);
 }

@@ -6,32 +6,21 @@
 // ctrl-\ : does nothing (original is SIGQUIT)
 // ctrl-D : exits the shell (this is not a signal, it is a EOF)
 
-void	ft_handler(int sig, siginfo_t *info, void *context)
+void	ft_handler(int sig)
 {
-	(void)info;
-	(void)context;
-	if (sig == SIGINT)
-	{
-		printf("\n");
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-		g_status = 130;
-	}
-	else if (sig == SIGQUIT)
-		rl_redisplay();
+	(void)sig;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	g_status = 130;
 	return ;
 }
 
+// modify signal
 int	ft_sighandle(void)
 {
-	struct sigaction	acint;
-	struct sigaction	acquit;
-
-	acint.sa_sigaction = ft_handler;
-	acint.sa_flags = SA_SIGINFO;
-	sigaction(SIGINT, &acint, 0);
-	acquit.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &acquit, 0);
+	signal(SIGINT, ft_handler);
+	signal(SIGQUIT, SIG_IGN);
 	return (0);
 }

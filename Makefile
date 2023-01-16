@@ -26,9 +26,9 @@ RM = rm -rf
 
 SRCS_DIR = srcs/
 SRCS = minishell.c signal.c init.c \
-	lexical.c tokenize.c expander.c parser.c \
+	lexical.c tokenize.c expander.c expander2.c parser.c \
 	executing.c cmd.c \
-	redirection.c pipe.c heredoc.c \
+	redirection.c pipe.c heredoc.c  quote.c \
 	echo.c pwd.c env.c export.c unset.c cd.c exit.c \
 	get_next_line.c get_next_line_utils.c utils.c free.c
 

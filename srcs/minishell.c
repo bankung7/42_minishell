@@ -54,10 +54,11 @@ int	ft_prompt(t_data *data)
 			continue ;
 		if (ft_lexical(data) == 0)
 			if (ft_parser(data) == 0)
-            {
-                ft_tast(data);
+			{
+                // ft_ttoken(data);
+				// ft_tast(data);
 				ft_execute(data);
-            }
+			}
 		ft_clean(data, 0);
 		add_history(data->line);
 		free(data->line);
@@ -75,6 +76,6 @@ int	main(int argc, char **argv, char **env)
 	ft_initenv(&data, env);
 	ft_sighandle();
 	ft_prompt(&data);
-	ft_exit(&data);
+	ft_exit(&data, 0);
 	return (0);
 }

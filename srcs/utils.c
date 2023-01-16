@@ -47,3 +47,14 @@ int	ft_ttoken(t_data *data)
 	data->token = 0;
 	return (0);
 }
+
+int	ft_print2a(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr && arr[i])
+		printf("arr : %s\n", arr[i++]);
+	printf("\n");
+	return (0);
+}
