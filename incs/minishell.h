@@ -69,6 +69,7 @@ typedef struct s_cmd
 	int pfd[2];
 	int hdfd[2];
 	int	lfd[2];
+    int pc;
 	char *hd_lmt;
 	struct s_cmd *next;
 } t_cmd;

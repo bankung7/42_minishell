@@ -13,6 +13,7 @@ t_cmd	*ft_newnode(void)
 	node->outfile = STDOUT_FILENO;
 	node->status = 0;
 	node->pipe = 0;
+	node->pc = 0;
 	node->next = 0;
 	node->hd_lmt = 0;
 	return (node);

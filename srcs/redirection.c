@@ -1,10 +1,7 @@
 #include "minishell.h"
 
-int ft_clearfd(t_cmd *head, int type)
+int	ft_clearfd(t_cmd *head, int type)
 {
-	(void)head;
-	(void)type;
-
 	if (type == INFILE && head->infile > 2)
 		close(head->infile);
 	else if ((type == OUTFILE || type == APPEND) && head->outfile > 2)

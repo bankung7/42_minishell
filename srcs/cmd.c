@@ -29,7 +29,7 @@ char	*ft_iscmd(t_data *data, t_cmd *cmd)
 		tmp2 = ft_makepath(path[i], cmd->path);
 		if (access(tmp2, F_OK | X_OK) == 0)
 		{
-			ft_free2((void**)path, 0);
+			ft_free2((void **)path, 0);
 			return (tmp2);
 		}
 		free(tmp2);
@@ -38,7 +38,7 @@ char	*ft_iscmd(t_data *data, t_cmd *cmd)
 	ft_putstr_fd(cmd->path, 2);
 	ft_putstr_fd(": command not found\n", 2);
 	g_status = 126;
-	ft_free2((void**)path, -1);
+	ft_free2((void **)path, -1);
 	return (NULL);
 }
 
@@ -46,6 +46,8 @@ int	ft_builtin(t_data *data, t_cmd *cmd)
 {
 	if (cmd->outfile != 1)
 		dup2(cmd->outfile, 1);
+	if (cmd->path == 0)
+		return (0);
 	if (ft_strncmp("echo", cmd->argv[0], 5) == 0)
 		exit(ft_echo(cmd));
 	if (ft_strncmp("env", cmd->argv[0], 4) == 0)
@@ -84,8 +86,13 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 {
 	char	*path;
 
-	if (access(cmd->path, F_OK | X_OK) == 0)
+	if (cmd->path != 0 && access(cmd->path, F_OK | X_OK) == 0)
 		return (execve(cmd->path, cmd->argv, data->env));
+	if (cmd->path == 0)
+	{
+		printf("exit 126\n");
+		exit(126);
+	}
 	path = ft_iscmd(data, cmd);
 	if (path != NULL)
 	{
@@ -94,6 +101,9 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 		return (execve(cmd->path, cmd->argv, data->env));
 	}
 	else
+	{
+		free(path);
 		exit(127);
+	}
 	return (0);
 }
