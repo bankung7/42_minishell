@@ -57,7 +57,8 @@ int	ft_expander(t_data *data, t_token *token, int x)
 			i += (ft_unquote(token, i, '\'') + 2);
 		else if (token->str[i] == '"')
 			i += ft_dquote(data, token, i);
-		else if (token->str[i] == '$' && x == 1)
+		else if (token->str[i] == '$' && (ft_isalnum(token->str[i + 1]) == 1
+            || token->str[i + 1] == '_' || token->str[i + 1] == '?') && x == 1)
 			i = ft_xsplit(data, token, i);
 		else
 			i++;

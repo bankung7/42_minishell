@@ -89,10 +89,7 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 	if (cmd->path != 0 && access(cmd->path, F_OK | X_OK) == 0)
 		return (execve(cmd->path, cmd->argv, data->env));
 	if (cmd->path == 0)
-	{
-		printf("exit 126\n");
 		exit(126);
-	}
 	path = ft_iscmd(data, cmd);
 	if (path != NULL)
 	{

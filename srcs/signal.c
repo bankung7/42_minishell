@@ -6,6 +6,12 @@
 // ctrl-\ : does nothing (original is SIGQUIT)
 // ctrl-D : exits the shell (this is not a signal, it is a EOF)
 
+void	ft_sigchild(int sig)
+{
+	(void)sig;
+	exit(2);
+}
+
 void	ft_handler(int sig)
 {
 	(void)sig;

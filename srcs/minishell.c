@@ -51,7 +51,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	g_status = 0;
 	ft_initenv(&data, env);
-	// ft_sighandle();
+	ft_sighandle();
 	ft_prompt(&data);
 	ft_exit(&data, 0);
 	return (0);
