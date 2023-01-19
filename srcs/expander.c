@@ -34,11 +34,11 @@ int	ft_getexpand(t_data *data, t_token *token, int i)
 			+ (ft_strlen(stc.env) - ft_strlen(stc.tmp)) + 1);
 	if (stc.tmp == 0 || stc.new == 0)
 		return (ft_freetoken(data, -1));
+	len = ft_strlen(stc.env);
 	ft_memcpy(stc.new, token->str, i);
 	ft_memcpy(&stc.new[ft_strlen(stc.new)], stc.env, ft_strlen(stc.env));
 	ft_memcpy(&stc.new[ft_strlen(stc.new)], &token->str[i + j],
 		ft_strlen(token->str) - (i + j));
-	len = ft_strlen(stc.env);
 	free(token->str);
 	free(stc.tmp);
 	free(stc.env);
@@ -54,7 +54,7 @@ int	ft_expander(t_data *data, t_token *token, int x)
 	while (token->str[i])
 	{
 		if (token->str[i] == '\'')
-			i += ft_unquote(token, i, '\'');
+			i += (ft_unquote(token, i, '\'') + 2);
 		else if (token->str[i] == '"')
 			i += ft_dquote(data, token, i);
 		else if (token->str[i] == '$' && x == 1)

@@ -58,8 +58,7 @@ int	ft_cd(t_data *data, t_cmd *cmd, int mode)
 		{
 			export_oldpwd(data);
 			chdir(path);
-			if (path)
-				free(path);
+			free(path);
 		}
 	}
 	g_status = 0;
