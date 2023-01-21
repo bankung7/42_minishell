@@ -137,8 +137,8 @@ int	ft_reheredoc(t_data *data, t_token *token);
 int ft_redirection(t_data *data, t_token *token);
 
 // heredoc.c
-void heredoc_dup(t_cmd *head);
-char *heredoc(char *str);
+void heredoc_dup(t_data *data, t_cmd *head);
+char *heredoc(t_data *data, char *str);
 int ft_heredoc(t_data *data);
 
 // pipe.c

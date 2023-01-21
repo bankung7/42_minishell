@@ -1,34 +1,37 @@
 #include "minishell.h"
 
-void	heredoc_dup(t_cmd *head)
+void	heredoc_dup(t_data *data, t_cmd *head)
 {
 	if (head->hd_lmt != NULL)
 	{
-		ft_putstr_fd(heredoc(head->hd_lmt), head->hdfd[WR]);
+		ft_putstr_fd(heredoc(data, head->hd_lmt), head->hdfd[WR]);
 		close(head->hdfd[WR]);
 		dup2(head->hdfd[RD], STDIN_FILENO);
 		close(head->hdfd[RD]);
 	}
 }
 
-char	*heredoc(char *str)
+char	*heredoc(t_data *data, char *str)
 {
+	t_token token;
 	char	*limiter;
-	char	*line;
 	char	*input_s;
 	char	*tmp_input_s;
 
+
 	limiter = ft_strjoin(str, "\n");
 	write(1, ">", 1);
-	line = get_next_line(STDIN_FILENO);
-	input_s = ft_calloc(ft_strlen(line) + 1, sizeof(char));
-	while (ft_strncmp(line, limiter, ft_strlen(limiter)))
+	token.str = get_next_line(STDIN_FILENO);
+	input_s = ft_calloc(ft_strlen(token.str) + 1, sizeof(char));
+	while (ft_strncmp(token.str, limiter, ft_strlen(limiter)))
 	{
+		ft_getexpand(data, &token, 0);
 		write(1, ">", 1);
 		tmp_input_s = input_s;
-		input_s = ft_strjoin(input_s, line);
+		input_s = ft_strjoin(input_s, token.str);
 		free(tmp_input_s);
-		line = get_next_line(0);
+		free(token.str);
+		token.str = get_next_line(0);
 	}
 	free(limiter);
 	return (input_s);
