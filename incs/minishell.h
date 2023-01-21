@@ -88,6 +88,7 @@ typedef struct s_data
 // ==== PART 1 : Initialize and Preparation ================ //
 // signal.c
 void    ft_sigchild(int sig);
+void    ft_sigheredoc(int sig);
 int ft_sighandle(void);
 
 // init.c

@@ -20,7 +20,7 @@ char	*heredoc(char *str)
 
 	limiter = ft_strjoin(str, "\n");
 	write(1, ">", 1);
-	line = get_next_line(0);
+	line = get_next_line(STDIN_FILENO);
 	input_s = ft_calloc(ft_strlen(line) + 1, sizeof(char));
 	while (ft_strncmp(line, limiter, ft_strlen(limiter)))
 	{

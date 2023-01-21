@@ -20,7 +20,7 @@ int	ft_reheredoc(t_data *data, t_token *token)
 	head = ft_lastcmd(data->cmdlist);
 	ft_expander(data, token->next, 0);
 	head->hd_lmt = token->next->str;
-	ft_heredoc(data);
+    pipe(head->hdfd);
 	heredoc_dup(head);
 	head->status = WORD;
 	return (0);

@@ -43,8 +43,6 @@ static void	parent(t_data *data, t_cmd *head)
 
 static void	child(t_data *data, t_cmd *head)
 {
-    signal(SIGINT, ft_sigchild);
-	heredoc_dup(head);
 	stdout_dup(data, head);
 	stdin_dup(data, head);
 	if (head->pc == 0 && ft_builtin(data, head) == 0)
