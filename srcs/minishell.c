@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:04:50 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:04:50 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	*getprompt(void)
@@ -24,19 +36,15 @@ int	ft_prompt(t_data *data)
 		ft_resetdata(data);
 		prompt = getprompt();
 		data->line = readline(prompt);
+		add_history(data->line);
 		free(prompt);
 		if (!data->line)
 			return (-1);
 		if (ft_strlen(data->line) == 0)
 			continue ;
-		if (ft_lexical(data) == 0)
-			if (ft_parser(data) == 0)
-            {
-                // ft_tast(data);
-				ft_execute(data);
-            }
+		if (ft_lexical(data) == 0 && ft_parser(data) == 0)
+			ft_execute(data);
 		ft_clean(data, 0);
-		add_history(data->line);
 		free(data->line);
 	}
 	return (0);
@@ -53,6 +61,6 @@ int	main(int argc, char **argv, char **env)
 	ft_initenv(&data, env);
 	ft_sighandle();
 	ft_prompt(&data);
-	ft_exit(&data, 0);
+	ft_exit(&data, 0, 0);
 	return (0);
 }

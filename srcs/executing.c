@@ -32,13 +32,10 @@ static void	parent(t_data *data, t_cmd *head)
 		close(head->pfd[WR]);
 		close(head->pfd[RD]);
 	}
-	if (head->hd_lmt != NULL)
-	{
-		close(head->hdfd[WR]);
-		close(head->hdfd[RD]);
-	}
 	if (head->path != 0)
 		ft_builtin_out(data, head, 0);
+	dup2(data->ori_fd[RD], STDIN_FILENO);
+	dup2(data->ori_fd[WR], STDOUT_FILENO);
 }
 
 static void	child(t_data *data, t_cmd *head)
@@ -59,6 +56,7 @@ int	ft_waitchild(t_data *data)
 	int		status;
 	t_cmd	*head;
 
+	signal(SIGINT, ft_handler);
 	head = data->cmdlist;
 	while (head)
 	{
@@ -68,7 +66,7 @@ int	ft_waitchild(t_data *data)
 			g_status = WEXITSTATUS(status);
 		}
 		else
-			waitpid(head->pid, 0, 0);
+			waitpid(head->pid, &status, 0);
 		head = head->next;
 	}
 	return (0);
@@ -83,11 +81,16 @@ int	ft_execute(t_data *data)
 	head = data->cmdlist;
 	if (infile_dup(data, head) == -1)
 		return (-1);
+	data->iflst = 1;
+	if (head->next == NULL)
+		data->iflst = 0;
+	signal(SIGINT, SIG_IGN);
 	while (head)
 	{
-		ft_where2run(head);
 		pipe_next(data, head);
 		head->pid = fork();
+		if (head->pid == -1)
+			return (-1);
 		if (head->pid == 0)
 			child(data, head);
 		parent(data, head);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:03:51 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:03:52 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	ft_delenv(t_data *data, int pos)
@@ -14,7 +26,10 @@ static int	ft_delenv(t_data *data, int pos)
 	while (data->env && data->env[i])
 	{
 		if (i == pos)
+		{
+			free(data->env[i]);
 			j++;
+		}
 		tmp[i] = data->env[i + j];
 		i++;
 	}

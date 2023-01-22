@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:05:27 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:05:28 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static char	*ft_makepath(char *path, char *name)
@@ -35,8 +47,6 @@ char	*ft_iscmd(t_data *data, t_cmd *cmd)
 		free(tmp2);
 		i++;
 	}
-	ft_putstr_fd(cmd->path, 2);
-	ft_putstr_fd(": command not found\n", 2);
 	g_status = 126;
 	ft_free2((void **)path, -1);
 	return (NULL);
@@ -68,6 +78,8 @@ int	ft_builtin(t_data *data, t_cmd *cmd)
 // mode = 1(not runcmd)
 int	ft_builtin_out(t_data *data, t_cmd *cmd, int mode)
 {
+	if (cmd->next != 0)
+		cmd->tfd = cmd->next->pfd[WR];
 	if (cmd->outfile != 1)
 		dup2(cmd->outfile, 1);
 	if (ft_strncmp("cd", cmd->argv[0], 3) == 0)
@@ -77,17 +89,20 @@ int	ft_builtin_out(t_data *data, t_cmd *cmd, int mode)
 	if (ft_strncmp("unset", cmd->argv[0], 6) == 0)
 		return (ft_unset(data, cmd, mode));
 	else if (ft_strncmp("exit", cmd->argv[0], 5) == 0)
-		return (ft_exit(data, mode));
+		return (ft_exit(data, cmd, mode));
 	return (1);
 }
 
-// test case error status only for the last pipe
 int	ft_runcmd(t_data *data, t_cmd *cmd)
 {
 	char	*path;
 
+	signal(SIGINT, ft_sigchild);
 	if (cmd->path != 0 && access(cmd->path, F_OK | X_OK) == 0)
-		return (execve(cmd->path, cmd->argv, data->env));
+	{
+		execve(cmd->path, cmd->argv, data->env);
+		ft_error(cmd);
+	}
 	if (cmd->path == 0)
 		exit(126);
 	path = ft_iscmd(data, cmd);
@@ -100,7 +115,7 @@ int	ft_runcmd(t_data *data, t_cmd *cmd)
 	else
 	{
 		free(path);
-		exit(127);
+		ft_error(cmd);
 	}
 	return (0);
 }

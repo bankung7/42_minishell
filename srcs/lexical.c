@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexical.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:04:46 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:04:49 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_ctype(t_data *data)
@@ -88,6 +100,6 @@ int	ft_lexical(t_data *data)
 			data->len++;
 	}
 	if (data->status != 0)
-		printf("lexical error\n");
+		ft_putstr_fd("lexical error\n", 2);
 	return (data->status);
 }

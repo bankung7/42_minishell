@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:05:28 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:05:32 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	export_oldpwd(t_data *data)
@@ -26,7 +38,8 @@ static char	*getpath(t_data *data, t_cmd *cmd)
 		old_path = ft_getenv(data, "OLDPWD");
 		if (old_path == NULL)
 			return (NULL);
-		printf("%s\n", old_path);
+		ft_putstr_fd(old_path, cmd->tfd);
+		ft_putstr_fd("\n", cmd->tfd);
 		return (old_path);
 	}
 	else if (ft_strchr(cmd->argv[1], '~'))
@@ -44,17 +57,17 @@ int	ft_cd(t_data *data, t_cmd *cmd, int mode)
 		return (0);
 	path = getpath(data, cmd);
 	if (path == NULL)
-		printf("OLDPWD not set\n");
+		ft_putstr_fd("OLDPWD not set\n", 2);
 	else
 	{
 		if (access(path, F_OK) != 0)
 		{
-			printf("No such directory\n");
+			ft_putstr_fd("No such directory\n", 2);
 			g_status = 1;
 			free(path);
 			return (0);
 		}
-		else
+		else if (data->iflst == 0)
 		{
 			export_oldpwd(data);
 			chdir(path);

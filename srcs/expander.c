@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:05:24 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:05:24 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 // Xpande which split is move to expander2.x
@@ -51,6 +63,12 @@ int	ft_expander(t_data *data, t_token *token, int x)
 	int	i;
 
 	i = 0;
+	if (ft_strlen(token->str) == 1 && token->str[0] == '~')
+	{
+		free(token->str);
+		token->str = ft_getenv(data, "HOME");
+		return (0);
+	}
 	while (token->str[i])
 	{
 		if (token->str[i] == '\'')
@@ -58,7 +76,7 @@ int	ft_expander(t_data *data, t_token *token, int x)
 		else if (token->str[i] == '"')
 			i += ft_dquote(data, token, i);
 		else if (token->str[i] == '$' && (ft_isalnum(token->str[i + 1]) == 1
-            || token->str[i + 1] == '_' || token->str[i + 1] == '?') && x == 1)
+				|| token->str[i + 1] == '_' || token->str[i + 1] == '?') && x)
 			i = ft_xsplit(data, token, i);
 		else
 			i++;

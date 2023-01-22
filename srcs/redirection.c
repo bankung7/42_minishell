@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:03:26 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:03:27 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_clearfd(t_cmd *head, int type)
@@ -20,9 +32,8 @@ int	ft_reheredoc(t_data *data, t_token *token)
 	head = ft_lastcmd(data->cmdlist);
 	ft_expander(data, token->next, 0);
 	head->hd_lmt = token->next->str;
-    pipe(head->hdfd);
 	heredoc_dup(data, head);
-    signal(SIGINT, ft_handler);
+	signal(SIGINT, ft_handler);
 	head->status = WORD;
 	return (data->status);
 }

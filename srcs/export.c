@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:05:20 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:05:22 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_arrlen(char **arr)
@@ -11,16 +23,16 @@ int	ft_arrlen(char **arr)
 }
 
 // print env when no argv
-int	ft_printenv(char **env)
+int	ft_printenv(char **env, t_cmd *head)
 {
 	int	i;
 
 	i = 0;
 	while (env[i])
 	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(env[i], 1);
-		ft_putchar_fd('\n', 1);
+		ft_putstr_fd("declare -x ", head->tfd);
+		ft_putstr_fd(env[i], head->tfd);
+		ft_putchar_fd('\n', head->tfd);
 		i++;
 	}
 	return (0);
@@ -78,7 +90,7 @@ int	ft_export(t_data *data, t_cmd *cmd, int mode)
 		return (0);
 	i = 1;
 	if (cmd->argv[1] == 0)
-		return (ft_printenv(data->env));
+		return (ft_printenv(data->env, cmd));
 	while (cmd->argv && cmd->argv[i])
 	{
 		if (ft_strchr(cmd->argv[i], '=') != 0)

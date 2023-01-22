@@ -1,8 +1,20 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/01/22 21:03:08 by vnilprap          #+#    #+#              #
+#    Updated: 2023/01/22 21:11:43 by vnilprap         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = minishell
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 # CFLAGS =
 
 LIBFT_DIR = libft
@@ -30,7 +42,8 @@ SRCS = minishell.c signal.c init.c \
 	executing.c cmd.c \
 	redirection.c pipe.c heredoc.c  quote.c \
 	echo.c pwd.c env.c export.c unset.c cd.c exit.c \
-	get_next_line.c get_next_line_utils.c utils.c free.c
+	utils.c free.c
+	# get_next_line.c get_next_line_utils.c 
 
 OBJS_DIR = objs/
 OBJS = $(addprefix $(OBJS_DIR), $(SRCS:.c=.o))
@@ -50,7 +63,7 @@ $(LIBFT):
 	@make -C $(LIBFT_DIR)
 
 clean:
-	@$(RM) $(NAME)
+	@$(RM) -rf $(NAME) *.dSYM 
 	@make clean -C $(LIBFT_DIR)
 	@echo "Some clean~"
 

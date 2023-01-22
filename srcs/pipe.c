@@ -1,13 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:03:28 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:03:33 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	pipe_next(t_data *data, t_cmd *head)
 {
 	(void) data;
+	ft_where2run(head);
 	if (head->next != NULL)
 	{
 		if (pipe(head->next->pfd) == -1)
 		{
-			printf("Error at pipe\n");
+			ft_putstr_fd("Error at pipe\n", 2);
 			return (-1);
 		}
 	}
@@ -19,7 +32,7 @@ int	infile_dup(t_data *data, t_cmd *head)
 	(void) data;
 	if (dup2(head->infile, STDIN_FILENO) < 0)
 	{
-		printf("No such file or directory\n");
+		ft_putstr_fd("No such file or directory\n", 2);
 		return (-1);
 	}
 	return (0);

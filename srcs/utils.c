@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/22 21:03:22 by vnilprap          #+#    #+#             */
+/*   Updated: 2023/01/22 21:03:24 by vnilprap         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 // Test AST
@@ -21,6 +33,7 @@ int	ft_tast(t_data *data)
 		printf("pipe\t:\t[%d]\n", head->pipe);
 		printf("status\t:\t[%d]\n", head->status);
 		printf("heredeoc limiter\t:\t[%s]\n", head->hd_lmt);
+		printf("tfd\t:\t[%d]\n", head->tfd);
 		printf("======= end node =======\n");
 		head = head->next;
 	}
@@ -57,4 +70,19 @@ int	ft_print2a(char **arr)
 		printf("arr : %s\n", arr[i++]);
 	printf("\n");
 	return (0);
+}
+
+void	ft_error(t_cmd *cmd)
+{
+	ft_putstr_fd(cmd->argv[0], 2);
+	if (ft_strchr(cmd->argv[0], '/') == 0)
+		ft_putstr_fd(": command not found\n", 2);
+	else if (opendir(cmd->argv[0]) == 0)
+		ft_putstr_fd(": no such file or directory\n", 2);
+	else
+	{
+		ft_putstr_fd(": is a directory\n", 2);
+		exit(126);
+	}
+	exit(127);
 }
