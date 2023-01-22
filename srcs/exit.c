@@ -6,7 +6,7 @@
 /*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 21:05:25 by vnilprap          #+#    #+#             */
-/*   Updated: 2023/01/22 21:05:25 by vnilprap         ###   ########.fr       */
+/*   Updated: 2023/01/22 21:57:36 by vnilprap         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ int	ft_exit(t_data *data, t_cmd *cmd, int mode)
 	}
 	ft_checkargv(cmd);
 	i = 0;
-	if (data->iflst != 0)
-		return (0);
 	ft_clean(data, 0);
+	if (data->cmdlist != 0 && data->iflst != 0)
+		return (0);
 	while (data->env && data->env[i])
 		free(data->env[i++]);
 	free(data->env);

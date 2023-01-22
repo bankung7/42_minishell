@@ -6,7 +6,7 @@
 /*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 21:04:50 by vnilprap          #+#    #+#             */
-/*   Updated: 2023/01/22 21:04:50 by vnilprap         ###   ########.fr       */
+/*   Updated: 2023/01/22 21:59:27 by vnilprap         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ int	ft_prompt(t_data *data)
 		if (!data->line)
 			return (-1);
 		if (ft_strlen(data->line) == 0)
+		{
+			free(data->line);
 			continue ;
+		}
 		if (ft_lexical(data) == 0 && ft_parser(data) == 0)
 			ft_execute(data);
 		ft_clean(data, 0);

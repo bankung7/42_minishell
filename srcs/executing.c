@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executing.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pjerddee <pjerddee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vnilprap <vnilprap@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/11 22:17:07 by pjerddee          #+#    #+#             */
-/*   Updated: 2023/01/10 01:18:57 by pjerddee         ###   ########.fr       */
+/*   Updated: 2023/01/22 21:45:18 by vnilprap         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	ft_execute(t_data *data)
 	if (infile_dup(data, head) == -1)
 		return (-1);
 	data->iflst = 1;
-	if (head->next == NULL)
+	if (head && head->next == NULL)
 		data->iflst = 0;
 	signal(SIGINT, SIG_IGN);
 	while (head)
