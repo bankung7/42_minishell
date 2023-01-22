@@ -22,8 +22,9 @@ int	ft_reheredoc(t_data *data, t_token *token)
 	head->hd_lmt = token->next->str;
     pipe(head->hdfd);
 	heredoc_dup(data, head);
+    signal(SIGINT, ft_handler);
 	head->status = WORD;
-	return (0);
+	return (data->status);
 }
 
 int	ft_redirection(t_data *data, t_token *token)

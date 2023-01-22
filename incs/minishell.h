@@ -89,6 +89,7 @@ typedef struct s_data
 // signal.c
 void    ft_sigchild(int sig);
 void    ft_sigheredoc(int sig);
+void	ft_handler(int sig);
 int ft_sighandle(void);
 
 // init.c
